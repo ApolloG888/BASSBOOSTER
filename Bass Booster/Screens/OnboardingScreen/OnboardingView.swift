@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @State var state: OnboardingState
+    @State var state: OnboardingState = .initial
     @State private var isHomeLinkActive: Bool = false
+    @StateObject var urlManager = URLManager()
     
     var body: some View {
         NavigationStack {
@@ -32,7 +33,7 @@ struct OnboardingView: View {
 extension OnboardingView {
     var mainView: some View {
         VStack {
-            PageIndicatorView(currentPage: state.rawValue, totalPages: 6)
+            PageIndicator(currentPage: state.rawValue, totalPages: 6)
                 .padding(.vertical, Space.m)
             VStack(spacing: Space.s) {
                 Text(state.title)
@@ -92,13 +93,15 @@ extension OnboardingView {
                 .font(.sfProText(type: .regular400, size: 16))
                 .multilineTextAlignment(.center)
             }
-            SelectionButton(
+            PrimaryButton(
                 type: .confirmation,
                 title: state.buttonTitle
             ) {
-                state == .potential ? isHomeLinkActive = true :  state.next()
+                state == .potential ? isHomeLinkActive = true : state.next()
             }
-            SubscriptionFunctionsView()
+            OptionsView(browserAction: {
+                urlManager.open(urlString: "https://www.google.com")
+            })
         }
     }
 }

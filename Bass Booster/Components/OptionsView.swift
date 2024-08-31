@@ -1,5 +1,5 @@
 //
-//  SubscriptionFunctionsView.swift
+//  OptionsView.swift
 //  Bass Booster
 //
 //  Created by Mac Book Air M1 on 31.08.2024.
@@ -7,20 +7,20 @@
 
 import SwiftUI
 
-struct SubscriptionFunctionsView: View {
+struct OptionsView: View {
     var restoreAction: (() -> Void)?
+    var browserAction: (() -> Void)?
+    
     var body: some View {
             HStack {
-                Button(action: {
-                    // open google.com
-                }) {
+                Button {
+                    browserAction?()
+                } label: {
                     Text("Privacy Policy")
                         .font(.sfProText(type: .light300, size: 11))
-                    
                 }
                 
                 Spacer()
-                
                 Rectangle()
                     .frame(width: 1, height: Space.l)
                     .foregroundColor(.white.opacity(0.3))
@@ -43,7 +43,7 @@ struct SubscriptionFunctionsView: View {
                 Spacer()
                 
                 Button(action: {
-                    // open google.com
+                    browserAction?()
                 }) {
                     Text("Terms of use")
                         .font(.sfProText(type: .light300, size: 11))
@@ -55,6 +55,6 @@ struct SubscriptionFunctionsView: View {
 }
 
 #Preview {
-    SubscriptionFunctionsView()
+    OptionsView()
         .background(Color.black)
 }

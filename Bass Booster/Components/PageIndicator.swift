@@ -1,5 +1,5 @@
 //
-//  PageIndicatorView.swift
+//  PageIndicator.swift
 //  Bass Booster
 //
 //  Created by Mac Book Air M1 on 31.08.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PageIndicatorView: View {
+struct PageIndicator: View {
     var currentPage: Int
     var totalPages: Int
     

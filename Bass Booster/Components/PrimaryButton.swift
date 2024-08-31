@@ -1,5 +1,5 @@
 //
-//  SelectionButton.swift
+//  PrimaryButton.swift
 //  Bass Booster
 //
 //  Created by Mac Book Air M1 on 31.08.2024.
@@ -14,7 +14,7 @@ enum ButtonType {
     case cancel
 }
 
-struct SelectionButton: View {
+struct PrimaryButton: View {
     var type: ButtonType
     var title: String
     var action: () -> Void
@@ -63,5 +63,5 @@ struct SelectionButton: View {
 }
 
 #Preview {
-    SelectionButton(type: .cancel, title: "Next", action: {})
+    PrimaryButton(type: .cancel, title: "Next", action: {})
 }

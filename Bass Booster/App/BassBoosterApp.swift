@@ -18,7 +18,7 @@ struct YourApp: App {
 
     var body: some Scene {
         WindowGroup {
-            OnboardingView(state: .initial)
+            OnboardingView()
         }
     }
 }
