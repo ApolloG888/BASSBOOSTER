@@ -20,6 +20,8 @@
 		6DA0B4572C838EEB0035751E /* SubscriptionFunctionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4562C838EEB0035751E /* SubscriptionFunctionsView.swift */; };
 		6DA0B45E2C839A5E0035751E /* PageIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B45D2C839A5E0035751E /* PageIndicatorView.swift */; };
 		6DA0B4602C839EBC0035751E /* OnboardingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B45F2C839EBC0035751E /* OnboardingState.swift */; };
+		6DA0B4632C83A2340035751E /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4622C83A2340035751E /* HomeView.swift */; };
+		6DA0B4652C83A23F0035751E /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4642C83A23F0035751E /* HomeViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,8 @@
 		6DA0B4562C838EEB0035751E /* SubscriptionFunctionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionFunctionsView.swift; sourceTree = "<group>"; };
 		6DA0B45D2C839A5E0035751E /* PageIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageIndicatorView.swift; sourceTree = "<group>"; };
 		6DA0B45F2C839EBC0035751E /* OnboardingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingState.swift; sourceTree = "<group>"; };
+		6DA0B4622C83A2340035751E /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		6DA0B4642C83A23F0035751E /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +104,7 @@
 		5FDBE7F12C833DE300E623B5 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				6DA0B4612C83A2220035751E /* HomeScreen */,
 				5FDBE7F72C83459F00E623B5 /* OnboardingScreen */,
 			);
 			path = Screens;
@@ -164,6 +169,15 @@
 			children = (
 			);
 			path = ViewModifiers;
+			sourceTree = "<group>";
+		};
+		6DA0B4612C83A2220035751E /* HomeScreen */ = {
+			isa = PBXGroup;
+			children = (
+				6DA0B4622C83A2340035751E /* HomeView.swift */,
+				6DA0B4642C83A23F0035751E /* HomeViewModel.swift */,
+			);
+			path = HomeScreen;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -244,7 +258,9 @@
 				6DA0B4532C835A5C0035751E /* SelectionButton.swift in Sources */,
 				6DA0B4572C838EEB0035751E /* SubscriptionFunctionsView.swift in Sources */,
 				5FDBE7FF2C83480500E623B5 /* View+Extension.swift in Sources */,
+				6DA0B4652C83A23F0035751E /* HomeViewModel.swift in Sources */,
 				6DA0B4602C839EBC0035751E /* OnboardingState.swift in Sources */,
+				6DA0B4632C83A2340035751E /* HomeView.swift in Sources */,
 				5FDBE7FA2C83463800E623B5 /* Color+Extension.swift in Sources */,
 				6DA0B45E2C839A5E0035751E /* PageIndicatorView.swift in Sources */,
 			);
