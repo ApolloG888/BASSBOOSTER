@@ -11,7 +11,7 @@ import SwiftUI
 struct BassBoosterApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            OnboardingView()
         }
     }
 }

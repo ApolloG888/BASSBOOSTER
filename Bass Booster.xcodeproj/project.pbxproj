@@ -8,17 +8,25 @@
 
 /* Begin PBXBuildFile section */
 		5FDBE7E32C833C3300E623B5 /* BassBoosterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E22C833C3300E623B5 /* BassBoosterApp.swift */; };
-		5FDBE7E52C833C3300E623B5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E42C833C3300E623B5 /* ContentView.swift */; };
+		5FDBE7E52C833C3300E623B5 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E42C833C3300E623B5 /* OnboardingView.swift */; };
 		5FDBE7E72C833C3500E623B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E62C833C3500E623B5 /* Assets.xcassets */; };
 		5FDBE7EA2C833C3500E623B5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E92C833C3500E623B5 /* Preview Assets.xcassets */; };
+		5FDBE7F62C83441000E623B5 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7F52C83441000E623B5 /* Typography.swift */; };
+		5FDBE7FA2C83463800E623B5 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7F92C83463800E623B5 /* Color+Extension.swift */; };
+		5FDBE7FC2C83478200E623B5 /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7FB2C83478200E623B5 /* AppColors.swift */; };
+		5FDBE7FF2C83480500E623B5 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7FE2C83480500E623B5 /* View+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5FDBE7DF2C833C3300E623B5 /* Bass Booster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bass Booster.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FDBE7E22C833C3300E623B5 /* BassBoosterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassBoosterApp.swift; sourceTree = "<group>"; };
-		5FDBE7E42C833C3300E623B5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		5FDBE7E42C833C3300E623B5 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		5FDBE7E62C833C3500E623B5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5FDBE7E92C833C3500E623B5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		5FDBE7F52C83441000E623B5 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		5FDBE7F92C83463800E623B5 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
+		5FDBE7FB2C83478200E623B5 /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
+		5FDBE7FE2C83480500E623B5 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +59,8 @@
 		5FDBE7E12C833C3300E623B5 /* Bass Booster */ = {
 			isa = PBXGroup;
 			children = (
+				5FDBE7F82C83462200E623B5 /* Extensions */,
+				5FDBE7F22C833F6C00E623B5 /* Resources */,
 				5FDBE7F12C833DE300E623B5 /* Screens */,
 				5FDBE7F02C833DC800E623B5 /* App */,
 				5FDBE7E62C833C3500E623B5 /* Assets.xcassets */,
@@ -78,9 +88,51 @@
 		5FDBE7F12C833DE300E623B5 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				5FDBE7E42C833C3300E623B5 /* ContentView.swift */,
+				5FDBE7F72C83459F00E623B5 /* OnboardingScreen */,
 			);
 			path = Screens;
+			sourceTree = "<group>";
+		};
+		5FDBE7F22C833F6C00E623B5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5FDBE7F42C833F9400E623B5 /* Colors */,
+				5FDBE7F32C833F8800E623B5 /* Fonts */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		5FDBE7F32C833F8800E623B5 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				5FDBE7F52C83441000E623B5 /* Typography.swift */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		5FDBE7F42C833F9400E623B5 /* Colors */ = {
+			isa = PBXGroup;
+			children = (
+				5FDBE7FB2C83478200E623B5 /* AppColors.swift */,
+			);
+			path = Colors;
+			sourceTree = "<group>";
+		};
+		5FDBE7F72C83459F00E623B5 /* OnboardingScreen */ = {
+			isa = PBXGroup;
+			children = (
+				5FDBE7E42C833C3300E623B5 /* OnboardingView.swift */,
+			);
+			path = OnboardingScreen;
+			sourceTree = "<group>";
+		};
+		5FDBE7F82C83462200E623B5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				5FDBE7F92C83463800E623B5 /* Color+Extension.swift */,
+				5FDBE7FE2C83480500E623B5 /* View+Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -153,8 +205,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FDBE7E52C833C3300E623B5 /* ContentView.swift in Sources */,
+				5FDBE7E52C833C3300E623B5 /* OnboardingView.swift in Sources */,
+				5FDBE7F62C83441000E623B5 /* Typography.swift in Sources */,
 				5FDBE7E32C833C3300E623B5 /* BassBoosterApp.swift in Sources */,
+				5FDBE7FC2C83478200E623B5 /* AppColors.swift in Sources */,
+				5FDBE7FF2C83480500E623B5 /* View+Extension.swift in Sources */,
+				5FDBE7FA2C83463800E623B5 /* Color+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,6 +346,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Bass Booster/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Bass Booster";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -321,6 +378,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Bass Booster/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Bass Booster";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -7,18 +7,19 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct OnboardingView: View {
     var body: some View {
         VStack {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             Text("Hello, world!")
+                .font(.sfProText(size: 33))
         }
-        .padding()
+        .appGradientBackground()
     }
 }
 
 #Preview {
-    ContentView()
+    OnboardingView()
 }
