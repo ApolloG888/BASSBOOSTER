@@ -16,7 +16,7 @@ import SwiftUI
 
 extension View {
     
-    func appGradientBackground(ignoreSafeAreaEdges edges: Edge.Set = .all) -> some View {
+    func appGradientBackground() -> some View {
         let gradient = LinearGradient(
             gradient: Gradient(
                 colors: [
@@ -31,7 +31,6 @@ extension View {
         return self
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(gradient)
-            .ignoresSafeArea(edges: edges)
     }
     
     func hideNavigationBar() -> some View {

@@ -10,33 +10,24 @@ import SwiftUI
 struct OnboardingView: View {
     var body: some View {
         VStack {
-            Spacer()
             ZStack {
-                Image(.welcome) // Замените на ваш ресурс
-                    .resizable()
-                    .scaledToFit()
-                    .ignoresSafeArea(.all, edges: .bottom) // Игнорируем SafeArea снизу
-                
-//                VStack {
-//                    VStack {
-//                        Text("Welcome")
-//                        Text("Welcome")
-//                        Text("Welcome")
-//                    }
-//                    .foregroundStyle(.white)
-//                    
-//                    Spacer()
-//                    
-//                    CustomTextContainer(text: "Next", textSize: 30)
-//                        .padding(.bottom, 20)
-//                }
+                VStack {
+                    Spacer()
+                    Image(.potenial)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                }
+                .ignoresSafeArea(edges: .bottom)
+                VStack {
+                    CustomTextContainer(text: "Play", textSize: 30)
+                    Spacer()
+                    CustomTextContainer(text: "Play", textSize: 30)
+                }
             }
-            .ignoresSafeArea(edges: .bottom)
         }
-        .appGradientBackground(ignoreSafeAreaEdges: .bottom) // Применяем градиент с игнорированием SafeArea
+        .appGradientBackground()
     }
 }
-
 #Preview {
     OnboardingView()
 }
