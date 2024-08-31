@@ -16,6 +16,10 @@
 		5F54B39D2C83B8A60012E1C0 /* SFProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B3992C83B8A50012E1C0 /* SFProText-Bold.ttf */; };
 		5F54B39E2C83B8A60012E1C0 /* SFProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B39A2C83B8A50012E1C0 /* SFProText-Semibold.ttf */; };
 		5F54B3A02C83B9120012E1C0 /* SFProText-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B39F2C83B9120012E1C0 /* SFProText-Light.ttf */; };
+		5F54B3A42C83C7830012E1C0 /* CornerRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F54B3A32C83C7830012E1C0 /* CornerRadius.swift */; };
+		5F54B3A72C83C7F80012E1C0 /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F54B3A62C83C7F80012E1C0 /* Size.swift */; };
+		5F54B3AA2C83C83F0012E1C0 /* CGSize+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F54B3A92C83C83F0012E1C0 /* CGSize+Extension.swift */; };
+		5F54B3AC2C83C8D00012E1C0 /* Space.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F54B3AB2C83C8D00012E1C0 /* Space.swift */; };
 		5FDBE7E32C833C3300E623B5 /* BassBoosterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E22C833C3300E623B5 /* BassBoosterApp.swift */; };
 		5FDBE7E52C833C3300E623B5 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E42C833C3300E623B5 /* OnboardingView.swift */; };
 		5FDBE7E72C833C3500E623B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E62C833C3500E623B5 /* Assets.xcassets */; };
@@ -44,6 +48,10 @@
 		5F54B39A2C83B8A50012E1C0 /* SFProText-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Semibold.ttf"; sourceTree = "<group>"; };
 		5F54B39F2C83B9120012E1C0 /* SFProText-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Light.ttf"; sourceTree = "<group>"; };
 		5F54B3A12C83B9BC0012E1C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		5F54B3A32C83C7830012E1C0 /* CornerRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CornerRadius.swift; sourceTree = "<group>"; };
+		5F54B3A62C83C7F80012E1C0 /* Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
+		5F54B3A92C83C83F0012E1C0 /* CGSize+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Extension.swift"; sourceTree = "<group>"; };
+		5F54B3AB2C83C8D00012E1C0 /* Space.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Space.swift; sourceTree = "<group>"; };
 		5FDBE7DF2C833C3300E623B5 /* Bass Booster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bass Booster.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FDBE7E22C833C3300E623B5 /* BassBoosterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassBoosterApp.swift; sourceTree = "<group>"; };
 		5FDBE7E42C833C3300E623B5 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -94,6 +102,16 @@
 				5F54B3902C83B7760012E1C0 /* SF-Pro-Display-Semibold.ttf */,
 			);
 			path = SFProDisplay;
+			sourceTree = "<group>";
+		};
+		5F54B3A22C83C7580012E1C0 /* Grid */ = {
+			isa = PBXGroup;
+			children = (
+				5F54B3A32C83C7830012E1C0 /* CornerRadius.swift */,
+				5F54B3A62C83C7F80012E1C0 /* Size.swift */,
+				5F54B3AB2C83C8D00012E1C0 /* Space.swift */,
+			);
+			path = Grid;
 			sourceTree = "<group>";
 		};
 		5FDBE7D62C833C3300E623B5 = {
@@ -155,6 +173,7 @@
 		5FDBE7F22C833F6C00E623B5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5F54B3A22C83C7580012E1C0 /* Grid */,
 				5FDBE7F42C833F9400E623B5 /* Colors */,
 				5FDBE7F32C833F8800E623B5 /* Fonts */,
 			);
@@ -194,6 +213,7 @@
 				5FDBE7F92C83463800E623B5 /* Color+Extension.swift */,
 				5FDBE7FE2C83480500E623B5 /* View+Extension.swift */,
 				6DA0B4542C838D990035751E /* String+Extension.swift */,
+				5F54B3A92C83C83F0012E1C0 /* CGSize+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -297,17 +317,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DA0B4552C838D990035751E /* String+Extension.swift in Sources */,
+				5F54B3A72C83C7F80012E1C0 /* Size.swift in Sources */,
 				5FDBE7E52C833C3300E623B5 /* OnboardingView.swift in Sources */,
 				5FDBE7F62C83441000E623B5 /* Typography.swift in Sources */,
 				5FDBE7E32C833C3300E623B5 /* BassBoosterApp.swift in Sources */,
 				5FDBE7FC2C83478200E623B5 /* AppColors.swift in Sources */,
+				5F54B3AC2C83C8D00012E1C0 /* Space.swift in Sources */,
 				6DA0B4532C835A5C0035751E /* SelectionButton.swift in Sources */,
 				6DA0B4572C838EEB0035751E /* SubscriptionFunctionsView.swift in Sources */,
 				5FDBE7FF2C83480500E623B5 /* View+Extension.swift in Sources */,
+				5F54B3A42C83C7830012E1C0 /* CornerRadius.swift in Sources */,
 				6DA0B4652C83A23F0035751E /* HomeViewModel.swift in Sources */,
 				6DA0B4602C839EBC0035751E /* OnboardingState.swift in Sources */,
 				6DA0B4632C83A2340035751E /* HomeView.swift in Sources */,
 				5FDBE7FA2C83463800E623B5 /* Color+Extension.swift in Sources */,
+				5F54B3AA2C83C83F0012E1C0 /* CGSize+Extension.swift in Sources */,
 				6DA0B45E2C839A5E0035751E /* PageIndicatorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

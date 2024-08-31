@@ -32,7 +32,7 @@ struct OnboardingView: View {
 extension OnboardingView {
     var mainView: some View {
         VStack {
-            PageIndicatorView(currentPage: state.rawValue)
+            PageIndicatorView(currentPage: state.rawValue, totalPages: 6)
                 .padding(.vertical, 16)
             VStack(spacing: 10) {
                 Text(state.title)

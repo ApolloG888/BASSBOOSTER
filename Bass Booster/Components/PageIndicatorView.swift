@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PageIndicatorView: View {
     var currentPage: Int
-    var totalPages: Int = 6
+    var totalPages: Int
     
     var body: some View {
         HStack(spacing: 8) {
