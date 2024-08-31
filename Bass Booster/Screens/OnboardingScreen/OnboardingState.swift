@@ -62,6 +62,15 @@ enum OnboardingState: Int {
         }
     }
     
+    var buttonTitle: String {
+        switch self {
+        case .initial:
+            "Get Started"
+        default:
+            "Next"
+        }
+    }
+    
     mutating func next() {
         switch self {
         case .initial:

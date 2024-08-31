@@ -33,8 +33,8 @@ extension OnboardingView {
     var mainView: some View {
         VStack {
             PageIndicatorView(currentPage: state.rawValue, totalPages: 6)
-                .padding(.vertical, 16)
-            VStack(spacing: 10) {
+                .padding(.vertical, Space.m)
+            VStack(spacing: Space.s) {
                 Text(state.title)
                     .font(.sfProText(type: .semiBold600, size: 32))
                     .foregroundColor(.white)
@@ -47,7 +47,7 @@ extension OnboardingView {
             Spacer()
             bottomView
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, Space.m)
     }
 }
 
@@ -63,9 +63,9 @@ extension OnboardingView {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .offset(
-                        y: state == .presets || state == .potential ? 50 : 0
+                        y: state == .presets || state == .potential ? Space.xl5 : .zero
                     )
-                    .padding(.leading, state == .potential ? 10 : 0)
+                    .padding(.leading, state == .potential ? Space.s : .zero)
                 
             case .initial, .rating:
                 state.image
@@ -83,7 +83,7 @@ extension OnboardingView {
 
 extension OnboardingView {
     var bottomView: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: Space.s) {
             if state == .potential {
                 Text(
                     "Get the unlimited access to all features and templates just for 4.99 USD/week"
@@ -94,7 +94,7 @@ extension OnboardingView {
             }
             SelectionButton(
                 type: .confirmation,
-                title: state == .initial ? "Get Started" : "Next"
+                title: state.buttonTitle
             ) {
                 state == .potential ? isHomeLinkActive = true :  state.next()
             }

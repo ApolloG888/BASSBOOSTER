@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 public enum Size {
     /// { 1, 1 }
     public static var xs4: CGSize { CGSize(square: 1) }

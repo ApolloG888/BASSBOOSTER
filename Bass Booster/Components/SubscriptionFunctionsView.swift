@@ -22,7 +22,7 @@ struct SubscriptionFunctionsView: View {
                 Spacer()
                 
                 Rectangle()
-                    .frame(width: 1, height: 20)
+                    .frame(width: 1, height: Space.l)
                     .foregroundColor(.white.opacity(0.3))
                 
                 Spacer()
@@ -37,7 +37,7 @@ struct SubscriptionFunctionsView: View {
                 Spacer()
                 
                 Rectangle()
-                    .frame(width: 1, height: 20)
+                    .frame(width: 1, height: Space.l)
                     .foregroundColor(.white.opacity(0.3))
                 
                 Spacer()
@@ -50,7 +50,7 @@ struct SubscriptionFunctionsView: View {
                 }
             }
             .foregroundColor(.white)
-            .padding(.horizontal, 40)
+            .padding(.horizontal, Space.xl4)
     }
 }
 

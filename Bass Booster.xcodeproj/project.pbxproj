@@ -20,6 +20,7 @@
 		5F54B3A72C83C7F80012E1C0 /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F54B3A62C83C7F80012E1C0 /* Size.swift */; };
 		5F54B3AA2C83C83F0012E1C0 /* CGSize+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F54B3A92C83C83F0012E1C0 /* CGSize+Extension.swift */; };
 		5F54B3AC2C83C8D00012E1C0 /* Space.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F54B3AB2C83C8D00012E1C0 /* Space.swift */; };
+		5F54B3AE2C83CE110012E1C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F54B3AD2C83CE110012E1C0 /* AppDelegate.swift */; };
 		5FDBE7E32C833C3300E623B5 /* BassBoosterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E22C833C3300E623B5 /* BassBoosterApp.swift */; };
 		5FDBE7E52C833C3300E623B5 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E42C833C3300E623B5 /* OnboardingView.swift */; };
 		5FDBE7E72C833C3500E623B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E62C833C3500E623B5 /* Assets.xcassets */; };
@@ -53,6 +54,7 @@
 		5F54B3A62C83C7F80012E1C0 /* Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
 		5F54B3A92C83C83F0012E1C0 /* CGSize+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGSize+Extension.swift"; sourceTree = "<group>"; };
 		5F54B3AB2C83C8D00012E1C0 /* Space.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Space.swift; sourceTree = "<group>"; };
+		5F54B3AD2C83CE110012E1C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5FDBE7DF2C833C3300E623B5 /* Bass Booster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bass Booster.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FDBE7E22C833C3300E623B5 /* BassBoosterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassBoosterApp.swift; sourceTree = "<group>"; };
 		5FDBE7E42C833C3300E623B5 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				5FDBE7E22C833C3300E623B5 /* BassBoosterApp.swift */,
+				5F54B3AD2C83CE110012E1C0 /* AppDelegate.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -336,6 +339,7 @@
 				5FDBE7FF2C83480500E623B5 /* View+Extension.swift in Sources */,
 				5F54B3A42C83C7830012E1C0 /* CornerRadius.swift in Sources */,
 				6DA0B4652C83A23F0035751E /* HomeViewModel.swift in Sources */,
+				5F54B3AE2C83CE110012E1C0 /* AppDelegate.swift in Sources */,
 				6DA0B4602C839EBC0035751E /* OnboardingState.swift in Sources */,
 				6DA0B4632C83A2340035751E /* HomeView.swift in Sources */,
 				5FDBE7FA2C83463800E623B5 /* Color+Extension.swift in Sources */,

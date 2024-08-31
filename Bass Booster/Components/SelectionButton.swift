@@ -30,10 +30,10 @@ struct SelectionButton: View {
                 .frame(height: 64)
                 .frame(maxWidth: .infinity)
                 .background(backgroundView)
-                .cornerRadius(50)
+                .cornerRadius(CornerRadius.xl2 * 2)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 50)
-                        .stroke(Color.selectionButtonBaseColor, lineWidth: type == .cancel ? 2 : 0)
+                    RoundedRectangle(cornerRadius: CornerRadius.xl2 * 2)
+                        .stroke(Color.selectionButtonBaseColor, lineWidth: type == .cancel ? 2 : .zero)
                 )
         }
         .buttonStyle(PlainButtonStyle())

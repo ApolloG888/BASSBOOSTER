@@ -12,15 +12,15 @@ struct PageIndicatorView: View {
     var totalPages: Int
     
     var body: some View {
-        HStack(spacing: 8) {
-            ForEach(0..<totalPages, id: \.self) { index in
+        HStack(spacing: Space.xs) {
+            ForEach(.zero..<totalPages, id: \.self) { index in
                 if index == currentPage {
-                    RoundedRectangle(cornerRadius: 4)
-                        .frame(width: 16, height: 8)
+                    RoundedRectangle(cornerRadius: CornerRadius.xs)
+                        .frame(width: Space.m, height: Space.xs)
                         .foregroundColor(.white)
                 } else {
                     Circle()
-                        .frame(width: 8, height: 8)
+                        .frame(size: Size.xs)
                         .foregroundColor(.gray)
                 }
             }

@@ -47,4 +47,8 @@ extension View {
             .navigationTitle("")
             .navigationBarHidden(true)
     }
+    
+    func frame(size: CGSize) -> some View {
+        self.frame(width: size.width, height: size.height)
+    }
 }
