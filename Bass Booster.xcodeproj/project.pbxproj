@@ -15,6 +15,7 @@
 		5FDBE7FA2C83463800E623B5 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7F92C83463800E623B5 /* Color+Extension.swift */; };
 		5FDBE7FC2C83478200E623B5 /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7FB2C83478200E623B5 /* AppColors.swift */; };
 		5FDBE7FF2C83480500E623B5 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7FE2C83480500E623B5 /* View+Extension.swift */; };
+		6DA0B4532C835A5C0035751E /* SelectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4522C835A5C0035751E /* SelectionButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		5FDBE7F92C83463800E623B5 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		5FDBE7FB2C83478200E623B5 /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
 		5FDBE7FE2C83480500E623B5 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
+		6DA0B4522C835A5C0035751E /* SelectionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 		5FDBE7E12C833C3300E623B5 /* Bass Booster */ = {
 			isa = PBXGroup;
 			children = (
+				6DA0B4512C835A1C0035751E /* UIComponents */,
 				5FDBE7F82C83462200E623B5 /* Extensions */,
 				5FDBE7F22C833F6C00E623B5 /* Resources */,
 				5FDBE7F12C833DE300E623B5 /* Screens */,
@@ -135,6 +138,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		6DA0B4512C835A1C0035751E /* UIComponents */ = {
+			isa = PBXGroup;
+			children = (
+				6DA0B4522C835A5C0035751E /* SelectionButton.swift */,
+			);
+			path = UIComponents;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -209,6 +220,7 @@
 				5FDBE7F62C83441000E623B5 /* Typography.swift in Sources */,
 				5FDBE7E32C833C3300E623B5 /* BassBoosterApp.swift in Sources */,
 				5FDBE7FC2C83478200E623B5 /* AppColors.swift in Sources */,
+				6DA0B4532C835A5C0035751E /* SelectionButton.swift in Sources */,
 				5FDBE7FF2C83480500E623B5 /* View+Extension.swift in Sources */,
 				5FDBE7FA2C83463800E623B5 /* Color+Extension.swift in Sources */,
 			);
@@ -352,7 +364,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -384,7 +396,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

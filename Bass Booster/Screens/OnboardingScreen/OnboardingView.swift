@@ -17,10 +17,12 @@ struct OnboardingView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                 }
-                .ignoresSafeArea(edges: .bottom)
+                .ignoresSafeArea(edges: [.bottom, .horizontal])
                 VStack {
                     CustomTextContainer(text: "Play", textSize: 30)
+                    CustomTextContainer(text: "Play", textSize: 30)
                     Spacer()
+                    
                     CustomTextContainer(text: "Play", textSize: 30)
                 }
             }
