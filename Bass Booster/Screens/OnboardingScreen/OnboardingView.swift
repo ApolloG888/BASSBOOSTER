@@ -40,7 +40,7 @@ extension OnboardingView {
                     .foregroundColor(.white)
                 Text(state.description)
                     .font(.sfProText(type: .regular400, size: 16))
-                    .foregroundColor(.gray)
+                    .foregroundColor(.white.opacity(0.7))
             }
             .multilineTextAlignment(.center)
             .padding(.horizontal)
@@ -62,7 +62,10 @@ extension OnboardingView {
                 state.image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .offset(y: state == .presets ? 60 : 0 )
+                    .offset(
+                        y: state == .presets || state == .potential ? 50 : 0
+                    )
+                    .padding(.leading, state == .potential ? 10 : 0)
                 
             case .initial, .rating:
                 state.image
@@ -81,7 +84,18 @@ extension OnboardingView {
 extension OnboardingView {
     var bottomView: some View {
         VStack(spacing: 10) {
-            SelectionButton(type: .confirmation, title: "Next") {
+            if state == .potential {
+                Text(
+                    "Get the unlimited access to all features and templates just for 4.99 USD/week"
+                )
+                .foregroundStyle(.white.opacity(0.4))
+                .font(.sfProText(type: .regular400, size: 16))
+                .multilineTextAlignment(.center)
+            }
+            SelectionButton(
+                type: .confirmation,
+                title: state == .initial ? "Get Started" : "Next"
+            ) {
                 state == .potential ? isHomeLinkActive = true :  state.next()
             }
             SubscriptionFunctionsView()

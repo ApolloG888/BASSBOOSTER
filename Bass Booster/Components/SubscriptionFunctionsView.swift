@@ -15,7 +15,7 @@ struct SubscriptionFunctionsView: View {
                     // open google.com
                 }) {
                     Text("Privacy Policy")
-                        .font(.sfProText(size: 11))
+                        .font(.sfProText(type: .light300, size: 11))
                     
                 }
                 
@@ -23,7 +23,7 @@ struct SubscriptionFunctionsView: View {
                 
                 Rectangle()
                     .frame(width: 1, height: 20)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.white.opacity(0.3))
                 
                 Spacer()
                 
@@ -31,14 +31,14 @@ struct SubscriptionFunctionsView: View {
                     restoreAction?()
                 }) {
                     Text("Restore")
-                        .font(.sfProText(size: 11))
+                        .font(.sfProText(type: .light300, size: 11))
                 }
                 
                 Spacer()
                 
                 Rectangle()
                     .frame(width: 1, height: 20)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.white.opacity(0.3))
                 
                 Spacer()
                 
@@ -46,7 +46,7 @@ struct SubscriptionFunctionsView: View {
                     // open google.com
                 }) {
                     Text("Terms of use")
-                        .font(.sfProText(size: 11))
+                        .font(.sfProText(type: .light300, size: 11))
                 }
             }
             .foregroundColor(.white)
