@@ -8,15 +8,18 @@
 import SwiftUI
 
 enum SFProTextFont: String {
+    case light300 = "SFProText-Light"
     case regular400 = "SFProText-Regular"
     case medium500 = "SFProText-Medium"
     case semiBold600 = "SFProText-Semibold"
+    case bold700 = "SFProText-Bold"
 }
 
 enum SFProDisplayFont: String {
-    case regular400 = "SFProDisplay-Regular"
-    case medium500 = "SFProDisplay-Medium"
-    case semiBold600 = "SFProDisplay-Semibold"
+    case regular400 = "SF-Pro-Display-Regular"
+    case medium500 = "SF-Pro-Display-Medium"
+    case semiBold600 = "SF-Pro-Display-Semibold"
+    case bold700 = "SF-Pro-Display-Bold"
 }
 
 extension Font {

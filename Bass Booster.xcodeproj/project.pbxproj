@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F54B3922C83B7760012E1C0 /* SF-Pro-Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B38F2C83B7760012E1C0 /* SF-Pro-Display-Medium.ttf */; };
+		5F54B3932C83B7760012E1C0 /* SF-Pro-Display-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B3902C83B7760012E1C0 /* SF-Pro-Display-Semibold.ttf */; };
+		5F54B3942C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B3912C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf */; };
+		5F54B3962C83B80F0012E1C0 /* SF-Pro-Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B3952C83B80F0012E1C0 /* SF-Pro-Display-Bold.ttf */; };
+		5F54B39B2C83B8A60012E1C0 /* SFProText-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B3972C83B8A50012E1C0 /* SFProText-Medium.ttf */; };
+		5F54B39C2C83B8A60012E1C0 /* SFProText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B3982C83B8A50012E1C0 /* SFProText-Regular.ttf */; };
+		5F54B39D2C83B8A60012E1C0 /* SFProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B3992C83B8A50012E1C0 /* SFProText-Bold.ttf */; };
+		5F54B39E2C83B8A60012E1C0 /* SFProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B39A2C83B8A50012E1C0 /* SFProText-Semibold.ttf */; };
+		5F54B3A02C83B9120012E1C0 /* SFProText-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B39F2C83B9120012E1C0 /* SFProText-Light.ttf */; };
 		5FDBE7E32C833C3300E623B5 /* BassBoosterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E22C833C3300E623B5 /* BassBoosterApp.swift */; };
 		5FDBE7E52C833C3300E623B5 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E42C833C3300E623B5 /* OnboardingView.swift */; };
 		5FDBE7E72C833C3500E623B5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E62C833C3500E623B5 /* Assets.xcassets */; };
@@ -25,6 +34,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F54B38F2C83B7760012E1C0 /* SF-Pro-Display-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Medium.ttf"; sourceTree = "<group>"; };
+		5F54B3902C83B7760012E1C0 /* SF-Pro-Display-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Semibold.ttf"; sourceTree = "<group>"; };
+		5F54B3912C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Regular.ttf"; sourceTree = "<group>"; };
+		5F54B3952C83B80F0012E1C0 /* SF-Pro-Display-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.ttf"; sourceTree = "<group>"; };
+		5F54B3972C83B8A50012E1C0 /* SFProText-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Medium.ttf"; sourceTree = "<group>"; };
+		5F54B3982C83B8A50012E1C0 /* SFProText-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Regular.ttf"; sourceTree = "<group>"; };
+		5F54B3992C83B8A50012E1C0 /* SFProText-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Bold.ttf"; sourceTree = "<group>"; };
+		5F54B39A2C83B8A50012E1C0 /* SFProText-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Semibold.ttf"; sourceTree = "<group>"; };
+		5F54B39F2C83B9120012E1C0 /* SFProText-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Light.ttf"; sourceTree = "<group>"; };
+		5F54B3A12C83B9BC0012E1C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		5FDBE7DF2C833C3300E623B5 /* Bass Booster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bass Booster.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FDBE7E22C833C3300E623B5 /* BassBoosterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BassBoosterApp.swift; sourceTree = "<group>"; };
 		5FDBE7E42C833C3300E623B5 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -54,6 +73,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5F54B38D2C83B7450012E1C0 /* SFProText */ = {
+			isa = PBXGroup;
+			children = (
+				5F54B3992C83B8A50012E1C0 /* SFProText-Bold.ttf */,
+				5F54B3972C83B8A50012E1C0 /* SFProText-Medium.ttf */,
+				5F54B3982C83B8A50012E1C0 /* SFProText-Regular.ttf */,
+				5F54B39A2C83B8A50012E1C0 /* SFProText-Semibold.ttf */,
+				5F54B39F2C83B9120012E1C0 /* SFProText-Light.ttf */,
+			);
+			path = SFProText;
+			sourceTree = "<group>";
+		};
+		5F54B38E2C83B7530012E1C0 /* SFProDisplay */ = {
+			isa = PBXGroup;
+			children = (
+				5F54B3952C83B80F0012E1C0 /* SF-Pro-Display-Bold.ttf */,
+				5F54B38F2C83B7760012E1C0 /* SF-Pro-Display-Medium.ttf */,
+				5F54B3912C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf */,
+				5F54B3902C83B7760012E1C0 /* SF-Pro-Display-Semibold.ttf */,
+			);
+			path = SFProDisplay;
+			sourceTree = "<group>";
+		};
 		5FDBE7D62C833C3300E623B5 = {
 			isa = PBXGroup;
 			children = (
@@ -73,7 +115,8 @@
 		5FDBE7E12C833C3300E623B5 /* Bass Booster */ = {
 			isa = PBXGroup;
 			children = (
-				6DA0B4512C835A1C0035751E /* UIComponents */,
+				5F54B3A12C83B9BC0012E1C0 /* Info.plist */,
+				6DA0B4512C835A1C0035751E /* Components */,
 				5FDBE7F82C83462200E623B5 /* Extensions */,
 				5FDBE7F22C833F6C00E623B5 /* Resources */,
 				5FDBE7F12C833DE300E623B5 /* Screens */,
@@ -121,6 +164,8 @@
 		5FDBE7F32C833F8800E623B5 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				5F54B38E2C83B7530012E1C0 /* SFProDisplay */,
+				5F54B38D2C83B7450012E1C0 /* SFProText */,
 				5FDBE7F52C83441000E623B5 /* Typography.swift */,
 			);
 			path = Fonts;
@@ -153,14 +198,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		6DA0B4512C835A1C0035751E /* UIComponents */ = {
+		6DA0B4512C835A1C0035751E /* Components */ = {
 			isa = PBXGroup;
 			children = (
 				6DA0B4522C835A5C0035751E /* SelectionButton.swift */,
 				6DA0B4562C838EEB0035751E /* SubscriptionFunctionsView.swift */,
 				6DA0B45D2C839A5E0035751E /* PageIndicatorView.swift */,
 			);
-			path = UIComponents;
+			path = Components;
 			sourceTree = "<group>";
 		};
 		6DA0B4612C83A2220035751E /* HomeScreen */ = {
@@ -230,8 +275,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F54B3932C83B7760012E1C0 /* SF-Pro-Display-Semibold.ttf in Resources */,
+				5F54B39B2C83B8A60012E1C0 /* SFProText-Medium.ttf in Resources */,
+				5F54B3922C83B7760012E1C0 /* SF-Pro-Display-Medium.ttf in Resources */,
+				5F54B39E2C83B8A60012E1C0 /* SFProText-Semibold.ttf in Resources */,
+				5F54B3962C83B80F0012E1C0 /* SF-Pro-Display-Bold.ttf in Resources */,
+				5F54B3A02C83B9120012E1C0 /* SFProText-Light.ttf in Resources */,
 				5FDBE7EA2C833C3500E623B5 /* Preview Assets.xcassets in Resources */,
+				5F54B3942C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf in Resources */,
 				5FDBE7E72C833C3500E623B5 /* Assets.xcassets in Resources */,
+				5F54B39D2C83B8A60012E1C0 /* SFProText-Bold.ttf in Resources */,
+				5F54B39C2C83B8A60012E1C0 /* SFProText-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,6 +444,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Bass Booster/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bass Booster";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -422,6 +477,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Bass Booster/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bass Booster";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

@@ -25,7 +25,7 @@ struct SelectionButton: View {
             action()
         }) {
             Text(title)
-                .font(.sfProDisplay(type: .semiBold600, size: 23))
+                .font(.sfProText(type: .medium500, size: 16))
                 .foregroundColor(type == .cancel ? .white : .black)
                 .frame(height: 64)
                 .frame(maxWidth: .infinity)
