@@ -15,67 +15,80 @@ struct OnboardingView: View {
         NavigationStack {
             VStack {
                 ZStack {
-                    VStack {
-                        PageIndicatorView(currentPage: state.rawValue)
-                            .padding(.vertical, 10)
-                        VStack(spacing: 10) {
-                            Text(state.title)
-                                .font(.sfProText(type: .semiBold600, size: 32))
-                                .foregroundColor(.white)
-                            Text(state.description)
-                                .font(.sfProText(type: .regular400, size: 16))
-                                .foregroundColor(.gray)
-                        }
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                        Spacer()
-                    }
-                    
-                    VStack {
-                        switch state {
-                        case .welcome, .effects, .presets, .potential:
-                            Spacer()
-                            state.image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .offset(y: state == .presets ? 60 : 0 )
-                            
-                        case .initial, .rating:
-                            Spacer()
-                            state.image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .scaleEffect(state == .initial ? 0.6 : 1.0)
-                            Spacer()
-                            
-                        }
-                    }
-                    .ignoresSafeArea(edges: [.bottom, .horizontal])
-                    
-                    VStack {
-                        Spacer()
-                        SelectionButton(type: .confirmation, title: "Next") {
-                            if state == .potential {
-                                isHomeLinkActive = true
-                            } else {
-                                state.next()
-                            }
-                        }
-                        .padding(.bottom, 10)
-                        SubscriptionFunctionsView()
-                            .padding(.bottom, 10)
-                    }
-                    .navigationDestination(isPresented: $isHomeLinkActive) {
-                        HomeView(viewModel: HomeViewModel())
-                    }
-                    .padding(.horizontal, 16)
+                    imageView
+                    mainView
                 }
             }
+            .navigationDestination(isPresented: $isHomeLinkActive) {
+                HomeView(viewModel: HomeViewModel())
+            }
             .appGradientBackground()
-            .edgesIgnoringSafeArea(.bottom)
         }
     }
 }
+
+// MARK: - Main View
+
+extension OnboardingView {
+    var mainView: some View {
+        VStack {
+            PageIndicatorView(currentPage: state.rawValue)
+                .padding(.vertical, 16)
+            VStack(spacing: 10) {
+                Text(state.title)
+                    .font(.sfProText(type: .semiBold600, size: 32))
+                    .foregroundColor(.white)
+                Text(state.description)
+                    .font(.sfProText(type: .regular400, size: 16))
+                    .foregroundColor(.gray)
+            }
+            .multilineTextAlignment(.center)
+            .padding(.horizontal)
+            Spacer()
+            bottomView
+        }
+        .padding(.horizontal, 16)
+    }
+}
+
+// MARK: - Image View
+
+extension OnboardingView {
+    var imageView: some View {
+        VStack {
+            Spacer()
+            switch state {
+            case .welcome, .effects, .presets, .potential:
+                state.image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .offset(y: state == .presets ? 60 : 0 )
+                
+            case .initial, .rating:
+                state.image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .scaleEffect(state == .initial ? 0.6 : 1.0)
+                Spacer()
+            }
+        }
+        .ignoresSafeArea(edges: [.bottom, .horizontal])
+    }
+}
+
+// MARK: - Bottom View
+
+extension OnboardingView {
+    var bottomView: some View {
+        VStack(spacing: 10) {
+            SelectionButton(type: .confirmation, title: "Next") {
+                state == .potential ? isHomeLinkActive = true :  state.next()
+            }
+            SubscriptionFunctionsView()
+        }
+    }
+}
+
 
 #Preview {
     OnboardingView(state: .initial)

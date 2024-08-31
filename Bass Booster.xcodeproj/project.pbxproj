@@ -73,7 +73,6 @@
 		5FDBE7E12C833C3300E623B5 /* Bass Booster */ = {
 			isa = PBXGroup;
 			children = (
-				6DA0B4582C8395DE0035751E /* ViewModifiers */,
 				6DA0B4512C835A1C0035751E /* UIComponents */,
 				5FDBE7F82C83462200E623B5 /* Extensions */,
 				5FDBE7F22C833F6C00E623B5 /* Resources */,
@@ -162,13 +161,6 @@
 				6DA0B45D2C839A5E0035751E /* PageIndicatorView.swift */,
 			);
 			path = UIComponents;
-			sourceTree = "<group>";
-		};
-		6DA0B4582C8395DE0035751E /* ViewModifiers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModifiers;
 			sourceTree = "<group>";
 		};
 		6DA0B4612C83A2220035751E /* HomeScreen */ = {

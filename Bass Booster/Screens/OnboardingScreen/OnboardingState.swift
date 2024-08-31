@@ -9,8 +9,7 @@ import Foundation
 import SwiftUI
 
 enum OnboardingState: Int {
-    case initial = 0
-    case welcome, rating, effects, presets, potential
+    case initial, welcome, rating, effects, presets, potential
     
     var title: String {
         switch self {
