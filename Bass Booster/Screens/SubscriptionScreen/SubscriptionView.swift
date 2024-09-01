@@ -8,35 +8,32 @@
 import SwiftUI
 
 struct SubscriptionView: View {
+    
     @StateObject var viewModel: SubscriptionViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State var state: SubScreenState = .preset
     
     var body: some View {
-        NavigationStack {
-            VStack {
-                headerView
-                infoView
-                state.image
-                PageIndicator(currentPage: state.rawValue, totalPages: 3)
-                HStack(spacing: 4) {
-                    ProductView(productType: .yearly)
-                    ProductView(productType: .monthly)
-                }
-                titleView
-                PrimaryButton(type: .confirmation, title: "Next") {
-                    state == .playlist ?
-                    presentationMode.wrappedValue.dismiss() :
-                    state.next()
-                }
-                .padding(.horizontal)
-                OptionsView()
-            }
-            .ignoresSafeArea(ed)
-            .appGradientBackground()
+        VStack {
+            headerView
+            infoView
+            state.image
+            PageIndicator(
+                currentPage: state.rawValue,
+                totalPages: 3
+            )
+            Spacer()
+            productView
+            Spacer()
+            bottomView
         }
+        .padding(.horizontal)
+        .hideNavigationBar()
+        .appGradientBackground()
     }
 }
+
+// MARK: - Header View
 
 extension SubscriptionView {
     var headerView: some View {
@@ -47,14 +44,15 @@ extension SubscriptionView {
             } label: {
                 Image(systemName: "xmark")
                     .resizable()
-                    .frame(width: 16, height: 16)
+                    .frame(size: Size.m)
                     .foregroundColor(.white)
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
+        .padding(.vertical, Space.xs)
     }
 }
+
+// MARK: - Info View
 
 extension SubscriptionView {
     var infoView: some View {
@@ -67,18 +65,47 @@ extension SubscriptionView {
                 .foregroundColor(.white.opacity(0.7))
         }
         .multilineTextAlignment(.center)
-        .padding(.horizontal)
     }
 }
 
+// MARK: - Product View
+
 extension SubscriptionView {
-    var titleView: some View {
+    var productView: some View {
+        HStack {
+            ProductView(productType: .yearly, selected: true)
+            ProductView(productType: .monthly)
+        }
+    }
+}
+
+// MARK: - Bottom View
+
+extension SubscriptionView {
+    var bottomView: some View {
+        VStack(spacing: Space.xs) {
+            benefitsView
+            PrimaryButton(type: .confirmation, title: "Next") {
+                state == .playlist ?
+                presentationMode.wrappedValue.dismiss() :
+                state.next()
+            }
+            OptionsView()
+        }
+    }
+}
+
+// MARK: - Benefits View
+
+extension SubscriptionView {
+    var benefitsView: some View {
         Text("3-day free trial • Recurring Bill • Cancel anytime")
             .font(.sfProText(type: .regular400, size: 14))
             .foregroundColor(.white)
-            .padding(.horizontal)
-            .padding(.vertical, 4)
-            .cornerRadius(8)
+            .fixedSize()
+            .padding(.bottom, Space.xs)
+            .padding(.horizontal, Space.l)
+            .cornerRadius(CornerRadius.s)
     }
 }
 

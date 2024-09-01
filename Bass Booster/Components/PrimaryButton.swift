@@ -8,6 +8,7 @@
 import SwiftUI
 
 enum ButtonType {
+    case welcome
     case confirmation
     case modeSelection
     case playlist

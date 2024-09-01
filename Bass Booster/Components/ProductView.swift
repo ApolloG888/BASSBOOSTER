@@ -44,7 +44,7 @@ struct ProductView: View {
     @State var selected: Bool = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: CornerRadius.l) {
             HStack {
                 Text(productType.rawValue)
                     .font(.sfProText(type: .semiBold600, size: 16))
@@ -54,14 +54,14 @@ struct ProductView: View {
                 
                 Text(productType.tag)
                     .font(.sfProText(type: .medium500, size: 10))
-                    .padding(8)
+                    .padding(Space.xs)
                     .background(.subProductTagColor)
-                    .cornerRadius(40)
+                    .cornerRadius(CornerRadius.xl3 * 2)
                     .foregroundColor(.white)
                 
             }
             
-            VStack(alignment: .leading,spacing: 4, content: {
+            VStack(alignment: .leading, spacing: Space.xs3) {
                 Text(productType.weekPrice)
                     .font(.sfProText(type: .medium500, size: 16))
                     .foregroundColor(.subProductPriceColor)
@@ -69,16 +69,15 @@ struct ProductView: View {
                     .font(.sfProText(type: .regular400, size: 12))
                     .foregroundColor(.subProductFullPrice)
 
-            })
+            }
         }
         .padding()
         .background(.subProductColor)
-        .cornerRadius(12)
+        .cornerRadius(CornerRadius.l)
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.yellow, lineWidth: selected ? 2 : 0)
+            RoundedRectangle(cornerRadius: CornerRadius.l)
+                .stroke(Color.yellow, lineWidth: selected ? 2 : .zero)
         )
-        .padding(.horizontal)
     }
 }
 

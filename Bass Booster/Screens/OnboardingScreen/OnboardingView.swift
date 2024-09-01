@@ -21,9 +21,9 @@ struct OnboardingView: View {
                 SubscriptionAssembly().build()
             }
             .appGradientBackground()
-            .onAppear {
-                requestTrackingAuthorization()
-            }
+//            .onAppear {
+//                requestTrackingAuthorization()
+//            }
         }
     }
     
