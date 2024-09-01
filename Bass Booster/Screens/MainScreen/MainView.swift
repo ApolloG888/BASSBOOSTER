@@ -1,16 +1,29 @@
-//
-//  MainView.swift
-//  Bass Booster
-//
-//  Created by Дмитрий Процак on 01.09.2024.
-//
-
 import SwiftUI
+
+enum TabState: Int, CaseIterable {
+    case home = 0
+    case modes
+    case features
+    case settings
+    
+    var icon: String {
+        switch self {
+        case .home:
+            return "home"
+        case .modes:
+            return "modes"
+        case .features:
+            return "features"
+        case .settings:
+            return "settings"
+        }
+    }
+}
 
 struct MainView: View {
     var body: some View {
         CustomTabView()
-            .background(Color.customBlack.ignoresSafeArea())
+            .background(Color.customBlack)
     }
 }
 
@@ -22,55 +35,35 @@ struct CustomTabView: View {
             // Отображение выбранного экрана
             ZStack {
                 switch selectedIndex {
-                case 0:
+                case TabState.home.rawValue:
                     OnboardingAssembly().build()
-                case 1:
+                case TabState.modes.rawValue:
                     SecondView()
-                case 2:
+                case TabState.features.rawValue:
                     ThirdView()
-                case 3:
+                case TabState.settings.rawValue:
                     FourthView()
                 default:
                     FirstView()
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
             Spacer()
             
             ZStack {
                 HStack {
                     Spacer()
                     
-                    // Первый экран
-                    TabBarButton(icon: "house.fill", isSelected: selectedIndex == 0) {
-                        selectedIndex = 0
+                    ForEach(TabState.allCases, id: \.self) { tab in
+                        TabBarButton(icon: tab.icon, isSelected: selectedIndex == tab.rawValue) {
+                            selectedIndex = tab.rawValue
+                        }
+                        Spacer()
+                        
+                        // Если это второй элемент, добавляем больший отступ
+                        if tab == .modes {
+                            Spacer().frame(width: 80) // Увеличенный отступ
+                        }
                     }
-                    
-                    Spacer()
-                    
-                    // Второй экран
-                    TabBarButton(icon: "magnifyingglass", isSelected: selectedIndex == 1) {
-                        selectedIndex = 1
-                    }
-                    
-                    Spacer()
-                    
-                    // Пустое пространство для кнопки "плюс"
-                    Spacer().frame(width: 80)
-                    
-                    // Третий экран
-                    TabBarButton(icon: "heart.fill", isSelected: selectedIndex == 2) {
-                        selectedIndex = 2
-                    }
-                    
-                    Spacer()
-                    
-                    // Четвертый экран
-                    TabBarButton(icon: "person.fill", isSelected: selectedIndex == 3) {
-                        selectedIndex = 3
-                    }
-                    
-                    Spacer()
                 }
                 
                 // Кнопка "плюс" по центру
@@ -79,9 +72,9 @@ struct CustomTabView: View {
                 }) {
                     Image(systemName: "plus.circle.fill")
                         .resizable()
-                        .frame(width: 70, height: 70)
-                        .foregroundColor(.white)
-                        .background(Circle().fill(Color.blue).shadow(radius: 10))
+                        .frame(width: 56, height: 56)
+                        .foregroundColor(.black)
+                        .background(Circle().fill(Color.white).shadow(radius: 10))
                 }
             }
         }
@@ -139,9 +132,9 @@ struct TabBarButton: View {
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: icon)
+            Image(icon)
                 .resizable()
-                .frame(width: 25, height: 25)
+                .frame(width: 24, height: 24)
                 .foregroundColor(isSelected ? .white : .gray)
         }
     }
