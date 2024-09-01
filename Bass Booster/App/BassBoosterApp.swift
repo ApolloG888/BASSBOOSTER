@@ -13,7 +13,7 @@ struct YourApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     init() {
-        Apphud.start(apiKey: "app_2ojGaR5zyQUUJn1htob9ei2uFhZFxv")
+        Apphud.start(apiKey: "app_dvCEY6wr9U7EVLjXPPdFebCrVskJq4")
     }
 
     var body: some Scene {
