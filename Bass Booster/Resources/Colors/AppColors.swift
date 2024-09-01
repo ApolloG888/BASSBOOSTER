@@ -18,4 +18,5 @@ extension ShapeStyle where Self == Color {
     public static var subProductTagColor:Color { Color(hex: 0x3C3C3E) }
     public static var subProductPriceColor:Color { Color(hex: 0xD9D9D9) }
     public static var subProductFullPrice:Color { Color(hex: 0x7D858E) }
+    public static var customBlack:Color { Color(hex: 0x18191B) }
 }

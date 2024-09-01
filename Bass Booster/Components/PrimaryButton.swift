@@ -8,7 +8,6 @@
 import SwiftUI
 
 enum ButtonType {
-    case welcome
     case confirmation
     case modeSelection
     case playlist
@@ -28,7 +27,7 @@ struct PrimaryButton: View {
             Text(title)
                 .font(.sfProText(type: .medium500, size: 16))
                 .foregroundColor(type == .cancel ? .white : .black)
-                .frame(height: 64)
+                .frame(height: 56)
                 .frame(maxWidth: .infinity)
                 .background(backgroundView)
                 .cornerRadius(CornerRadius.xl2 * 2)
