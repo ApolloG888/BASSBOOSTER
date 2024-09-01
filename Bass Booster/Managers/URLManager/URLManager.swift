@@ -9,8 +9,11 @@ import UIKit
 import SwiftUI
 import Combine
 
-final class URLManager: ObservableObject {
-    
+protocol URLManagerProtocol {
+    func open(urlString: String)
+}
+
+final class URLManager: ObservableObject, URLManagerProtocol {
     func open(urlString: String) {
         guard let url = URL(string: urlString) else {
             print("Invalid URL string: \(urlString)")

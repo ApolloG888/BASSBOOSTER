@@ -10,7 +10,7 @@ import SwiftUI
 struct OnboardingView: View {
     @State var state: OnboardingState = .initial
     @State private var isHomeLinkActive: Bool = false
-    @StateObject var urlManager = URLManager()
+    @StateObject var viewModel: OnboardingViewModel
     
     var body: some View {
         NavigationStack {
@@ -100,7 +100,7 @@ extension OnboardingView {
                 state == .potential ? isHomeLinkActive = true : state.next()
             }
             OptionsView(browserAction: {
-                urlManager.open(urlString: "https://www.google.com")
+                viewModel.openMockURL()
             })
         }
     }
@@ -108,5 +108,5 @@ extension OnboardingView {
 
 
 #Preview {
-    OnboardingView(state: .initial)
+    OnboardingView(state: .initial, viewModel: OnboardingViewModel(urlManager: URLManager()))
 }
