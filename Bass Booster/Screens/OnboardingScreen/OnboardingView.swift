@@ -21,7 +21,8 @@ struct OnboardingView: View {
                 }
             }
             .navigationDestination(isPresented: $isHomeLinkActive) {
-                HomeView(viewModel: HomeViewModel())
+//                HomeView(viewModel: HomeViewModel())
+                SubscriptionAssembly().build()
             }
             .appGradientBackground()
         }

@@ -8,10 +8,8 @@
 import Foundation
 import SwiftUI
 
-enum SubScreenState {
-    case preset
-    case booster
-    case playlist
+enum SubScreenState: Int {
+    case preset, booster, playlist
     
     var title: String {
         "Unlock your potential"
@@ -29,6 +27,17 @@ enum SubScreenState {
             Image(.booster)
         case .playlist:
             Image(.playlist)
+        }
+    }
+    
+    mutating func next() {
+        switch self {
+        case .preset:
+            self = .booster
+        case .booster:
+            self = .playlist
+        case .playlist:
+            self = .playlist
         }
     }
 }
