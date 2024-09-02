@@ -26,7 +26,7 @@ struct PrimaryButton: View {
         }) {
             Text(title)
                 .font(.sfProText(type: .medium500, size: 16))
-                .foregroundColor(type == .cancel ? .white : .black)
+                .foregroundColor((type == .cancel || type == .modeSelection && !(modeSelected ?? false)) ? .white : .black)
                 .frame(height: 56)
                 .frame(maxWidth: .infinity)
                 .background(backgroundView)
@@ -63,5 +63,5 @@ struct PrimaryButton: View {
 }
 
 #Preview {
-    PrimaryButton(type: .cancel, title: "Next", action: {})
+    PrimaryButton(type: .modeSelection, title: "Next", action: {})
 }

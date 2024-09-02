@@ -17,7 +17,7 @@ struct CustomTabView: View {
                 case MainScreenTabState.home.rawValue:
                     OnboardingAssembly().build()
                 case MainScreenTabState.modes.rawValue:
-                    SecondView()
+                    ModesAssembly().build()
                 case MainScreenTabState.features.rawValue:
                     ThirdView()
                 case MainScreenTabState.settings.rawValue:

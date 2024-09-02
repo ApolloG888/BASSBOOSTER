@@ -34,6 +34,9 @@
 		5FDBE7FF2C83480500E623B5 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7FE2C83480500E623B5 /* View+Extension.swift */; };
 		6D0E33522C8481720087493E /* ProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E33512C8481720087493E /* ProductView.swift */; };
 		6D363B562C85C8C90053761C /* MainScreenTabState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B552C85C8C90053761C /* MainScreenTabState.swift */; };
+		6D363B592C85F26A0053761C /* ModesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B582C85F2690053761C /* ModesView.swift */; };
+		6D363B5C2C85F7F10053761C /* ModesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B5B2C85F7F10053761C /* ModesViewModel.swift */; };
+		6D363B5E2C85F84F0053761C /* ModesAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B5D2C85F84F0053761C /* ModesAssembly.swift */; };
 		6DA0B4532C835A5C0035751E /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4522C835A5C0035751E /* PrimaryButton.swift */; };
 		6DA0B4552C838D990035751E /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4542C838D990035751E /* String+Extension.swift */; };
 		6DA0B4572C838EEB0035751E /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4562C838EEB0035751E /* OptionsView.swift */; };
@@ -80,6 +83,9 @@
 		5FDBE7FE2C83480500E623B5 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 		6D0E33512C8481720087493E /* ProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductView.swift; sourceTree = "<group>"; };
 		6D363B552C85C8C90053761C /* MainScreenTabState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenTabState.swift; sourceTree = "<group>"; };
+		6D363B582C85F2690053761C /* ModesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModesView.swift; sourceTree = "<group>"; };
+		6D363B5B2C85F7F10053761C /* ModesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModesViewModel.swift; sourceTree = "<group>"; };
+		6D363B5D2C85F84F0053761C /* ModesAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModesAssembly.swift; sourceTree = "<group>"; };
 		6DA0B4522C835A5C0035751E /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
 		6DA0B4542C838D990035751E /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		6DA0B4562C838EEB0035751E /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
@@ -225,6 +231,7 @@
 		5FDBE7F12C833DE300E623B5 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				6D363B5A2C85F26E0053761C /* ModesScreen */,
 				5FD59D922C84EC7700D3508B /* MainScreen */,
 				6DA0B46D2C845F3B0035751E /* SubscriptionScreen */,
 				6DA0B4612C83A2220035751E /* HomeScreen */,
@@ -281,6 +288,16 @@
 				5F54B3A92C83C83F0012E1C0 /* CGSize+Extension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		6D363B5A2C85F26E0053761C /* ModesScreen */ = {
+			isa = PBXGroup;
+			children = (
+				6D363B582C85F2690053761C /* ModesView.swift */,
+				6D363B5B2C85F7F10053761C /* ModesViewModel.swift */,
+				6D363B5D2C85F84F0053761C /* ModesAssembly.swift */,
+			);
+			path = ModesScreen;
 			sourceTree = "<group>";
 		};
 		6DA0B4512C835A1C0035751E /* Components */ = {
@@ -403,12 +420,15 @@
 				6DA0B46C2C845BD00035751E /* OnboardingAssembly.swift in Sources */,
 				6DA0B4552C838D990035751E /* String+Extension.swift in Sources */,
 				5F54B3A72C83C7F80012E1C0 /* Size.swift in Sources */,
+				6D363B5C2C85F7F10053761C /* ModesViewModel.swift in Sources */,
 				5FDBE7E52C833C3300E623B5 /* OnboardingView.swift in Sources */,
 				5FDBE7F62C83441000E623B5 /* Typography.swift in Sources */,
+				6D363B5E2C85F84F0053761C /* ModesAssembly.swift in Sources */,
 				5FDBE7E32C833C3300E623B5 /* BassBoosterApp.swift in Sources */,
 				5FDBE7FC2C83478200E623B5 /* AppColors.swift in Sources */,
 				5F54B3B52C83D5260012E1C0 /* URLManager.swift in Sources */,
 				5F54B3AC2C83C8D00012E1C0 /* Space.swift in Sources */,
+				6D363B592C85F26A0053761C /* ModesView.swift in Sources */,
 				6DA0B4532C835A5C0035751E /* PrimaryButton.swift in Sources */,
 				6DA0B4572C838EEB0035751E /* OptionsView.swift in Sources */,
 				5FDBE7FF2C83480500E623B5 /* View+Extension.swift in Sources */,

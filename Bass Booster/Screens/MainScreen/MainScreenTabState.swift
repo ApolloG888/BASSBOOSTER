@@ -38,4 +38,12 @@ enum MainScreenTabState: Int, CaseIterable {
             return "Settings"
         }
     }
+    
+    var possibilities: String {
+        switch self {
+        case .modes, .features:
+            "Customize the sound yourself"
+        default: .empty
+        }
+    }
 }
