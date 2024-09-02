@@ -19,4 +19,7 @@ extension ShapeStyle where Self == Color {
     public static var subProductPriceColor:Color { Color(hex: 0xD9D9D9) }
     public static var subProductFullPrice:Color { Color(hex: 0x7D858E) }
     public static var customBlack:Color { Color(hex: 0x18191B) }
+    public static var tabBarSelected:Color { Color(hex: 0xFACD66) }
+    public static var plusButtonTabBarGradient1:Color { Color(hex: 0x16171B) }
+    public static var plusButtonTabBarGradient2:Color { Color(hex: 0x353A40) }
 }

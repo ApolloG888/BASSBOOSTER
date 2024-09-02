@@ -41,6 +41,24 @@ extension View {
         return gradient
     }
     
+    func plusButtonGradient() -> LinearGradient {
+            let gradient = LinearGradient(
+                gradient: Gradient(colors: [.plusButtonTabBarGradient1, .plusButtonTabBarGradient2]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            return gradient
+        }
+    
+    func plusButtonBorderGradient() -> LinearGradient {
+            let gradient = LinearGradient(
+                gradient: Gradient(colors: [.plusButtonTabBarGradient2, .plusButtonTabBarGradient1]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            return gradient
+        }
+    
     func hideNavigationBar() -> some View {
         self
             .navigationBarBackButtonHidden(true)

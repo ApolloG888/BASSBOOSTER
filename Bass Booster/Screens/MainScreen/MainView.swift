@@ -1,25 +1,5 @@
 import SwiftUI
 
-enum TabState: Int, CaseIterable {
-    case home = 0
-    case modes
-    case features
-    case settings
-    
-    var icon: String {
-        switch self {
-        case .home:
-            return "home"
-        case .modes:
-            return "modes"
-        case .features:
-            return "features"
-        case .settings:
-            return "settings"
-        }
-    }
-}
-
 struct MainView: View {
     var body: some View {
         CustomTabView()
@@ -29,19 +9,18 @@ struct MainView: View {
 
 struct CustomTabView: View {
     @State private var selectedIndex = 0
-
+    
     var body: some View {
         VStack {
-            // Отображение выбранного экрана
             ZStack {
                 switch selectedIndex {
-                case TabState.home.rawValue:
+                case MainScreenTabState.home.rawValue:
                     OnboardingAssembly().build()
-                case TabState.modes.rawValue:
+                case MainScreenTabState.modes.rawValue:
                     SecondView()
-                case TabState.features.rawValue:
+                case MainScreenTabState.features.rawValue:
                     ThirdView()
-                case TabState.settings.rawValue:
+                case MainScreenTabState.settings.rawValue:
                     FourthView()
                 default:
                     FirstView()
@@ -51,30 +30,43 @@ struct CustomTabView: View {
             
             ZStack {
                 HStack {
-                    Spacer()
-                    
-                    ForEach(TabState.allCases, id: \.self) { tab in
-                        TabBarButton(icon: tab.icon, isSelected: selectedIndex == tab.rawValue) {
-                            selectedIndex = tab.rawValue
-                        }
-                        Spacer()
-                        
-                        // Если это второй элемент, добавляем больший отступ
-                        if tab == .modes {
-                            Spacer().frame(width: 80) // Увеличенный отступ
+                    HStack(spacing: 36) {
+                        ForEach(MainScreenTabState.allCases.prefix(2), id: \.self) { tab in
+                            TabBarButton(icon: tab.icon, isSelected: selectedIndex == tab.rawValue, label: tab.name) {
+                                selectedIndex = tab.rawValue
+                            }
                         }
                     }
+                    .padding(.leading, 36)
+                    
+                    Spacer()
+                    
+                    HStack(spacing: 24) {
+                        ForEach(MainScreenTabState.allCases.suffix(2), id: \.self) { tab in
+                            TabBarButton(icon: tab.icon, isSelected: selectedIndex == tab.rawValue, label: tab.name) {
+                                selectedIndex = tab.rawValue
+                            }
+                        }
+                    }
+                    .padding(.trailing, 24)
                 }
                 
-                // Кнопка "плюс" по центру
                 Button(action: {
-                    // Действие по нажатию на кнопку "плюс"
+                    // Action for the plus button
                 }) {
-                    Image(systemName: "plus.circle.fill")
-                        .resizable()
-                        .frame(width: 56, height: 56)
-                        .foregroundColor(.black)
-                        .background(Circle().fill(Color.white).shadow(radius: 10))
+                    ZStack {
+                        Circle()
+                            .fill(plusButtonGradient())
+                            .frame(width: 56, height: 56)
+                            .overlay(
+                                Circle()
+                                    .stroke(plusButtonBorderGradient(), lineWidth: 0.66))
+                        Image(systemName: "plus")
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundColor(.white)
+                            .frame(width: 21, height: 21)
+                    }
                 }
             }
         }
@@ -128,17 +120,28 @@ struct FourthView: View {
 struct TabBarButton: View {
     let icon: String
     let isSelected: Bool
+    let label: String
     let action: () -> Void
-
+    
     var body: some View {
         Button(action: action) {
-            Image(icon)
-                .resizable()
-                .frame(width: 24, height: 24)
-                .foregroundColor(isSelected ? .white : .gray)
+            VStack(spacing: 4) {
+                Circle()
+                    .frame(width: 6, height: 6)
+                    .foregroundColor(isSelected ? .tabBarSelected : .clear)
+                Image(icon)
+                    .resizable()
+                    .renderingMode(.template)
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(isSelected ? .tabBarSelected : .gray)
+                Text(label)
+                    .font(.caption)
+                    .foregroundColor(isSelected ? .tabBarSelected : .gray)
+            }
         }
     }
 }
+
 
 #Preview {
     MainView()
