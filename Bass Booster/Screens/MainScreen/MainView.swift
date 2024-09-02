@@ -19,7 +19,7 @@ struct CustomTabView: View {
                 case MainScreenTabState.modes.rawValue:
                     ModesAssembly().build()
                 case MainScreenTabState.features.rawValue:
-                    ThirdView()
+                    FeaturesAssembly().build()
                 case MainScreenTabState.settings.rawValue:
                     FourthView()
                 default:
@@ -84,7 +84,7 @@ struct FirstView: View {
     }
 }
 
-struct SecondView: View {
+struct ThirdView: View {
     var body: some View {
         VStack {
             Toggle(isOn: .constant(true), label: {
@@ -92,18 +92,8 @@ struct SecondView: View {
                     .foregroundStyle(.white)
                     .font(.sfProText(size: 30))
             })
-            .toggleStyle(CustomToggleStyle())
+            .toggleStyle(CustomToggleStyle(gradient: selectionButtonGradient()))
         }
-    }
-}
-
-struct ThirdView: View {
-    var body: some View {
-        Text("Favorites Screen")
-            .foregroundColor(.white)
-            .font(.largeTitle)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.orange)
     }
 }
 

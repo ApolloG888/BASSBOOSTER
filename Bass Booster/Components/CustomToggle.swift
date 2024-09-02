@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CustomToggleStyle: ToggleStyle {
+    var gradient: LinearGradient
     func makeBody(configuration: Configuration) -> some View {
         HStack {
             configuration.label
@@ -17,14 +18,15 @@ struct CustomToggleStyle: ToggleStyle {
             Spacer()
             
             ZStack {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(.orange)
-                    .frame(width: 51, height: 31)
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(.black)
+                    .frame(width: 80, height: 40)
+                    
                 
                 Circle()
-                    .fill(configuration.isOn ? Color.red : Color.green)
-                    .frame(width: 27, height: 27)
-                    .offset(x: configuration.isOn ? 10 : -10)
+                    .fill(gradient)
+                    .frame(width: 29, height: 29)
+                    .offset(x: configuration.isOn ? 20 : -20)
                     .animation(.easeInOut(duration: 0.2), value: configuration.isOn)
             }
             .onTapGesture {
