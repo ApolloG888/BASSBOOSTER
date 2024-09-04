@@ -22,4 +22,6 @@ extension ShapeStyle where Self == Color {
     public static var tabBarSelected:Color { Color(hex: 0xFACD66) }
     public static var plusButtonTabBarGradient1:Color { Color(hex: 0x16171B) }
     public static var plusButtonTabBarGradient2:Color { Color(hex: 0x353A40) }
+    public static var placeholderYellow:Color { Color(hex: 0xFACD66) }
+    public static var playlistGrey:Color { Color(hex: 0x8B8C8D) }
 }

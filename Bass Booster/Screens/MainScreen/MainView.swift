@@ -15,7 +15,7 @@ struct CustomTabView: View {
             ZStack {
                 switch selectedIndex {
                 case MainScreenTabState.home.rawValue:
-                    OnboardingAssembly().build()
+                    HomeAssembly().build()
                 case MainScreenTabState.modes.rawValue:
                     ModesAssembly().build()
                 case MainScreenTabState.features.rawValue:
