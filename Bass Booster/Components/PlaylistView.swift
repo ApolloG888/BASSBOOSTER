@@ -35,14 +35,20 @@ struct PlaylistView: View {
                     .font(.sfProDisplay(type: .regular400, size: 14))
                     .foregroundColor(.gray)
             case .existing(let name):
-                Image(systemName: "music.note")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50, height: 50)
-                    .foregroundColor(.white)
+                ZStack {
+                    Circle()
+                        .stroke(Color.white.opacity(0.07), lineWidth: 2)
+                        .frame(width: 48, height: 48)
+                    Image(.musicNote)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(.playlistGrey)
+                }
+                .padding(.bottom, 8)
                 
                 Text(name)
-                    .font(.system(size: 18, weight: .regular))
+                    .font(.sfProDisplay(type: .regular400, size: 14))
                     .foregroundColor(.gray)
             }
         }
