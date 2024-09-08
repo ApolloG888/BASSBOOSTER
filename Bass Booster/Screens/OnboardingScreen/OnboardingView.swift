@@ -1,7 +1,11 @@
+//
+//  OnboardingView.swift
+//  Bass Booster
+//
+//  Created by Mac Book Air M1 on 01.09.2024.
+//
+
 import SwiftUI
-import ApphudSDK
-import AdSupport
-import AppTrackingTransparency
 
 struct OnboardingView: View {
     @State var state: OnboardingState = .initial

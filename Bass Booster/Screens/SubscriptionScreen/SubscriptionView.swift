@@ -9,19 +9,21 @@ import SwiftUI
 
 struct SubscriptionView: View {
     
-    @StateObject var viewModel: SubscriptionViewModel
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State var state: SubScreenState = .preset
+    @StateObject var viewModel: SubscriptionViewModel
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         VStack {
             headerView
             infoView
             state.image
+                .padding(.horizontal)
             PageIndicator(
                 currentPage: state.rawValue,
                 totalPages: 3
             )
+            .padding(.horizontal)
             Spacer()
             if !viewModel.products.isEmpty {
                 productView
@@ -29,7 +31,6 @@ struct SubscriptionView: View {
             Spacer()
             bottomView
         }
-        .padding(.horizontal)
         .hideNavigationBar()
         .appGradientBackground()
         .onAppear {
@@ -68,6 +69,7 @@ extension SubscriptionView {
             }
         }
         .padding(.vertical, Space.xs)
+        .padding(.horizontal)
     }
 }
 
@@ -84,6 +86,7 @@ extension SubscriptionView {
                 .foregroundColor(.white.opacity(0.7))
         }
         .multilineTextAlignment(.center)
+        .padding(.horizontal)
     }
 }
 
@@ -93,7 +96,7 @@ extension SubscriptionView {
     var productView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                ForEach(0..<viewModel.products.count, id: \.self) { index in
+                ForEach(.zero..<viewModel.products.count, id: \.self) { index in
                     if let product = viewModel.products[index].skProduct {
                         ProductView(
                             productDuration: product.getProductDuration(),
@@ -101,15 +104,18 @@ extension SubscriptionView {
                             fullPrice: "\(product.getProductPrice())/\(product.getProductDurationTypeAndUnit())",
                             selected: viewModel.selectedProductIndex == index
                         )
-                        .frame(width: 171, height: 98)
+                        .frame(
+                            width: Space.l * 9,
+                            height: Space.l * 5
+                        )
                         .padding(.vertical)
                         .onTapGesture {
-                            print("Tapped block")
                             viewModel.selectedProductIndex = index
                         }
                     }
                 }
             }
+            .padding(.horizontal)
         }
     }
 }
@@ -123,18 +129,13 @@ extension SubscriptionView {
             benefitsView
             PrimaryButton(
                 type: .confirmation,
-                title: state == .playlist ? "Start free trial" : "Next"
+                title: state == .playlist 
+                ? "Start free trial"
+                : "Next"
             ) {
-                state == .playlist ?
-                viewModel.purchase { succeeded in
-                    if succeeded {
-                        print("Красава")
-                        presentationMode.wrappedValue.dismiss()
-                    } else {
-                        print("Не получилось")
-                    }
-                } :
-                state.next()
+                state == .playlist 
+                ? purchase()
+                : state.next()
             }
             OptionsView {
                 viewModel.restorePurchases()
@@ -142,6 +143,7 @@ extension SubscriptionView {
                 viewModel.openMockURL()
             }
         }
+        .padding(.horizontal)
     }
 }
 
@@ -156,6 +158,19 @@ extension SubscriptionView {
             .padding(.bottom, Space.xs)
             .padding(.horizontal, Space.l)
             .cornerRadius(CornerRadius.s)
+    }
+}
+
+private extension SubscriptionView {
+    func purchase() {
+        viewModel.purchase { succeeded in
+            if succeeded {
+                print("Done☑️")
+                presentationMode.wrappedValue.dismiss()
+            } else {
+                print("Fail❌")
+            }
+        }
     }
 }
 
