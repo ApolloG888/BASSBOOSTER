@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F4BF3B82C8D238C00F313E2 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4BF3B72C8D238C00F313E2 /* PurchaseManager.swift */; };
 		5F54B3922C83B7760012E1C0 /* SF-Pro-Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B38F2C83B7760012E1C0 /* SF-Pro-Display-Medium.ttf */; };
 		5F54B3932C83B7760012E1C0 /* SF-Pro-Display-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B3902C83B7760012E1C0 /* SF-Pro-Display-Semibold.ttf */; };
 		5F54B3942C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B3912C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf */; };
@@ -22,6 +23,7 @@
 		5F54B3AC2C83C8D00012E1C0 /* Space.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F54B3AB2C83C8D00012E1C0 /* Space.swift */; };
 		5F54B3AE2C83CE110012E1C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F54B3AD2C83CE110012E1C0 /* AppDelegate.swift */; };
 		5F54B3B52C83D5260012E1C0 /* URLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F54B3B42C83D5260012E1C0 /* URLManager.swift */; };
+		5FADBEBE2C8D00E500ACBC98 /* ApphudSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 5FADBEBD2C8D00E500ACBC98 /* ApphudSDK */; };
 		5FD59D942C84EC9200D3508B /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD59D932C84EC9200D3508B /* MainView.swift */; };
 		5FD59D962C84EFB400D3508B /* CustomToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD59D952C84EFB400D3508B /* CustomToggle.swift */; };
 		5FDBE7E32C833C3300E623B5 /* BassBoosterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E22C833C3300E623B5 /* BassBoosterApp.swift */; };
@@ -50,7 +52,6 @@
 		6DA0B4572C838EEB0035751E /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4562C838EEB0035751E /* OptionsView.swift */; };
 		6DA0B45E2C839A5E0035751E /* PageIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B45D2C839A5E0035751E /* PageIndicator.swift */; };
 		6DA0B4602C839EBC0035751E /* OnboardingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B45F2C839EBC0035751E /* OnboardingState.swift */; };
-		6DA0B4682C83C9F80035751E /* ApphudSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 6DA0B4672C83C9F80035751E /* ApphudSDK */; };
 		6DA0B46A2C84585E0035751E /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4692C84585D0035751E /* OnboardingViewModel.swift */; };
 		6DA0B46C2C845BD00035751E /* OnboardingAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B46B2C845BD00035751E /* OnboardingAssembly.swift */; };
 		6DA0B46F2C845F560035751E /* SubscriptionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B46E2C845F560035751E /* SubscriptionViewModel.swift */; };
@@ -60,6 +61,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F4BF3B72C8D238C00F313E2 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		5F54B38F2C83B7760012E1C0 /* SF-Pro-Display-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Medium.ttf"; sourceTree = "<group>"; };
 		5F54B3902C83B7760012E1C0 /* SF-Pro-Display-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Semibold.ttf"; sourceTree = "<group>"; };
 		5F54B3912C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Regular.ttf"; sourceTree = "<group>"; };
@@ -118,13 +120,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6DA0B4682C83C9F80035751E /* ApphudSDK in Frameworks */,
+				5FADBEBE2C8D00E500ACBC98 /* ApphudSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5F4BF3B62C8D236000F313E2 /* PurchaseManager */ = {
+			isa = PBXGroup;
+			children = (
+				5F4BF3B72C8D238C00F313E2 /* PurchaseManager.swift */,
+			);
+			path = PurchaseManager;
+			sourceTree = "<group>";
+		};
 		5F54B38D2C83B7450012E1C0 /* SFProText */ = {
 			isa = PBXGroup;
 			children = (
@@ -168,6 +178,7 @@
 		5F54B3B22C83D50A0012E1C0 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				5F4BF3B62C8D236000F313E2 /* PurchaseManager */,
 				5F54B3B32C83D5120012E1C0 /* URLManager */,
 			);
 			path = Managers;
@@ -375,7 +386,7 @@
 			);
 			name = "Bass Booster";
 			packageProductDependencies = (
-				6DA0B4672C83C9F80035751E /* ApphudSDK */,
+				5FADBEBD2C8D00E500ACBC98 /* ApphudSDK */,
 			);
 			productName = "Bass Booster";
 			productReference = 5FDBE7DF2C833C3300E623B5 /* Bass Booster.app */;
@@ -406,7 +417,7 @@
 			);
 			mainGroup = 5FDBE7D62C833C3300E623B5;
 			packageReferences = (
-				6DA0B4662C83C9F80035751E /* XCRemoteSwiftPackageReference "ApphudSDK" */,
+				5FADBEBC2C8D00E500ACBC98 /* XCRemoteSwiftPackageReference "ApphudSDK" */,
 			);
 			productRefGroup = 5FDBE7E02C833C3300E623B5 /* Products */;
 			projectDirPath = "";
@@ -471,6 +482,7 @@
 				6D0E33522C8481720087493E /* ProductView.swift in Sources */,
 				6DA0B4732C845F750035751E /* SubscriptionAssembly.swift in Sources */,
 				6DA0B4752C84765A0035751E /* SubscriptionScreenState.swift in Sources */,
+				5F4BF3B82C8D238C00F313E2 /* PurchaseManager.swift in Sources */,
 				6D363B742C88A55C0053761C /* PlaylistView.swift in Sources */,
 				6D363B562C85C8C90053761C /* MainScreenTabState.swift in Sources */,
 				6D363B702C888D760053761C /* HomeAssembly.swift in Sources */,
@@ -698,20 +710,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		6DA0B4662C83C9F80035751E /* XCRemoteSwiftPackageReference "ApphudSDK" */ = {
+		5FADBEBC2C8D00E500ACBC98 /* XCRemoteSwiftPackageReference "ApphudSDK" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apphud/ApphudSDK";
+			repositoryURL = "git@github.com:apphud/ApphudSDK.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.4.0;
+				kind = exactVersion;
+				version = 3.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6DA0B4672C83C9F80035751E /* ApphudSDK */ = {
+		5FADBEBD2C8D00E500ACBC98 /* ApphudSDK */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6DA0B4662C83C9F80035751E /* XCRemoteSwiftPackageReference "ApphudSDK" */;
+			package = 5FADBEBC2C8D00E500ACBC98 /* XCRemoteSwiftPackageReference "ApphudSDK" */;
 			productName = ApphudSDK;
 		};
 /* End XCSwiftPackageProductDependency section */

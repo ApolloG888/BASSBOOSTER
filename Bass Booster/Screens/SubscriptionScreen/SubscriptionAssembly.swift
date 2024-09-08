@@ -12,8 +12,8 @@ struct SubscriptionAssembly {
     
     @MainActor
     func build() -> some View {
-        //let urlService = URLManager()
-        let viewModel = SubscriptionViewModel()
+        let purchaseService = PurchaseManager.instance
+        let viewModel = SubscriptionViewModel(purchaseService: purchaseService)
         return SubscriptionView(viewModel: viewModel)
     }
 }

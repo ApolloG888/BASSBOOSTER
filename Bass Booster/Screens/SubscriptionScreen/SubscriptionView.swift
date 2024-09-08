@@ -30,6 +30,10 @@ struct SubscriptionView: View {
         .padding(.horizontal)
         .hideNavigationBar()
         .appGradientBackground()
+        .onAppear {
+            print("onAppear called")
+            viewModel.fetchProducts()
+        }
     }
 }
 
@@ -110,5 +114,5 @@ extension SubscriptionView {
 }
 
 #Preview {
-    SubscriptionView(viewModel: SubscriptionViewModel())
+    SubscriptionView(viewModel: SubscriptionViewModel(purchaseService: PurchaseManager.instance))
 }

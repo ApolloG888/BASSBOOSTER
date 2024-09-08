@@ -21,24 +21,6 @@ struct OnboardingView: View {
                 SubscriptionAssembly().build()
             }
             .appGradientBackground()
-//            .onAppear {
-//                requestTrackingAuthorization()
-//            }
-        }
-    }
-    
-    // MARK: - IDFA Request Function
-    private func requestTrackingAuthorization() {
-        ATTrackingManager.requestTrackingAuthorization { status in
-            switch status {
-            case .authorized:
-                let idfa = ASIdentifierManager.shared().advertisingIdentifier.uuidString
-                print("IDFA: \(idfa)")
-            case .denied, .restricted, .notDetermined:
-                print("Tracking authorization denied or not determined")
-            @unknown default:
-                print("Unknown tracking authorization status")
-            }
         }
     }
 }
