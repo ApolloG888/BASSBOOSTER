@@ -13,10 +13,15 @@ import AdSupport
 @main
 struct BassBoosterApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-
+    @AppStorage("isFirstLaunch") var isFirstLaunch: Bool = true
+    
     var body: some Scene {
         WindowGroup {
-            SubscriptionAssembly().build()
+            if isFirstLaunch {
+                OnboardingAssembly().build()
+            } else {
+                MainTabAssembly().build()
+            }
         }
     }
 }

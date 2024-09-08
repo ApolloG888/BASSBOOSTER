@@ -5,10 +5,15 @@
 //  Created by Дмитрий Процак on 08.09.2024.
 //
 
-import Foundation
+import SwiftUI
 
 final class SettingsViewModel: ObservableObject {
     
+    @Published var allSettings = Settings.allCases
+    @AppStorage("shouldShowPromotion") var shouldShowPromotion = true
+}
+
+extension SettingsViewModel {
     enum Settings: CaseIterable {
         case subscription
         case shareApp
@@ -46,6 +51,4 @@ final class SettingsViewModel: ObservableObject {
             }
         }
     }
-    
-    @Published var allSettings = Settings.allCases
 }

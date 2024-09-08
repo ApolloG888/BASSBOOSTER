@@ -12,13 +12,19 @@ struct SettingsView: View {
     @StateObject var viewModel: SettingsViewModel
     
     var body: some View {
-        VStack {
-            header
-            settingsList
-            Spacer()
+        NavigationStack {
+            VStack {
+                header
+                if viewModel.shouldShowPromotion {
+                    premiumRow
+                }
+                settingsList
+                Spacer()
+            }
+            .hideNavigationBar()
+            .padding(.vertical)
+            .appGradientBackground()
         }
-        .padding(.vertical)
-        .appGradientBackground()
     }
 }
 
@@ -37,12 +43,28 @@ extension SettingsView {
     }
 }
 
+// MARK: - Premium Row
+
+extension SettingsView {
+    var premiumRow: some View {
+        NavigationLink {
+            SubscriptionAssembly().build()
+        } label: {
+            Image(.premiumRow)
+                .resizable()
+                .scaledToFill()
+                .frame(height: 138)
+                .padding(.horizontal)
+        }
+    }
+}
+
 // MARK: - Settings List
 
 extension SettingsView {
     var settingsList: some View {
         List(viewModel.allSettings, id: \.self) { setting in
-            VStack {
+            VStack(spacing: 16) {
                 HStack {
                     Image(setting.image)
                         .resizable()
@@ -57,7 +79,10 @@ extension SettingsView {
                         .scaledToFit()
                         .frame(size: Size.xl)
                 }
+                Divider()
+                    .background(Color.settingCellBG)
             }
+            .padding(.vertical, 5)
             .listRowBackground(Color.white.opacity(0.07))
         }
         .scrollContentBackground(.hidden)

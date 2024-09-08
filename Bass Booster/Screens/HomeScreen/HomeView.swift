@@ -26,6 +26,7 @@ struct HomeView: View {
             PlaylistView(state: .createNew)
             Spacer()
         }
+        .hideNavigationBar()
         .padding()
         .appGradientBackground()
     }

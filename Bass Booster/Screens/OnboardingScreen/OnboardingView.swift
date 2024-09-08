@@ -102,7 +102,9 @@ extension OnboardingView {
                 type: .confirmation,
                 title: state.buttonTitle
             ) {
-                state == .potential ? isHomeLinkActive = true : state.next()
+                state == .potential 
+                ? routeToMainScreen()
+                : state.next()
             }
             OptionsView {
                 viewModel.restore()
@@ -110,6 +112,13 @@ extension OnboardingView {
                 viewModel.openMockURL()
             }
         }
+    }
+}
+
+private extension OnboardingView {
+    func routeToMainScreen() {
+        isHomeLinkActive = true
+        viewModel.isFirstLaunch = false
     }
 }
 

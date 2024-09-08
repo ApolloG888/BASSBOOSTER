@@ -9,6 +9,10 @@ import SwiftUI
 
 final class ModesViewModel: ObservableObject {
     
+    @AppStorage("selectedMode") var selectedMode: Modes = .normal
+}
+
+extension ModesViewModel {
     enum Modes: String, CaseIterable {
         case normal = "Normal"
         case club = "Club"
@@ -17,6 +21,4 @@ final class ModesViewModel: ObservableObject {
         case movie = "Movie"
         case car = "Car"
     }
-    
-    @AppStorage("selectedMode") var selectedMode: Modes = .normal
 }

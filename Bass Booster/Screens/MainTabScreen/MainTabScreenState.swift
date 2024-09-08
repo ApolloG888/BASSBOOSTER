@@ -55,8 +55,7 @@ enum MainTabScreenState: Int, CaseIterable {
         case .features:
             FeaturesAssembly().build()
         case .settings:
-            //TODO: Change in the future
-            FeaturesAssembly().build()
+            SettingsAssembly().build()
         }
     }
 }

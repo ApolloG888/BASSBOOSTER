@@ -17,6 +17,7 @@ struct FeaturesView: View {
             toggles
             Spacer()
         }
+        .hideNavigationBar()
         .padding()
         .appGradientBackground()
     }

@@ -5,7 +5,7 @@
 //  Created by Mac Book Air M1 on 01.09.2024.
 //
 
-import Foundation
+import SwiftUI
 
 final class OnboardingViewModel: ObservableObject {
     private let urlManager: URLManagerProtocol
@@ -15,6 +15,7 @@ final class OnboardingViewModel: ObservableObject {
     @Published var isRestoreAlertPresented = false
     @Published var restoreTitle = ""
     @Published var restoreMessage: String?
+    @AppStorage("isFirstLaunch") var isFirstLaunch: Bool = true
     
     init(urlManager: URLManagerProtocol, purchaseManager: PurchaseManager) {
         self.urlManager = urlManager
