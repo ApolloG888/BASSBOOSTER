@@ -10,6 +10,7 @@ struct MainTabView: View {
             Spacer()
             tabBarPanel
         }
+        .hideNavigationBar()
         .background(Color.customBlack)
     }
 }
@@ -34,14 +35,14 @@ extension MainTabView {
             HStack {
                 tabBarButtonGroup(
                     from: MainTabScreenState.allCases.prefix(2),
-                    spacing: 36,
-                    padding: .leading(36)
+                    spacing: Space.xl3,
+                    padding: .leading(Space.xl3)
                 )
                 Spacer()
                 tabBarButtonGroup(
                     from: MainTabScreenState.allCases.suffix(2),
-                    spacing: 24,
-                    padding: .trailing(24)
+                    spacing: Space.xl,
+                    padding: .trailing(Space.xl)
                 )
             }
             
@@ -54,12 +55,16 @@ extension MainTabView {
                         .frame(width: 56, height: 56)
                         .overlay(
                             Circle()
-                                .stroke(plusButtonBorderGradient(), lineWidth: 0.66))
+                                .stroke(
+                                    plusButtonBorderGradient(),
+                                    lineWidth: 0.66
+                                )
+                        )
                     Image(systemName: "plus")
                         .resizable()
                         .renderingMode(.template)
                         .foregroundColor(.white)
-                        .frame(width: 21, height: 21)
+                        .frame(size: Size.l)
                 }
             }
         }
