@@ -20,6 +20,11 @@ struct OnboardingView: View {
                 MainTabAssembly().build()
             }
             .appGradientBackground()
+            .alert(viewModel.restoreTitle, isPresented: $viewModel.isRestoreAlertPresented) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(viewModel.restoreMessage ?? .empty)
+            }
         }
     }
 }
@@ -96,7 +101,7 @@ extension OnboardingView {
                 state == .potential ? isHomeLinkActive = true : state.next()
             }
             OptionsView {
-                print("restoreAction")
+                viewModel.restore()
             } browserAction: {
                 viewModel.openMockURL()
             }
