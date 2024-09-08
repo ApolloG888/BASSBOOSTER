@@ -9,7 +9,7 @@ import SwiftUI
 import ApphudSDK
 
 final class SubscriptionViewModel: ObservableObject {
-    
+
     @Published var products: [ApphudProduct] = []
     @Published var selectedProductIndex = 0
     @Published var isLoading = false
@@ -41,7 +41,7 @@ final class SubscriptionViewModel: ObservableObject {
         }
     }
     
-    @MainActor 
+    @MainActor
     func purchase(completion: @escaping (Bool) -> ()) {
         if !products.isEmpty {
             isLoading = true
@@ -55,10 +55,27 @@ final class SubscriptionViewModel: ObservableObject {
                 completion(succeeded)
             }
         } else {
-            print("Subscription have not loaded.")
+            print("Subscription not loaded.")
         }
     }
     
+    // Add restore purchases method
+    @MainActor
+    func restorePurchases() {
+        isLoading = true
+        purchaseService.restorePurchases { [weak self] success in
+            self?.isLoading = false
+            if success {
+                self?.restoreTitle = "Restore Successful"
+                self?.restoreMessage = "Your purchases have been successfully restored."
+            } else {
+                self?.restoreTitle = "Restore Failed"
+                self?.restoreMessage = "There was an issue restoring your purchases."
+            }
+            self?.isRestoreAlertPresented = true
+        }
+    }
+
     func openMockURL() {
         urlManager.open(urlString: "https://www.google.com")
     }

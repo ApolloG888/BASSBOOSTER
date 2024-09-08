@@ -44,6 +44,11 @@ struct SubscriptionView: View {
                     .scaleEffect(2)
             }
         }
+        .alert(viewModel.restoreTitle, isPresented: $viewModel.isRestoreAlertPresented) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(viewModel.restoreMessage ?? .empty)
+        }
     }
 }
 
@@ -132,7 +137,7 @@ extension SubscriptionView {
                 state.next()
             }
             OptionsView {
-                print("restoreAction")
+                viewModel.restorePurchases()
             } browserAction: {
                 viewModel.openMockURL()
             }

@@ -200,14 +200,14 @@
 			path = URLManager;
 			sourceTree = "<group>";
 		};
-		5FD59D922C84EC7700D3508B /* MainScreen */ = {
+		5FD59D922C84EC7700D3508B /* MainTabScreen */ = {
 			isa = PBXGroup;
 			children = (
 				5FD59D932C84EC9200D3508B /* MainTabView.swift */,
 				6D363B552C85C8C90053761C /* MainTabScreenState.swift */,
 				5FD00C5F2C8D35FE008F2B4B /* MainTabAssembly.swift */,
 			);
-			path = MainScreen;
+			path = MainTabScreen;
 			sourceTree = "<group>";
 		};
 		5FDBE7D62C833C3300E623B5 = {
@@ -266,7 +266,7 @@
 				6D363B6A2C888D240053761C /* Home Screen */,
 				6D363B5F2C85F9E80053761C /* FeaturesScreen */,
 				6D363B5A2C85F26E0053761C /* ModesScreen */,
-				5FD59D922C84EC7700D3508B /* MainScreen */,
+				5FD59D922C84EC7700D3508B /* MainTabScreen */,
 				6DA0B46D2C845F3B0035751E /* SubscriptionScreen */,
 				5FDBE7F72C83459F00E623B5 /* OnboardingScreen */,
 			);
@@ -732,8 +732,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:apphud/ApphudSDK.git";
 			requirement = {
-				kind = exactVersion;
-				version = 3.4.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
