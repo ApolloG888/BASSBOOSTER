@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     @State private var state: MainTabScreenState = .settings
     @StateObject var viewModel: SettingsViewModel
+    @State private var isSubscriptionLinkActive = false
     
     var body: some View {
         NavigationStack {
@@ -24,6 +25,9 @@ struct SettingsView: View {
             .hideNavigationBar()
             .padding(.vertical)
             .appGradientBackground()
+            .navigationDestination(isPresented: $isSubscriptionLinkActive) {
+                SubscriptionAssembly().build()
+            }
         }
     }
 }
@@ -82,32 +86,21 @@ extension SettingsView {
                 Divider()
                     .background(Color.settingCellBG)
             }
+            .padding(.vertical, 5)
+            .listRowBackground(Color.white.opacity(0.07))
             .onTapGesture {
                 handleTap(for: setting)
             }
-            .padding(.vertical, 5)
-            .listRowBackground(Color.white.opacity(0.07))
         }
         .scrollContentBackground(.hidden)
     }
-}
 
-private extension SettingsView {
     func handleTap(for setting: SettingsViewModel.Settings) {
         switch setting {
         case .subscription:
-            navigateToSubscription()
+            isSubscriptionLinkActive = true
         default:
             viewModel.openMockURL()
-        }
-    }
-    
-    func navigateToSubscription() {
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            windowScene.windows.first?.rootViewController?.present(
-                UIHostingController(rootView: SubscriptionAssembly().build()),
-                animated: true
-            )
         }
     }
 }
