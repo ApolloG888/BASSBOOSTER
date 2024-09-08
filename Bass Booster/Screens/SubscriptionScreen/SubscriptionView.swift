@@ -116,9 +116,18 @@ extension SubscriptionView {
     var bottomView: some View {
         VStack(spacing: Space.xs) {
             benefitsView
-            PrimaryButton(type: .confirmation, title: "Next") {
+            PrimaryButton(
+                type: .confirmation,
+                title: state == .playlist ? "Start free trial" : "Next"
+            ) {
                 state == .playlist ?
-                presentationMode.wrappedValue.dismiss() :
+                viewModel.purchase { succeeded in
+                    if succeeded {
+                        print("Красава")
+                    } else {
+                        print("Не получилось")
+                    }
+                } :
                 state.next()
             }
             OptionsView()

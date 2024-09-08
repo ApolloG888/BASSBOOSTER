@@ -27,17 +27,18 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     
     private func requestTrackingPermission() {
         if #available(iOS 14, *) {
-            ATTrackingManager.requestTrackingAuthorization { status in
-                switch status {
-                case .authorized:
-                    print("Tracking authorized.")
-                    // Tracking is authorized, proceed to use tracking-related frameworks (like AdSupport)
-                    let idfa = ASIdentifierManager.shared().advertisingIdentifier
-                    print("IDFA: \(idfa)")
-                case .denied, .restricted, .notDetermined:
-                    print("Tracking not authorized.")
-                @unknown default:
-                    break
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                ATTrackingManager.requestTrackingAuthorization { status in
+                    switch status {
+                    case .authorized:
+                        print("Tracking authorized.")
+                        let idfa = ASIdentifierManager.shared().advertisingIdentifier
+                        print("IDFA: \(idfa)")
+                    case .denied, .restricted, .notDetermined:
+                        print("Tracking not authorized.")
+                    @unknown default:
+                        break
+                    }
                 }
             }
         }
