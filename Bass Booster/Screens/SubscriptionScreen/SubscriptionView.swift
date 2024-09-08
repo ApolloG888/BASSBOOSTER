@@ -23,7 +23,9 @@ struct SubscriptionView: View {
                 totalPages: 3
             )
             Spacer()
-            productView
+            if !viewModel.products.isEmpty {
+                productView
+            }
             Spacer()
             bottomView
         }
@@ -33,6 +35,14 @@ struct SubscriptionView: View {
         .onAppear {
             print("onAppear called")
             viewModel.fetchProducts()
+        }
+        .overlay {
+            if viewModel.isLoading {
+                Color.black.opacity(0.4).ignoresSafeArea()
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white.opacity(0.6)))
+                    .scaleEffect(2)
+            }
         }
     }
 }
@@ -76,12 +86,29 @@ extension SubscriptionView {
 
 extension SubscriptionView {
     var productView: some View {
-        HStack {
-            ProductView(productType: .yearly, selected: true)
-            ProductView(productType: .monthly)
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
+                ForEach(0..<viewModel.products.count, id: \.self) { index in
+                    if let product = viewModel.products[index].skProduct {
+                        ProductView(
+                            productDuration: product.getProductDuration(),
+                            weekPrice: "\(product.getProductWeeklyPrice())/week",
+                            fullPrice: "\(product.getProductPrice())/\(product.getProductDurationTypeAndUnit())",
+                            selected: viewModel.selectedProductIndex == index
+                        )
+                        .frame(width: 171, height: 98)
+                        .padding(.vertical)
+                        .onTapGesture {
+                            print("Tapped block")
+                            viewModel.selectedProductIndex = index
+                        }
+                    }
+                }
+            }
         }
     }
 }
+
 
 // MARK: - Bottom View
 

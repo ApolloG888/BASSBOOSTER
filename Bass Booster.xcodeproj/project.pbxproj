@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5F4BF3B82C8D238C00F313E2 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4BF3B72C8D238C00F313E2 /* PurchaseManager.swift */; };
+		5F4BF3BA2C8D26E300F313E2 /* SKProduct+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4BF3B92C8D26E300F313E2 /* SKProduct+Extensions.swift */; };
 		5F54B3922C83B7760012E1C0 /* SF-Pro-Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B38F2C83B7760012E1C0 /* SF-Pro-Display-Medium.ttf */; };
 		5F54B3932C83B7760012E1C0 /* SF-Pro-Display-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B3902C83B7760012E1C0 /* SF-Pro-Display-Semibold.ttf */; };
 		5F54B3942C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54B3912C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf */; };
@@ -62,6 +63,7 @@
 
 /* Begin PBXFileReference section */
 		5F4BF3B72C8D238C00F313E2 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		5F4BF3B92C8D26E300F313E2 /* SKProduct+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKProduct+Extensions.swift"; sourceTree = "<group>"; };
 		5F54B38F2C83B7760012E1C0 /* SF-Pro-Display-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Medium.ttf"; sourceTree = "<group>"; };
 		5F54B3902C83B7760012E1C0 /* SF-Pro-Display-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Semibold.ttf"; sourceTree = "<group>"; };
 		5F54B3912C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Regular.ttf"; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 				5FDBE7FE2C83480500E623B5 /* View+Extension.swift */,
 				6DA0B4542C838D990035751E /* String+Extension.swift */,
 				5F54B3A92C83C83F0012E1C0 /* CGSize+Extension.swift */,
+				5F4BF3B92C8D26E300F313E2 /* SKProduct+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -469,6 +472,7 @@
 				5FDBE7FC2C83478200E623B5 /* AppColors.swift in Sources */,
 				5F54B3B52C83D5260012E1C0 /* URLManager.swift in Sources */,
 				5F54B3AC2C83C8D00012E1C0 /* Space.swift in Sources */,
+				5F4BF3BA2C8D26E300F313E2 /* SKProduct+Extensions.swift in Sources */,
 				6D363B592C85F26A0053761C /* ModesView.swift in Sources */,
 				6D363B652C85FA220053761C /* FeaturesAssembly.swift in Sources */,
 				6DA0B4532C835A5C0035751E /* PrimaryButton.swift in Sources */,
