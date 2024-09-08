@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct FeaturesView: View {
     @State private var state: MainTabScreenState = .features
     @StateObject var viewModel: FeaturesViewModel
