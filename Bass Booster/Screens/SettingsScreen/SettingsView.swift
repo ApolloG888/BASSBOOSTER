@@ -82,6 +82,9 @@ extension SettingsView {
                 Divider()
                     .background(Color.settingCellBG)
             }
+            .onTapGesture {
+                handleTap(for: setting)
+            }
             .padding(.vertical, 5)
             .listRowBackground(Color.white.opacity(0.07))
         }
@@ -89,6 +92,26 @@ extension SettingsView {
     }
 }
 
+private extension SettingsView {
+    func handleTap(for setting: SettingsViewModel.Settings) {
+        switch setting {
+        case .subscription:
+            navigateToSubscription()
+        default:
+            viewModel.openMockURL()
+        }
+    }
+    
+    func navigateToSubscription() {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            windowScene.windows.first?.rootViewController?.present(
+                UIHostingController(rootView: SubscriptionAssembly().build()),
+                animated: true
+            )
+        }
+    }
+}
+
 #Preview {
-    SettingsView(viewModel: SettingsViewModel())
+    SettingsView(viewModel: SettingsViewModel(urlManager: URLManager()))
 }

@@ -11,6 +11,16 @@ final class SettingsViewModel: ObservableObject {
     
     @Published var allSettings = Settings.allCases
     @AppStorage("shouldShowPromotion") var shouldShowPromotion = true
+    
+    private let urlManager: URLManagerProtocol
+    
+    init(urlManager: URLManagerProtocol) {
+        self.urlManager = urlManager
+    }
+    
+    func openMockURL() {
+        urlManager.open(urlString: "https://www.google.com")
+    }
 }
 
 extension SettingsViewModel {

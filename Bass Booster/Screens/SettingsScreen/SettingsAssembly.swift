@@ -11,7 +11,8 @@ struct SettingsAssembly {
     
     @MainActor
     func build() -> some View {
-        let viewModel = SettingsViewModel()
+        let urlManager = URLManager()
+        let viewModel = SettingsViewModel(urlManager: urlManager)
         return SettingsView(viewModel: viewModel)
     }
 }
