@@ -7,18 +7,27 @@
 
 import SwiftUI
 
-enum Features: String {
-    case quietSounds = "Amplifying quiet sounds"
-    case noiseSuppression = "Noise suppression"
-}
+import SwiftUI
 
 struct FeaturesView: View {
     @State private var state: MainTabScreenState = .features
     @StateObject var viewModel: FeaturesViewModel
-    @State var isQuietSoundSelected: Bool = false
-    @State var isSuppressionSelected: Bool = false
     
     var body: some View {
+        VStack {
+            header
+            toggles
+            Spacer()
+        }
+        .padding()
+        .appGradientBackground()
+    }
+}
+
+// MARK: - Header
+
+extension FeaturesView {
+    var header: some View {
         VStack {
             HStack {
                 Text(state.name)
@@ -26,7 +35,7 @@ struct FeaturesView: View {
                     .foregroundColor(.white)
                 Spacer()
             }
-            .padding(.bottom, 8)
+            .padding(.bottom, Space.xs)
             
             HStack {
                 Text(state.possibilities)
@@ -34,25 +43,27 @@ struct FeaturesView: View {
                     .foregroundColor(.white.opacity(0.5))
                 Spacer()
             }
-            .padding(.bottom, 24)
-            
-            VStack {
-                Toggle(isOn: $isQuietSoundSelected, label: {
-                    Text(Features.quietSounds.rawValue)
-                        .font(.sfProText(type: .medium500, size: 15))
-                })
-               
-                Toggle(isOn: $isSuppressionSelected, label: {
-                    Text(Features.noiseSuppression.rawValue)
-                        .font(.sfProText(type: .medium500, size: 15))
-                })
-            }
-            .toggleStyle(CustomToggleStyle(gradient: selectionButtonGradient()))
-           
-            Spacer()
+            .padding(.bottom, Space.xl)
         }
-        .padding()
-        .appGradientBackground()
+    }
+}
+
+// MARK: - Toggles
+
+extension FeaturesView {
+    var toggles: some View {
+        VStack {
+            Toggle(isOn: $viewModel.isQuietSoundSelected, label: {
+                Text(FeaturesViewModel.Features.quietSounds.rawValue)
+                    .font(.sfProText(type: .medium500, size: 15))
+            })
+           
+            Toggle(isOn: $viewModel.isSuppressionSelected, label: {
+                Text(FeaturesViewModel.Features.noiseSuppression.rawValue)
+                    .font(.sfProText(type: .medium500, size: 15))
+            })
+        }
+        .toggleStyle(CustomToggleStyle(gradient: selectionButtonGradient()))
     }
 }
 

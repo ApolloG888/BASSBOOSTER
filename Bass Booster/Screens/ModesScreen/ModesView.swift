@@ -7,21 +7,28 @@
 
 import SwiftUI
 
-enum Modes: String, CaseIterable {
-    case normal = "Normal"
-    case club = "Club"
-    case inside = "Inside"
-    case street = "Street"
-    case movie = "Movie"
-    case car = "Car"
-}
-
 struct ModesView: View {
+    
     @State private var state: MainTabScreenState = .modes
-    @State private var mode: Modes = .normal
     @StateObject var viewModel: ModesViewModel
     
     var body: some View {
+        VStack {
+            header
+            Spacer()
+            modes
+            Spacer()
+        }
+        .padding()
+        .appGradientBackground()
+        .hideNavigationBar()
+    }
+}
+
+// MARK: - Header
+
+extension ModesView {
+    var header: some View {
         VStack {
             HStack {
                 Text(state.name)
@@ -29,7 +36,7 @@ struct ModesView: View {
                     .foregroundColor(.white)
                 Spacer()
             }
-            .padding(.bottom, 8)
+            .padding(.bottom, Space.xs)
             
             HStack {
                 Text(state.possibilities)
@@ -37,25 +44,26 @@ struct ModesView: View {
                     .foregroundColor(.white.opacity(0.5))
                 Spacer()
             }
-            .padding(.bottom, 32)
-            
-            Spacer()
-            
-            ForEach(Modes.allCases, id: \.self) { mode in
-                PrimaryButton(
-                    type: .modeSelection,
-                    title: mode.rawValue,
-                    action: {
-                        self.mode = mode
-                    },
-                    modeSelected: self.mode == mode
-                )
-                .padding(.bottom, 8)
-            }
-            Spacer()
+            .padding(.bottom, Space.xs)
         }
-        .padding()
-        .appGradientBackground()
+    }
+}
+
+// MARK: - Modes
+
+extension ModesView {
+    var modes: some View {
+        ForEach(ModesViewModel.Modes.allCases, id: \.self) { mode in
+            PrimaryButton(
+                type: .modeSelection,
+                title: mode.rawValue,
+                action: {
+                    viewModel.selectedMode = mode
+                },
+                modeSelected: viewModel.selectedMode == mode
+            )
+            .padding(.bottom, Space.xs)
+        }
     }
 }
 

@@ -52,7 +52,10 @@ extension MainTabView {
                 ZStack {
                     Circle()
                         .fill(plusButtonGradient())
-                        .frame(width: 56, height: 56)
+                        .frame(
+                            width: 56,
+                            height: 56
+                        )
                         .overlay(
                             Circle()
                                 .stroke(

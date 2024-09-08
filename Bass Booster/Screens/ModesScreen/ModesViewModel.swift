@@ -5,8 +5,18 @@
 //  Created by Mac Book Air M1 on 02.09.2024.
 //
 
-import Foundation
+import SwiftUI
 
 final class ModesViewModel: ObservableObject {
     
+    enum Modes: String, CaseIterable {
+        case normal = "Normal"
+        case club = "Club"
+        case inside = "Inside"
+        case street = "Street"
+        case movie = "Movie"
+        case car = "Car"
+    }
+    
+    @AppStorage("selectedMode") var selectedMode: Modes = .normal
 }
