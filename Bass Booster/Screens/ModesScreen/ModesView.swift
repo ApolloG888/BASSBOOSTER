@@ -17,7 +17,7 @@ enum Modes: String, CaseIterable {
 }
 
 struct ModesView: View {
-    @State private var state: MainScreenTabState = .modes
+    @State private var state: MainTabScreenState = .modes
     @State private var mode: Modes = .normal
     @StateObject var viewModel: ModesViewModel
     

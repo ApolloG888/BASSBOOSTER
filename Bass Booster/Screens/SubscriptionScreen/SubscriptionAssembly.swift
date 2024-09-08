@@ -13,7 +13,8 @@ struct SubscriptionAssembly {
     @MainActor
     func build() -> some View {
         let purchaseService = PurchaseManager.instance
-        let viewModel = SubscriptionViewModel(purchaseService: purchaseService)
+        let urlManager = URLManager()
+        let viewModel = SubscriptionViewModel(purchaseService: purchaseService, urlManager: urlManager)
         return SubscriptionView(viewModel: viewModel)
     }
 }

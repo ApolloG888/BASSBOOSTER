@@ -17,8 +17,7 @@ struct OnboardingView: View {
                 }
             }
             .navigationDestination(isPresented: $isHomeLinkActive) {
-//                HomeView(viewModel: HomeViewModel())
-                SubscriptionAssembly().build()
+                MainTabAssembly().build()
             }
             .appGradientBackground()
         }
@@ -96,9 +95,11 @@ extension OnboardingView {
             ) {
                 state == .potential ? isHomeLinkActive = true : state.next()
             }
-            OptionsView(browserAction: {
+            OptionsView {
+                print("restoreAction")
+            } browserAction: {
                 viewModel.openMockURL()
-            })
+            }
         }
     }
 }

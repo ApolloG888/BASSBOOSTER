@@ -131,9 +131,11 @@ extension SubscriptionView {
                 } :
                 state.next()
             }
-            OptionsView(browserAction: {
+            OptionsView {
+                print("restoreAction")
+            } browserAction: {
                 viewModel.openMockURL()
-            })
+            }
         }
     }
 }
@@ -153,5 +155,5 @@ extension SubscriptionView {
 }
 
 #Preview {
-    SubscriptionView(viewModel: SubscriptionViewModel(purchaseService: PurchaseManager.instance))
+    SubscriptionView(viewModel: SubscriptionViewModel(purchaseService: PurchaseManager.instance, urlManager: URLManager()))
 }

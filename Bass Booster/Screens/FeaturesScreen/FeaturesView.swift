@@ -13,7 +13,7 @@ enum Features: String {
 }
 
 struct FeaturesView: View {
-    @State private var state: MainScreenTabState = .features
+    @State private var state: MainTabScreenState = .features
     @StateObject var viewModel: FeaturesViewModel
     @State var isQuietSoundSelected: Bool = false
     @State var isSuppressionSelected: Bool = false

@@ -1,17 +1,14 @@
 //
-//  MainScreenTabState.swift
+//  MainTabScreenTabState.swift
 //  Bass Booster
 //
 //  Created by Mac Book Air M1 on 02.09.2024.
 //
 
-import Foundation
+import SwiftUI
 
-enum MainScreenTabState: Int, CaseIterable {
-    case home = 0
-    case modes
-    case features
-    case settings
+enum MainTabScreenState: Int, CaseIterable {
+    case home, modes, features, settings
     
     var icon: String {
         switch self {
@@ -44,6 +41,22 @@ enum MainScreenTabState: Int, CaseIterable {
         case .modes, .features:
             "Customize the sound yourself"
         default: .empty
+        }
+    }
+    
+    @MainActor
+    @ViewBuilder
+    var viewBuilder: some View {
+        switch self {
+        case .home:
+            HomeAssembly().build()
+        case .modes:
+            ModesAssembly().build()
+        case .features:
+            FeaturesAssembly().build()
+        case .settings:
+            //TODO: Change in the future
+            FeaturesAssembly().build()
         }
     }
 }
