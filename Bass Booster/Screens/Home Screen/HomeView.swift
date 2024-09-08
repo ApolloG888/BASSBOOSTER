@@ -21,7 +21,7 @@ struct HomeView: View {
             .padding(.bottom, 8)
             
             SearchBarView {
-                1+1
+                
             }
             PlaylistView(state: .createNew)
             Spacer()

@@ -124,13 +124,16 @@ extension SubscriptionView {
                 viewModel.purchase { succeeded in
                     if succeeded {
                         print("Красава")
+                        presentationMode.wrappedValue.dismiss()
                     } else {
                         print("Не получилось")
                     }
                 } :
                 state.next()
             }
-            OptionsView()
+            OptionsView(browserAction: {
+                viewModel.openMockURL()
+            })
         }
     }
 }

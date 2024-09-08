@@ -104,5 +104,5 @@ extension OnboardingView {
 }
 
 #Preview {
-    OnboardingView(state: .initial, viewModel: OnboardingViewModel(urlManager: URLManager()))
+    OnboardingView(state: .initial, viewModel: OnboardingViewModel(urlManager: URLManager(), purchaseManager: PurchaseManager.instance))
 }

@@ -17,10 +17,12 @@ final class SubscriptionViewModel: ObservableObject {
     @Published var restoreTitle = ""
     @Published var restoreMessage: String?
     
-    let purchaseService: PurchaseManager
+    private let purchaseService: PurchaseManager
+    private let urlManager: URLManagerProtocol
     
-    init(purchaseService: PurchaseManager) {
+    init(purchaseService: PurchaseManager, urlManager: URLManagerProtocol) {
         self.purchaseService = purchaseService
+        self.urlManager = urlManager
     }
     
     @MainActor
@@ -55,5 +57,9 @@ final class SubscriptionViewModel: ObservableObject {
         } else {
             print("Subscription have not loaded.")
         }
+    }
+    
+    func openMockURL() {
+        urlManager.open(urlString: "https://www.google.com")
     }
 }

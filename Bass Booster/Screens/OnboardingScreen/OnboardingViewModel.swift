@@ -9,13 +9,19 @@ import Foundation
 
 final class OnboardingViewModel: ObservableObject {
     private let urlManager: URLManagerProtocol
+    private let purchaseManager: PurchaseManager
     
-    init(urlManager: URLManagerProtocol) {
+    init(urlManager: URLManagerProtocol, purchaseManager: PurchaseManager) {
         self.urlManager = urlManager
+        self.purchaseManager = purchaseManager
     }
     
     func openMockURL() {
         urlManager.open(urlString: "https://www.google.com")
     }
     
+    @MainActor 
+    func restore() {
+        
+    }
 }
