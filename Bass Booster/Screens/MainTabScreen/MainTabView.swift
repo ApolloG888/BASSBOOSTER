@@ -3,12 +3,22 @@ import SwiftUI
 struct MainTabView: View {
     
     @State private var selectedIndex = 0
+    @State private var expandSheet = false
+    @Namespace private var animation
     
     var body: some View {
         VStack {
             screens
             Spacer()
+            CustomBottomSheet()
             tabBarPanel
+        }
+        .overlay {
+            if expandSheet {
+                // Here we add music player expended sheet
+                
+                MusicView(expandSheet: $expandSheet, animation: animation)
+            }
         }
         .hideNavigationBar()
         .background(Color.customBlack)
@@ -24,6 +34,29 @@ extension MainTabView {
             return AnyView(EmptyView())
         }
         return AnyView(screenState.viewBuilder)
+    }
+}
+
+// Now we start design of CustomBottomSheet
+extension MainTabView {
+    @ViewBuilder
+    func CustomBottomSheet() -> some View {
+        ZStack {
+            if expandSheet {
+                Rectangle()
+                    .fill(.clear)
+            } else {
+                Rectangle()
+                    .fill(.ultraThickMaterial)
+                    .overlay {
+                        // Music Info
+                         MusicInfo(expandSheet: $expandSheet, animation: animation)
+                    }
+                    .clipShape(.rect(topLeadingRadius: 30, topTrailingRadius: 30))
+                    .matchedGeometryEffect(id: "BACKGROUNDVIEW", in: animation)
+            }
+        }
+        .frame(height: 80)
     }
 }
 
