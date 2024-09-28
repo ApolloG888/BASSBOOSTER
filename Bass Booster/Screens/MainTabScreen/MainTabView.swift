@@ -15,7 +15,6 @@ struct MainTabView: View {
         }
         .overlay {
             if expandSheet {
-                // Ваш код для расширенного представления музыкального плеера
                 MusicView(expandSheet: $expandSheet, animation: animation)
             }
         }
@@ -43,16 +42,14 @@ struct MainTabView: View {
                     .fill(Color.clear)
             } else {
                 Rectangle()
-                    .fill(.ultraThickMaterial)
+                    .fill(.musicInfoColor)
                     .overlay {
-                        // Информация о музыке
-                        MusicInfo(expandSheet: $expandSheet, animation: animation)
+                        MusicInfo(expandSheet: $expandSheet, state: .pause, animation: animation)
                     }
-                    .clipShape(.rect(topLeadingRadius: 30, topTrailingRadius: 30))
                     .matchedGeometryEffect(id: "BACKGROUNDVIEW", in: animation)
             }
         }
-        .frame(height: 80)
+        .frame(height: 70)
     }
 
     // MARK: - TabBarPanel
