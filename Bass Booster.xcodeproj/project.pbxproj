@@ -810,7 +810,7 @@
 			);
 			currentVersion = 5F2DA4C82CA8C245009EA6D0 /* BassBoosterData.xcdatamodel */;
 			name = BassBoosterData.xcdatamodeld;
-			path = "/Users/protsackdima/Documents/BASSBOOSTER/Bass Booster/BassBoosterData.xcdatamodeld";
+			path = BassBoosterData.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
