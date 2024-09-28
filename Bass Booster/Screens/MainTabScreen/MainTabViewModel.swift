@@ -25,7 +25,6 @@ final class MainTabViewModel: ObservableObject {
                 self.dataManager.handlePickedFiles(urls: urls)
             }
             manager.showDocumentPicker()
-            // Удерживаем сильную ссылку на менеджер
             self.documentPickerManager = manager
         }
     }

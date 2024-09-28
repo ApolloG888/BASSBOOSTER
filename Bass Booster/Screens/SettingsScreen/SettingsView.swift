@@ -83,8 +83,6 @@ extension SettingsView {
                         .scaledToFit()
                         .frame(size: Size.xl)
                 }
-                Divider()
-                    .background(Color.settingCellBG)
             }
             .padding(.vertical, 5)
             .listRowBackground(Color.white.opacity(0.07))

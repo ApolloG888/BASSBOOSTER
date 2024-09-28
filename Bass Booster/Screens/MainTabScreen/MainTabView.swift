@@ -3,25 +3,27 @@ import SwiftUI
 struct MainTabView: View {
     @StateObject var viewModel: MainTabViewModel
     @Namespace private var animation
-
+    
     var body: some View {
         VStack {
             screens
-            Spacer()
-            CustomBottomSheet()
+            musciBottomSheet()
             tabBarPanel
         }
         .overlay {
             if viewModel.expandSheet {
-                MusicView(expandSheet: $viewModel.expandSheet, animation: animation)
+                MusicView(
+                    expandSheet: $viewModel.expandSheet,
+                    animation: animation
+                )
             }
         }
         .hideNavigationBar()
         .background(Color.customBlack)
     }
-
+    
     // MARK: - Screen
-
+    
     @MainActor
     var screens: some View {
         guard let screenState = MainTabScreenState(rawValue: viewModel.selectedIndex) else {
@@ -29,29 +31,12 @@ struct MainTabView: View {
         }
         return AnyView(screenState.viewBuilder)
     }
+}
 
-    // MARK: - CustomBottomSheet
+// MARK: - TabBarPanel
 
-    @ViewBuilder
-    func CustomBottomSheet() -> some View {
-        ZStack {
-            if viewModel.expandSheet {
-                Rectangle()
-                    .fill(Color.clear)
-            } else {
-                Rectangle()
-                    .fill(.musicInfoColor)
-                    .overlay {
-                        MusicInfo(expandSheet: $viewModel.expandSheet, state: .pause, animation: animation)
-                    }
-                    .matchedGeometryEffect(id: "BACKGROUNDVIEW", in: animation)
-            }
-        }
-        .frame(height: 70)
-    }
-
-    // MARK: - TabBarPanel
-
+extension MainTabView {
+    
     var tabBarPanel: some View {
         ZStack {
             HStack {
@@ -93,10 +78,39 @@ struct MainTabView: View {
             }
         }
     }
+}
 
-    // MARK: - Private Methods
 
-    private func tabBarButtonGroup(
+// MARK: - Music BottomSheet
+
+extension MainTabView {
+    
+    @ViewBuilder
+    func musciBottomSheet() -> some View {
+        ZStack {
+            if viewModel.expandSheet {
+                Rectangle()
+                    .fill(Color.clear)
+            } else {
+                Rectangle()
+                    .fill(.musicInfoColor)
+                    .overlay {
+                        MusicInfo(
+                            expandSheet: $viewModel.expandSheet,
+                            state: .pause,
+                            animation: animation
+                        )
+                    }
+                    .matchedGeometryEffect(id: "BACKGROUNDVIEW", in: animation)
+            }
+        }
+        .frame(height: 70)
+    }
+}
+
+private extension MainTabView {
+    
+    func tabBarButtonGroup(
         from tabs: ArraySlice<MainTabScreenState>,
         spacing: CGFloat,
         padding: EdgeInsets
