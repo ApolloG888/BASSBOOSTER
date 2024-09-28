@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F2DA4C92CA8C245009EA6D0 /* BassBoosterData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5F2DA4C72CA8C245009EA6D0 /* BassBoosterData.xcdatamodeld */; };
 		5F3D3A7C2CA8ABDF00CD9D5A /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F3D3A7B2CA8ABDF00CD9D5A /* FileManager.swift */; };
 		5F3D3A7F2CA8AC3200CD9D5A /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F3D3A7E2CA8AC3200CD9D5A /* DataManager.swift */; };
 		5F4BF3B82C8D238C00F313E2 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4BF3B72C8D238C00F313E2 /* PurchaseManager.swift */; };
@@ -72,6 +73,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F2DA4C82CA8C245009EA6D0 /* BassBoosterData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BassBoosterData.xcdatamodel; sourceTree = "<group>"; };
 		5F3D3A7B2CA8ABDF00CD9D5A /* FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
 		5F3D3A7E2CA8AC3200CD9D5A /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		5F4BF3B72C8D238C00F313E2 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				5FDBE7F02C833DC800E623B5 /* App */,
 				5FDBE7E62C833C3500E623B5 /* Assets.xcassets */,
 				5FDBE7E82C833C3500E623B5 /* Preview Content */,
+				5F2DA4C72CA8C245009EA6D0 /* BassBoosterData.xcdatamodeld */,
 			);
 			path = "Bass Booster";
 			sourceTree = "<group>";
@@ -534,6 +537,7 @@
 				6DA0B4532C835A5C0035751E /* PrimaryButton.swift in Sources */,
 				5F3D3A7F2CA8AC3200CD9D5A /* DataManager.swift in Sources */,
 				6DA0B4572C838EEB0035751E /* OptionsView.swift in Sources */,
+				5F2DA4C92CA8C245009EA6D0 /* BassBoosterData.xcdatamodeld in Sources */,
 				6D4600E82C945EBD003F92BC /* MusicView.swift in Sources */,
 				5FD00C672C8E1A5E008F2B4B /* SettingsView.swift in Sources */,
 				5FDBE7FF2C83480500E623B5 /* View+Extension.swift in Sources */,
@@ -797,6 +801,20 @@
 			productName = ApphudSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		5F2DA4C72CA8C245009EA6D0 /* BassBoosterData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				5F2DA4C82CA8C245009EA6D0 /* BassBoosterData.xcdatamodel */,
+			);
+			currentVersion = 5F2DA4C82CA8C245009EA6D0 /* BassBoosterData.xcdatamodel */;
+			name = BassBoosterData.xcdatamodeld;
+			path = "/Users/protsackdima/Documents/BASSBOOSTER/Bass Booster/BassBoosterData.xcdatamodeld";
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 5FDBE7D72C833C3300E623B5 /* Project object */;
 }

@@ -16,7 +16,7 @@ final class DataManager: ObservableObject {
     @Published var savedFiles: [MusicFileEntity] = []
 
     private init() {
-        container = NSPersistentContainer(name: "BassBooster")
+        container = NSPersistentContainer(name: "BassBoosterData")
         container.loadPersistentStores { description, error in
             if let error = error {
                 fatalError("Ошибка загрузки Core Data: \(error)")
