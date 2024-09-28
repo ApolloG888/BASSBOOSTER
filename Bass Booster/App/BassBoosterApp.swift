@@ -19,8 +19,10 @@ struct BassBoosterApp: App {
         WindowGroup {
             if isFirstLaunch {
                 OnboardingAssembly().build()
+                    .preferredColorScheme(.dark)
             } else {
                 MainTabAssembly().build()
+                    .preferredColorScheme(.dark)
             }
         }
     }

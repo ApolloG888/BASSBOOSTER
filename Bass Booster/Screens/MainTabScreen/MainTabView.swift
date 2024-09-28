@@ -1,11 +1,11 @@
 import SwiftUI
 
 struct MainTabView: View {
-    
     @State private var selectedIndex = 0
     @State private var expandSheet = false
     @Namespace private var animation
-    
+    @State private var documentPickerManager: DocumentPickerManager?
+
     var body: some View {
         VStack {
             screens
@@ -15,19 +15,16 @@ struct MainTabView: View {
         }
         .overlay {
             if expandSheet {
-                // Here we add music player expended sheet
-                
+                // Ваш код для расширенного представления музыкального плеера
                 MusicView(expandSheet: $expandSheet, animation: animation)
             }
         }
         .hideNavigationBar()
         .background(Color.customBlack)
     }
-}
 
-// MARK: - Screen
+    // MARK: - Screen
 
-extension MainTabView {
     @MainActor
     var screens: some View {
         guard let screenState = MainTabScreenState(rawValue: selectedIndex) else {
@@ -35,22 +32,21 @@ extension MainTabView {
         }
         return AnyView(screenState.viewBuilder)
     }
-}
 
-// Now we start design of CustomBottomSheet
-extension MainTabView {
+    // MARK: - CustomBottomSheet
+
     @ViewBuilder
     func CustomBottomSheet() -> some View {
         ZStack {
             if expandSheet {
                 Rectangle()
-                    .fill(.clear)
+                    .fill(Color.clear)
             } else {
                 Rectangle()
                     .fill(.ultraThickMaterial)
                     .overlay {
-                        // Music Info
-                         MusicInfo(expandSheet: $expandSheet, animation: animation)
+                        // Информация о музыке
+                        MusicInfo(expandSheet: $expandSheet, animation: animation)
                     }
                     .clipShape(.rect(topLeadingRadius: 30, topTrailingRadius: 30))
                     .matchedGeometryEffect(id: "BACKGROUNDVIEW", in: animation)
@@ -58,11 +54,9 @@ extension MainTabView {
         }
         .frame(height: 80)
     }
-}
 
-// MARK: - TabBarPanel
+    // MARK: - TabBarPanel
 
-extension MainTabView {
     var tabBarPanel: some View {
         ZStack {
             HStack {
@@ -78,9 +72,8 @@ extension MainTabView {
                     padding: .trailing(Space.xl)
                 )
             }
-            
             Button(action: {
-                // Action for the plus button
+                presentDocumentPicker()
             }) {
                 ZStack {
                     Circle()
@@ -105,12 +98,22 @@ extension MainTabView {
             }
         }
     }
-}
 
-// MARK: - Private Methods
+    // MARK: - Private Methods
 
-private extension MainTabView {
-    func tabBarButtonGroup(
+    private func presentDocumentPicker() {
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let rootViewController = scene.windows.first?.rootViewController {
+            let manager = DocumentPickerManager { urls in
+                DataManager.shared.handlePickedFiles(urls: urls)
+            }
+            manager.showDocumentPicker()
+            // Удерживаем сильную ссылку на менеджер, чтобы он не был деинициализирован
+            self.documentPickerManager = manager
+        }
+    }
+
+    private func tabBarButtonGroup(
         from tabs: ArraySlice<MainTabScreenState>,
         spacing: CGFloat,
         padding: EdgeInsets
