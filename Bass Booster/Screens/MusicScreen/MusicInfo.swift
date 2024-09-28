@@ -7,28 +7,6 @@
 
 import SwiftUI
 
-enum SongState {
-    case play
-    case pause
-    
-    var image: Image {
-        switch self {
-        case .play:
-            Image(.play)
-        case .pause:
-            Image(.pausee)
-        }
-    }
-    
-    mutating func toggle() {
-        if self == .pause {
-            self = .play
-        } else {
-            self = .pause
-        }
-    }
-}
-
 struct MusicInfo: View {
     
     @Binding var expandSheet: Bool
@@ -89,7 +67,7 @@ struct MusicInfo: View {
 }
 
 #Preview {
-    MainTabView()
+    MainTabView(viewModel: MainTabViewModel())
 }
 
 

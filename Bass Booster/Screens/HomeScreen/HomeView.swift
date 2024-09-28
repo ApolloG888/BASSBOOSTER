@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct HomeView: View {
     @StateObject var viewModel: HomeViewModel
@@ -18,7 +17,6 @@ struct HomeView: View {
                     .font(.system(size: 32, weight: .medium))
                     .foregroundColor(.white)
                 Spacer()
-                // Кнопка добавления музыки находится в MainTabView
             }
             .padding(.bottom, 8)
 
@@ -34,9 +32,6 @@ struct HomeView: View {
             }
             .listStyle(PlainListStyle())
             .background(Color.clear)
-            .onAppear {
-                viewModel.fetchSavedMusicFiles()
-            }
 
             Spacer()
         }

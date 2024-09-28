@@ -12,6 +12,7 @@ struct MainTabAssembly {
     
     @MainActor
     func build() -> some View {
-        return MainTabView()
+        let viewModel = MainTabViewModel()
+        return MainTabView(viewModel: viewModel)
     }
 }

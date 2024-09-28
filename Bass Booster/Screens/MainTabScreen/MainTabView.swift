@@ -1,10 +1,8 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @State private var selectedIndex = 0
-    @State private var expandSheet = false
+    @StateObject var viewModel: MainTabViewModel
     @Namespace private var animation
-    @State private var documentPickerManager: DocumentPickerManager?
 
     var body: some View {
         VStack {
@@ -14,8 +12,8 @@ struct MainTabView: View {
             tabBarPanel
         }
         .overlay {
-            if expandSheet {
-                MusicView(expandSheet: $expandSheet, animation: animation)
+            if viewModel.expandSheet {
+                MusicView(expandSheet: $viewModel.expandSheet, animation: animation)
             }
         }
         .hideNavigationBar()
@@ -26,7 +24,7 @@ struct MainTabView: View {
 
     @MainActor
     var screens: some View {
-        guard let screenState = MainTabScreenState(rawValue: selectedIndex) else {
+        guard let screenState = MainTabScreenState(rawValue: viewModel.selectedIndex) else {
             return AnyView(EmptyView())
         }
         return AnyView(screenState.viewBuilder)
@@ -37,14 +35,14 @@ struct MainTabView: View {
     @ViewBuilder
     func CustomBottomSheet() -> some View {
         ZStack {
-            if expandSheet {
+            if viewModel.expandSheet {
                 Rectangle()
                     .fill(Color.clear)
             } else {
                 Rectangle()
                     .fill(.musicInfoColor)
                     .overlay {
-                        MusicInfo(expandSheet: $expandSheet, state: .pause, animation: animation)
+                        MusicInfo(expandSheet: $viewModel.expandSheet, state: .pause, animation: animation)
                     }
                     .matchedGeometryEffect(id: "BACKGROUNDVIEW", in: animation)
             }
@@ -70,7 +68,7 @@ struct MainTabView: View {
                 )
             }
             Button(action: {
-                presentDocumentPicker()
+                viewModel.presentDocumentPicker()
             }) {
                 ZStack {
                     Circle()
@@ -98,18 +96,6 @@ struct MainTabView: View {
 
     // MARK: - Private Methods
 
-    private func presentDocumentPicker() {
-        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let rootViewController = scene.windows.first?.rootViewController {
-            let manager = DocumentPickerManager { urls in
-                DataManager.shared.handlePickedFiles(urls: urls)
-            }
-            manager.showDocumentPicker()
-            // Удерживаем сильную ссылку на менеджер, чтобы он не был деинициализирован
-            self.documentPickerManager = manager
-        }
-    }
-
     private func tabBarButtonGroup(
         from tabs: ArraySlice<MainTabScreenState>,
         spacing: CGFloat,
@@ -119,10 +105,10 @@ struct MainTabView: View {
             ForEach(tabs, id: \.self) { tab in
                 TabBarButton(
                     icon: tab.icon,
-                    isSelected: selectedIndex == tab.rawValue,
+                    isSelected: viewModel.selectedIndex == tab.rawValue,
                     label: tab.name
                 ) {
-                    selectedIndex = tab.rawValue
+                    viewModel.selectedIndex = tab.rawValue
                 }
             }
         }
@@ -131,5 +117,5 @@ struct MainTabView: View {
 }
 
 #Preview {
-    MainTabView()
+    MainTabView(viewModel: MainTabViewModel())
 }

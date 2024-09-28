@@ -7,19 +7,19 @@
 
 import Foundation
 import CoreData
+import Combine
 
 final class DataManager: ObservableObject {
     static let shared = DataManager()
-
     let container: NSPersistentContainer
 
     @Published var savedFiles: [MusicFileEntity] = []
 
     private init() {
         container = NSPersistentContainer(name: "BassBoosterData")
-        container.loadPersistentStores { description, error in
+        container.loadPersistentStores { (_, error) in
             if let error = error {
-                fatalError("Ошибка загрузки Core Data: \(error)")
+                print("Ошибка загрузки Core Data: \(error)")
             }
         }
         fetchMusicFiles()
@@ -28,38 +28,40 @@ final class DataManager: ObservableObject {
     func fetchMusicFiles() {
         let request: NSFetchRequest<MusicFileEntity> = MusicFileEntity.fetchRequest()
         do {
-            savedFiles = try container.viewContext.fetch(request)
+            let files = try container.viewContext.fetch(request)
+            DispatchQueue.main.async {
+                self.savedFiles = files
+            }
         } catch {
             print("Ошибка получения данных: \(error)")
         }
     }
 
     func handlePickedFiles(urls: [URL]) {
-        for url in urls {
-            let fileName = url.lastPathComponent
-            let destinationURL = getDocumentsDirectory().appendingPathComponent(fileName)
-            do {
-                if !FileManager.default.fileExists(atPath: destinationURL.path) {
-                    try FileManager.default.copyItem(at: url, to: destinationURL)
+        DispatchQueue.main.async {
+            for url in urls {
+                let fileName = url.lastPathComponent
+                let destinationURL = self.getDocumentsDirectory().appendingPathComponent(fileName)
+                do {
+                    if !FileManager.default.fileExists(atPath: destinationURL.path) {
+                        try FileManager.default.copyItem(at: url, to: destinationURL)
+                    }
+                    self.saveMusicFile(name: fileName, url: destinationURL)
+                } catch {
+                    print("Ошибка копирования файла: \(error)")
                 }
-                saveMusicFile(name: fileName, url: destinationURL)
-            } catch {
-                print("Ошибка копирования файла: \(error)")
             }
+            self.fetchMusicFiles()
         }
-        fetchMusicFiles()
     }
 
     func saveMusicFile(name: String, url: URL) {
-        if !isMusicFileExists(withName: name) {
-            let newFile = MusicFileEntity(context: container.viewContext)
-            newFile.id = UUID()
-            newFile.name = name
-            newFile.url = url.absoluteString
+        let newFile = MusicFileEntity(context: container.viewContext)
+        newFile.id = UUID()
+        newFile.name = name
+        newFile.url = url.absoluteString
 
-            saveData()
-            fetchMusicFiles()
-        }
+        saveData()
     }
 
     func deleteMusicFile(_ musicFile: MusicFileEntity) {
@@ -76,10 +78,6 @@ final class DataManager: ObservableObject {
                 print("Ошибка сохранения данных: \(error)")
             }
         }
-    }
-
-    private func isMusicFileExists(withName name: String) -> Bool {
-        savedFiles.contains { $0.name == name }
     }
 
     private func getDocumentsDirectory() -> URL {
