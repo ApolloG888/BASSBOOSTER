@@ -11,9 +11,11 @@ struct MusicView: View {
     
     @Binding var expandSheet: Bool
     var animation: Namespace.ID
+    
     // View Properties
     @State private var animateContent: Bool = false
     @State private var offsetY: CGFloat = 0
+    @State var value = 11.0
     
     var body: some View {
         GeometryReader {
@@ -30,7 +32,7 @@ struct MusicView: View {
                             .opacity(animateContent ? 1 : 0)
                     }
                     .overlay(alignment: .top) {
-                        MusicInfo(expandSheet: $expandSheet, animation: animation)
+                        MusicInfo(expandSheet: $expandSheet, state: .play, animation: animation)
                             .allowsHitTesting(false)
                         // Here first when animateContent is true then musicInfo is hide and if animatecontent is false the musicInfo is visible
                             .opacity(animateContent ? 0 : 1)
@@ -125,8 +127,6 @@ struct MusicView: View {
         
     }
     
-    @State var value = 11.0
-    
     @ViewBuilder
     func PlayerView(_ mainSize: CGSize) -> some View {
         GeometryReader {
@@ -189,8 +189,7 @@ struct MusicView: View {
 }
 
 #Preview {
-    ContentView()
-        .preferredColorScheme(.dark)
+    MainTabView()
 }
 
 
