@@ -35,8 +35,9 @@ struct HomeView: View {
 
             Spacer()
         }
+        .padding(.horizontal)
+        .padding(.top)
         .hideNavigationBar()
-        .padding()
         .appGradientBackground()
     }
 }

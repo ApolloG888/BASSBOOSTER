@@ -19,7 +19,7 @@ struct MainTabView: View {
             }
         }
         .hideNavigationBar()
-        .background(Color.customBlack)
+        .appGradientBackground()
     }
     
     // MARK: - Screen
