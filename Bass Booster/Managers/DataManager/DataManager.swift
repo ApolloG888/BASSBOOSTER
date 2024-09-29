@@ -7,14 +7,15 @@
 
 import Foundation
 import CoreData
+import Combine
 
 final class DataManager: ObservableObject {
     static let shared = DataManager()
-
+    
     let container: NSPersistentContainer
-
+    
     @Published var savedFiles: [MusicFileEntity] = []
-
+    
     private init() {
         container = NSPersistentContainer(name: "BassBoosterData")
         container.loadPersistentStores { description, error in
@@ -24,16 +25,19 @@ final class DataManager: ObservableObject {
         }
         fetchMusicFiles()
     }
-
+    
     func fetchMusicFiles() {
         let request: NSFetchRequest<MusicFileEntity> = MusicFileEntity.fetchRequest()
         do {
-            savedFiles = try container.viewContext.fetch(request)
+            let files = try container.viewContext.fetch(request)
+            DispatchQueue.main.async {
+                self.savedFiles = files
+            }
         } catch {
             print("Ошибка получения данных: \(error)")
         }
     }
-
+    
     func handlePickedFiles(urls: [URL]) {
         for url in urls {
             let fileName = url.lastPathComponent
@@ -49,39 +53,40 @@ final class DataManager: ObservableObject {
         }
         fetchMusicFiles()
     }
-
+    
     func saveMusicFile(name: String, url: URL) {
         if !isMusicFileExists(withName: name) {
             let newFile = MusicFileEntity(context: container.viewContext)
             newFile.id = UUID()
             newFile.name = name
             newFile.url = url.absoluteString
-
+            
             saveData()
-            fetchMusicFiles()
+            // Не обязательно вызывать fetchMusicFiles() здесь, так как изменения в savedFiles будут отслеживаться
         }
     }
-
+    
     func deleteMusicFile(_ musicFile: MusicFileEntity) {
         container.viewContext.delete(musicFile)
         saveData()
-        fetchMusicFiles()
+        // Не обязательно вызывать fetchMusicFiles() здесь
     }
-
+    
     func saveData() {
         if container.viewContext.hasChanges {
             do {
                 try container.viewContext.save()
+                fetchMusicFiles() // Обновляем savedFiles после сохранения
             } catch {
                 print("Ошибка сохранения данных: \(error)")
             }
         }
     }
-
+    
     private func isMusicFileExists(withName name: String) -> Bool {
         savedFiles.contains { $0.name == name }
     }
-
+    
     private func getDocumentsDirectory() -> URL {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     }

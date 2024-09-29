@@ -7,19 +7,24 @@
 
 import Foundation
 import SwiftUI
-import CoreData
+import Combine
 
 final class HomeViewModel: ObservableObject {
-    @ObservedObject var dataManager = DataManager.shared
-
-    var musicFiles: [MusicFileEntity] {
-        dataManager.savedFiles
+    @Published var musicFiles: [MusicFileEntity] = []
+    private var dataManager = DataManager.shared
+    private var cancellables = Set<AnyCancellable>()
+    
+    init() {
+        dataManager.$savedFiles
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.musicFiles, on: self)
+            .store(in: &cancellables)
     }
-
+    
     func fetchSavedMusicFiles() {
         dataManager.fetchMusicFiles()
     }
-
+    
     func deleteMusicFile(at offsets: IndexSet) {
         for index in offsets {
             let musicFile = musicFiles[index]

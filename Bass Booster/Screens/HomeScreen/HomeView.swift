@@ -9,8 +9,8 @@ import SwiftUI
 import CoreData
 
 struct HomeView: View {
-    @StateObject var viewModel: HomeViewModel
-
+    @StateObject var viewModel = HomeViewModel()
+    
     var body: some View {
         VStack {
             HStack {
@@ -18,14 +18,13 @@ struct HomeView: View {
                     .font(.system(size: 32, weight: .medium))
                     .foregroundColor(.white)
                 Spacer()
-                // Кнопка добавления музыки находится в MainTabView
             }
             .padding(.bottom, 8)
-
+            
             SearchBarView {
                 // Реализация поиска, если необходимо
             }
-
+            
             List {
                 ForEach(viewModel.musicFiles) { musicFile in
                     MusicFileRow(musicFile: musicFile)
@@ -37,7 +36,7 @@ struct HomeView: View {
             .onAppear {
                 viewModel.fetchSavedMusicFiles()
             }
-
+            
             Spacer()
         }
         .hideNavigationBar()
@@ -48,7 +47,7 @@ struct HomeView: View {
 
 struct MusicFileRow: View {
     var musicFile: MusicFileEntity
-
+    
     var body: some View {
         HStack {
             Image(systemName: "music.note")
