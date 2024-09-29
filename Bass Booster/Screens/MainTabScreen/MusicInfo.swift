@@ -52,14 +52,17 @@ struct MusicInfo: View {
                 }
                 .frame(width: 55, height: 55)
                 
-                VStack {
+                VStack(spacing: 8) {
                     Text("The Chain - 2004 Remaster")
+                        .foregroundStyle(.white)
                     Text("The Chain - 2004 Remaster")
+                        .foregroundStyle(.musicInfoSubColor)
                        
                 }
                 .font(.sfProText(size: 14))
                 .multilineTextAlignment(.leading)
                 .padding(.horizontal, 12)
+                .padding(.top, 4)
                 .lineLimit(1)
                 
                 Spacer()
@@ -75,7 +78,6 @@ struct MusicInfo: View {
                         .frame(height: 20)
                 }
             }
-            .foregroundStyle(.blue)
             .padding(.horizontal,20)
             .padding(.bottom)
             .onTapGesture {

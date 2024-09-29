@@ -28,7 +28,7 @@ struct MusicView: View {
                     .overlay {
                         Rectangle()
                         // I forget to start recording ;) so please check and change gray to black
-                            .fill(.black)
+                            .fill(.gray)
                             .opacity(animateContent ? 1 : 0)
                     }
                     .overlay(alignment: .top) {
@@ -38,9 +38,7 @@ struct MusicView: View {
                             .opacity(animateContent ? 0 : 1)
                     }
                     .matchedGeometryEffect(id: "BACKGROUNDVIEW", in: animation)
-                
-                LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.5), Color.clear]), startPoint: .top, endPoint: .bottom)
-                    .frame(height: 300)
+                    
 
                 VStack(spacing: 10) {
                     HStack(alignment: .top) {

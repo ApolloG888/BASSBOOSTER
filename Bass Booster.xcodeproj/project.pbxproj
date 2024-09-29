@@ -70,6 +70,8 @@
 		6DA0B4712C845F640035751E /* SubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4702C845F640035751E /* SubscriptionView.swift */; };
 		6DA0B4732C845F750035751E /* SubscriptionAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4722C845F750035751E /* SubscriptionAssembly.swift */; };
 		6DA0B4752C84765A0035751E /* SubscriptionScreenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4742C84765A0035751E /* SubscriptionScreenState.swift */; };
+		6DF32B972CA9BB2900D346A0 /* helvetica-neue-medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DF32B952CA9BB2900D346A0 /* helvetica-neue-medium.ttf */; };
+		6DF32B982CA9BB2900D346A0 /* helvetica-neue-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DF32B962CA9BB2900D346A0 /* helvetica-neue-regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -137,6 +139,8 @@
 		6DA0B4702C845F640035751E /* SubscriptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionView.swift; sourceTree = "<group>"; };
 		6DA0B4722C845F750035751E /* SubscriptionAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionAssembly.swift; sourceTree = "<group>"; };
 		6DA0B4742C84765A0035751E /* SubscriptionScreenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionScreenState.swift; sourceTree = "<group>"; };
+		6DF32B952CA9BB2900D346A0 /* helvetica-neue-medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "helvetica-neue-medium.ttf"; sourceTree = "<group>"; };
+		6DF32B962CA9BB2900D346A0 /* helvetica-neue-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "helvetica-neue-regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -334,6 +338,7 @@
 		5FDBE7F32C833F8800E623B5 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				6DB326A02CA8BADB003311F1 /* HelveticaNeue */,
 				5F54B38E2C83B7530012E1C0 /* SFProDisplay */,
 				5F54B38D2C83B7450012E1C0 /* SFProText */,
 				5FDBE7F52C83441000E623B5 /* Typography.swift */,
@@ -429,6 +434,15 @@
 			path = SubscriptionScreen;
 			sourceTree = "<group>";
 		};
+		6DB326A02CA8BADB003311F1 /* HelveticaNeue */ = {
+			isa = PBXGroup;
+			children = (
+				6DF32B952CA9BB2900D346A0 /* helvetica-neue-medium.ttf */,
+				6DF32B962CA9BB2900D346A0 /* helvetica-neue-regular.ttf */,
+			);
+			path = HelveticaNeue;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -499,9 +513,11 @@
 				5F54B39E2C83B8A60012E1C0 /* SFProText-Semibold.ttf in Resources */,
 				5F54B3962C83B80F0012E1C0 /* SF-Pro-Display-Bold.ttf in Resources */,
 				5F54B3A02C83B9120012E1C0 /* SFProText-Light.ttf in Resources */,
+				6DF32B972CA9BB2900D346A0 /* helvetica-neue-medium.ttf in Resources */,
 				5FDBE7EA2C833C3500E623B5 /* Preview Assets.xcassets in Resources */,
 				5F54B3942C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf in Resources */,
 				5FDBE7E72C833C3500E623B5 /* Assets.xcassets in Resources */,
+				6DF32B982CA9BB2900D346A0 /* helvetica-neue-regular.ttf in Resources */,
 				5F54B39D2C83B8A60012E1C0 /* SFProText-Bold.ttf in Resources */,
 				5F54B39C2C83B8A60012E1C0 /* SFProText-Regular.ttf in Resources */,
 			);

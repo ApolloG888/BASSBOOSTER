@@ -22,12 +22,21 @@ enum SFProDisplayFont: String {
     case bold700 = "SF-Pro-Display-Bold"
 }
 
+enum HelveticaNeueFont: String {
+    case regular400 = "helvetica-neue-regular"
+    case medium500 = "helvetica-neue-medium"
+}
+
 extension Font {
     static func sfProText(type: SFProTextFont = .regular400, size: CGFloat) -> Font {
         return Font.custom(type.rawValue, size: size)
     }
     
     static func sfProDisplay(type: SFProDisplayFont = .regular400, size: CGFloat) -> Font {
+        return Font.custom(type.rawValue, size: size)
+    }
+    
+    static func helvetica(type: HelveticaNeueFont = .regular400, size: CGFloat) -> Font {
         return Font.custom(type.rawValue, size: size)
     }
 }
