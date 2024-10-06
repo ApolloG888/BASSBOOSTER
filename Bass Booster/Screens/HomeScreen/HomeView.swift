@@ -107,6 +107,57 @@ struct HomeView_Previews: PreviewProvider {
 
 import SwiftUI
 
+struct MusicFileRow: View {
+    var musicFile: MusicFileEntity
+    var playlists: [PlaylistEntity]
+    var onAddToPlaylist: (MusicFileEntity, PlaylistEntity) -> Void
+
+    @State private var showActionSheet = false
+
+    var body: some View {
+        HStack {
+            Image(systemName: "music.note")
+                .foregroundColor(.white)
+                .font(.largeTitle)
+            VStack(alignment: .leading) {
+                Text(musicFile.name ?? "Unknown")
+                    .foregroundColor(.white)
+                    .font(.headline)
+                Text("Additional Info")
+                    .foregroundColor(.gray)
+                    .font(.subheadline)
+            }
+            Spacer()
+            // Кнопка с тремя точками
+            Button(action: {
+                showActionSheet = true
+            }) {
+                Image(systemName: "ellipsis")
+                    .foregroundColor(.white)
+                    .font(.title)
+            }
+            .actionSheet(isPresented: $showActionSheet) {
+                ActionSheet(
+                    title: Text("Add to Playlist"),
+                    message: Text("Choose a playlist to add the song"),
+                    buttons: actionSheetButtons()
+                )
+            }
+        }
+        .padding()
+    }
+
+    private func actionSheetButtons() -> [ActionSheet.Button] {
+        var buttons: [ActionSheet.Button] = playlists.map { playlist in
+            .default(Text(playlist.name ?? "Playlist")) {
+                onAddToPlaylist(musicFile, playlist)
+            }
+        }
+        buttons.append(.cancel())
+        return buttons
+    }
+}
+
 struct PlaylistCell: View {
     var playlist: PlaylistEntity
     var onTap: () -> Void
@@ -158,41 +209,6 @@ struct AddPlaylistView: View {
                 }
                 .disabled(playlistName.isEmpty)
             )
-        }
-    }
-}
-
-import SwiftUI
-
-struct MusicFileRow: View {
-    var musicFile: MusicFileEntity
-    var playlists: [PlaylistEntity]
-    var onAddToPlaylist: (MusicFileEntity, PlaylistEntity) -> Void
-
-    var body: some View {
-        HStack {
-            Image(systemName: "music.note")
-                .foregroundColor(.white)
-                .font(.largeTitle)
-            VStack(alignment: .leading) {
-                Text(musicFile.name ?? "Unknown")
-                    .foregroundColor(.white)
-                    .font(.headline)
-                Text("Additional Info")
-                    .foregroundColor(.gray)
-                    .font(.subheadline)
-            }
-            Spacer()
-        }
-        .padding()
-        .contextMenu {
-            ForEach(playlists) { playlist in
-                Button(action: {
-                    onAddToPlaylist(musicFile, playlist)
-                }) {
-                    Text("Add to \(playlist.name ?? "Playlist")")
-                }
-            }
         }
     }
 }

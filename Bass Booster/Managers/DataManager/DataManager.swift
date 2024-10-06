@@ -120,8 +120,14 @@ final class DataManager: ObservableObject {
     }
     
     func addSong(_ song: MusicFileEntity, to playlist: PlaylistEntity) {
-        song.addToPlaylist(playlist)
-        saveData()
+        // Проверяем, есть ли песня уже в плейлисте
+        if let songs = playlist.songs as? Set<MusicFileEntity>, !songs.contains(song) {
+            playlist.addToSongs(song)
+            saveData()
+        } else {
+            // Песня уже в плейлисте, можно показать уведомление или игнорировать
+            print("Песня уже находится в плейлисте \(playlist.name ?? "Unknown")")
+        }
     }
     
     // MARK: - Сохранение данных
