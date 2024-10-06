@@ -10,8 +10,7 @@ import CoreData
 
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
-    @State private var showAddPlaylistAlert = false
-    @State private var newPlaylistName = ""
+    @State private var showAddPlaylistSheet = false
 
     var body: some View {
         VStack {
@@ -28,7 +27,7 @@ struct HomeView: View {
                 HStack(spacing: 16) {
                     // Кнопка для добавления нового плейлиста
                     Button(action: {
-                        showAddPlaylistAlert = true
+                        showAddPlaylistSheet = true
                     }) {
                         VStack {
                             Image(systemName: "plus")
@@ -42,22 +41,18 @@ struct HomeView: View {
                         .background(Color.blue)
                         .cornerRadius(10)
                     }
-
-                    // Список существующих плейлистов
-                    ForEach(viewModel.playlists) { playlist in
-                        VStack {
-                            Image(systemName: "music.note.list")
-                                .font(.largeTitle)
-                                .foregroundColor(.white)
-                            Text(playlist.name ?? "Unknown")
-                                .foregroundColor(.white)
-                                .font(.caption)
+                    
+                    // Плейлист "General" всегда отображается вторым
+                    if let generalPlaylist = viewModel.playlists.first(where: { $0.name == "General" }) {
+                        PlaylistCell(playlist: generalPlaylist) {
+                            viewModel.selectedPlaylist = generalPlaylist
+                            viewModel.fetchMusicFiles(for: generalPlaylist)
                         }
-                        .frame(width: 100, height: 100)
-                        .background(Color.green)
-                        .cornerRadius(10)
-                        .onTapGesture {
-                            // Действие при выборе плейлиста
+                    }
+                    
+                    // Остальные плейлисты
+                    ForEach(viewModel.playlists.filter { $0.name != "General" }) { playlist in
+                        PlaylistCell(playlist: playlist) {
                             viewModel.selectedPlaylist = playlist
                             viewModel.fetchMusicFiles(for: playlist)
                         }
@@ -65,16 +60,16 @@ struct HomeView: View {
                 }
                 .padding(.vertical)
             }
-
+            
             SearchBarView {
                 // Реализация поиска, если необходимо
             }
-
+            
             List {
                 ForEach(viewModel.musicFiles) { musicFile in
                     MusicFileRow(
                         musicFile: musicFile,
-                        playlists: viewModel.playlists,
+                        playlists: viewModel.playlists.filter { $0.name != "General" },
                         onAddToPlaylist: { song, playlist in
                             viewModel.addSong(song, to: playlist)
                         }
@@ -88,27 +83,86 @@ struct HomeView: View {
                 viewModel.fetchSavedMusicFiles()
                 viewModel.fetchPlaylists()
             }
-
+            
             Spacer()
         }
         .hideNavigationBar()
         .padding()
         .appGradientBackground()
-        .alert(isPresented: $showAddPlaylistAlert) {
-            Alert(
-                title: Text("New Playlist"),
-                message: Text("Enter the name of the playlist"),
-                primaryButton: .default(Text("Add"), action: {
-                    viewModel.addPlaylist(name: newPlaylistName)
-                    newPlaylistName = ""
-                }),
-                secondaryButton: .cancel({
-                    newPlaylistName = ""
-                })
+        .sheet(isPresented: $showAddPlaylistSheet) {
+            AddPlaylistView(isPresented: $showAddPlaylistSheet, onAdd: { name in
+                viewModel.addPlaylist(name: name)
+            })
+        }
+    }
+}
+
+// Превью для SwiftUI
+struct HomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        let viewModel = HomeViewModel()
+        HomeView(viewModel: viewModel)
+    }
+}
+
+import SwiftUI
+
+struct PlaylistCell: View {
+    var playlist: PlaylistEntity
+    var onTap: () -> Void
+
+    var body: some View {
+        VStack {
+            Image(systemName: "music.note.list")
+                .font(.largeTitle)
+                .foregroundColor(.white)
+            Text(playlist.name ?? "Unknown")
+                .foregroundColor(.white)
+                .font(.caption)
+                .lineLimit(1)
+        }
+        .frame(width: 100, height: 100)
+        .background(Color.green)
+        .cornerRadius(10)
+        .onTapGesture {
+            onTap()
+        }
+    }
+}
+
+import SwiftUI
+
+struct AddPlaylistView: View {
+    @Binding var isPresented: Bool
+    @State private var playlistName: String = ""
+    var onAdd: (String) -> Void
+
+    var body: some View {
+        NavigationView {
+            VStack {
+                TextField("Playlist Name", text: $playlistName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                Spacer()
+            }
+            .navigationBarTitle("New Playlist", displayMode: .inline)
+            .navigationBarItems(
+                leading: Button("Cancel") {
+                    isPresented = false
+                },
+                trailing: Button("Add") {
+                    if !playlistName.isEmpty {
+                        onAdd(playlistName)
+                        isPresented = false
+                    }
+                }
+                .disabled(playlistName.isEmpty)
             )
         }
     }
 }
+
+import SwiftUI
 
 struct MusicFileRow: View {
     var musicFile: MusicFileEntity
@@ -138,55 +192,6 @@ struct MusicFileRow: View {
                 }) {
                     Text("Add to \(playlist.name ?? "Playlist")")
                 }
-            }
-        }
-    }
-}
-
-//import SwiftUI
-
-struct CustomAlert: View {
-    @Binding var isPresented: Bool
-    @Binding var text: String
-    var title: String
-    var onAdd: () -> Void
-
-    var body: some View {
-        VStack {
-            Text(title)
-                .font(.headline)
-                .padding()
-            TextField("Playlist Name", text: $text)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            HStack {
-                Button("Cancel") {
-                    isPresented = false
-                    text = ""
-                }
-                Spacer()
-                Button("Add") {
-                    isPresented = false
-                    onAdd()
-                    text = ""
-                }
-            }
-            .padding()
-        }
-        .frame(width: 300, height: 200)
-        .background(Color(UIColor.systemBackground))
-        .cornerRadius(20)
-        .shadow(radius: 20)
-    }
-}
-
-extension View {
-    func customAlert(isPresented: Binding<Bool>, text: Binding<String>, title: String, onAdd: @escaping () -> Void) -> some View {
-        ZStack {
-            self
-                .blur(radius: isPresented.wrappedValue ? 2 : 0)
-            if isPresented.wrappedValue {
-                CustomAlert(isPresented: isPresented, text: text, title: title, onAdd: onAdd)
             }
         }
     }

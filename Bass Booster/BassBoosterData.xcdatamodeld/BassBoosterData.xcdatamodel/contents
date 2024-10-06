@@ -4,7 +4,7 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="String"/>
-        <relationship name="playlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PlaylistEntity" inverseName="songs" inverseEntity="PlaylistEntity"/>
+        <relationship name="playlist" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PlaylistEntity" inverseName="songs" inverseEntity="PlaylistEntity"/>
     </entity>
     <entity name="PlaylistEntity" representedClassName="PlaylistEntity" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>

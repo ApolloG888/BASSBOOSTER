@@ -1,3 +1,10 @@
+//
+//  DataManager.swift
+//  Bass Booster
+//
+//  Created by Protsak Dmytro on 28.09.2024.
+//
+
 import Foundation
 import CoreData
 import Combine
@@ -19,6 +26,11 @@ final class DataManager: ObservableObject {
         }
         fetchMusicFiles()
         fetchPlaylists()
+        
+        // Создаем плейлист "General", если его нет
+        if !savedPlaylists.contains(where: { $0.name == "General" }) {
+            savePlaylist(name: "General")
+        }
     }
     
     // MARK: - Работа с музыкальными файлами
@@ -70,9 +82,9 @@ final class DataManager: ObservableObject {
             newFile.name = name
             newFile.url = url.absoluteString
             
-            // Добавляем в общий плейлист (опционально)
+            // Добавляем в плейлист "General"
             if let generalPlaylist = savedPlaylists.first(where: { $0.name == "General" }) {
-                newFile.playlist = generalPlaylist
+                newFile.addToPlaylist(generalPlaylist)
             }
             
             saveData()
@@ -108,7 +120,7 @@ final class DataManager: ObservableObject {
     }
     
     func addSong(_ song: MusicFileEntity, to playlist: PlaylistEntity) {
-        playlist.addToSongs(song)
+        song.addToPlaylist(playlist)
         saveData()
     }
     
