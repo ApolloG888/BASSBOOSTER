@@ -714,7 +714,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Bass Booster/Preview Content\"";
-				DEVELOPMENT_TEAM = 57DJVCAD29;
+				DEVELOPMENT_TEAM = HVE9NJE8L3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
@@ -749,7 +749,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Bass Booster/Preview Content\"";
-				DEVELOPMENT_TEAM = 57DJVCAD29;
+				DEVELOPMENT_TEAM = HVE9NJE8L3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
@@ -825,7 +825,6 @@
 				5F2DA4C82CA8C245009EA6D0 /* BassBoosterData.xcdatamodel */,
 			);
 			currentVersion = 5F2DA4C82CA8C245009EA6D0 /* BassBoosterData.xcdatamodel */;
-			name = BassBoosterData.xcdatamodeld;
 			path = BassBoosterData.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
