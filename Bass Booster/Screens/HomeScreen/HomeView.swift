@@ -61,9 +61,11 @@ struct HomeView: View {
                 .padding(.vertical)
             }
             
-            SearchBarView {
-                // Реализация поиска, если необходимо
-            }
+            // Здесь должен быть ваш SearchBarView, если он есть
+            // Если его нет, можете закомментировать или удалить следующую строку
+            // SearchBarView {
+            //     // Реализация поиска, если необходимо
+            // }
             
             List {
                 ForEach(viewModel.musicFiles) { musicFile in
@@ -72,7 +74,14 @@ struct HomeView: View {
                         playlists: viewModel.playlists.filter { $0.name != "General" },
                         onAddToPlaylist: { song, playlist in
                             viewModel.addSong(song, to: playlist)
-                        }
+                        },
+                        onRename: { song, newName in
+                            viewModel.renameSong(song, to: newName)
+                        },
+                        onDelete: { song in
+                            viewModel.deleteMusicFileEntity(song)
+                        },
+                        isInGeneralPlaylist: viewModel.isInGeneralPlaylist
                     )
                 }
                 .onDelete(perform: viewModel.deleteMusicFile)
@@ -88,7 +97,7 @@ struct HomeView: View {
         }
         .hideNavigationBar()
         .padding()
-        .appGradientBackground()
+        .background(Color.black) // Или используйте ваш собственный модификатор appGradientBackground()
         .sheet(isPresented: $showAddPlaylistSheet) {
             AddPlaylistView(isPresented: $showAddPlaylistSheet, onAdd: { name in
                 viewModel.addPlaylist(name: name)
@@ -105,14 +114,20 @@ struct HomeView_Previews: PreviewProvider {
     }
 }
 
-import SwiftUI
+// MARK: - Дополнительные компоненты
 
+// Компонент MusicFileRow
 struct MusicFileRow: View {
     var musicFile: MusicFileEntity
     var playlists: [PlaylistEntity]
     var onAddToPlaylist: (MusicFileEntity, PlaylistEntity) -> Void
+    var onRename: (MusicFileEntity, String) -> Void
+    var onDelete: (MusicFileEntity) -> Void
+    var isInGeneralPlaylist: Bool
 
     @State private var showActionSheet = false
+    @State private var showRenameSheet = false
+    @State private var showAddToPlaylistSheet = false
 
     var body: some View {
         HStack {
@@ -137,31 +152,129 @@ struct MusicFileRow: View {
                     .font(.title)
             }
             .actionSheet(isPresented: $showActionSheet) {
-                ActionSheet(
-                    title: Text("Add to Playlist"),
-                    message: Text("Choose a playlist to add the song"),
-                    buttons: actionSheetButtons()
+                actionSheet()
+            }
+            .sheet(isPresented: $showRenameSheet) {
+                RenameSongView(
+                    isPresented: $showRenameSheet,
+                    songName: musicFile.name ?? "",
+                    onSave: { newName in
+                        onRename(musicFile, newName)
+                    }
+                )
+            }
+            .sheet(isPresented: $showAddToPlaylistSheet) {
+                AddToPlaylistView(
+                    isPresented: $showAddToPlaylistSheet,
+                    playlists: playlists,
+                    onAddToPlaylist: { playlist in
+                        onAddToPlaylist(musicFile, playlist)
+                    }
                 )
             }
         }
         .padding()
     }
 
-    private func actionSheetButtons() -> [ActionSheet.Button] {
-        var buttons: [ActionSheet.Button] = playlists.map { playlist in
-            .default(Text(playlist.name ?? "Playlist")) {
-                onAddToPlaylist(musicFile, playlist)
-            }
+    private func actionSheet() -> ActionSheet {
+        if isInGeneralPlaylist {
+            // Действия для главного плейлиста
+            return ActionSheet(
+                title: Text("Options"),
+                buttons: [
+                    .default(Text("Rename")) {
+                        showRenameSheet = true
+                    },
+                    .default(Text("Add to Playlist")) {
+                        showAddToPlaylistSheet = true
+                    },
+                    .destructive(Text("Delete")) {
+                        onDelete(musicFile)
+                    },
+                    .cancel()
+                ]
+            )
+        } else {
+            // Действия для других плейлистов (например, только Add to Playlist)
+            return ActionSheet(
+                title: Text("Options"),
+                buttons: [
+                    .default(Text("Add to Playlist")) {
+                        showAddToPlaylistSheet = true
+                    },
+                    .cancel()
+                ]
+            )
         }
-        buttons.append(.cancel())
-        return buttons
     }
 }
 
+// Компонент RenameSongView
+struct RenameSongView: View {
+    @Binding var isPresented: Bool
+    @State private var newSongName: String
+    var onSave: (String) -> Void
+
+    init(isPresented: Binding<Bool>, songName: String, onSave: @escaping (String) -> Void) {
+        self._isPresented = isPresented
+        self._newSongName = State(initialValue: songName)
+        self.onSave = onSave
+    }
+
+    var body: some View {
+        NavigationView {
+            VStack {
+                TextField("Song Name", text: $newSongName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                Spacer()
+            }
+            .navigationBarTitle("Rename Song", displayMode: .inline)
+            .navigationBarItems(
+                leading: Button("Cancel") {
+                    isPresented = false
+                },
+                trailing: Button("Save") {
+                    onSave(newSongName)
+                    isPresented = false
+                }
+                .disabled(newSongName.isEmpty)
+            )
+        }
+    }
+}
+
+// Компонент AddToPlaylistView
+struct AddToPlaylistView: View {
+    @Binding var isPresented: Bool
+    var playlists: [PlaylistEntity]
+    var onAddToPlaylist: (PlaylistEntity) -> Void
+
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(playlists) { playlist in
+                    Button(action: {
+                        onAddToPlaylist(playlist)
+                        isPresented = false
+                    }) {
+                        Text(playlist.name ?? "Unknown")
+                    }
+                }
+            }
+            .navigationBarTitle("Select Playlist", displayMode: .inline)
+            .navigationBarItems(trailing: Button("Cancel") {
+                isPresented = false
+            })
+        }
+    }
+}
+
+// Компонент PlaylistCell
 struct PlaylistCell: View {
     var playlist: PlaylistEntity
     var onTap: () -> Void
-
+    
     var body: some View {
         VStack {
             Image(systemName: "music.note.list")
@@ -181,8 +294,7 @@ struct PlaylistCell: View {
     }
 }
 
-import SwiftUI
-
+// Компонент AddPlaylistView
 struct AddPlaylistView: View {
     @Binding var isPresented: Bool
     @State private var playlistName: String = ""

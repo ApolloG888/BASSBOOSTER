@@ -91,6 +91,11 @@ final class DataManager: ObservableObject {
         }
     }
     
+    func renameSong(_ song: MusicFileEntity, to newName: String) {
+        song.name = newName
+        saveData()
+    }
+    
     func deleteMusicFile(_ musicFile: MusicFileEntity) {
         container.viewContext.delete(musicFile)
         saveData()

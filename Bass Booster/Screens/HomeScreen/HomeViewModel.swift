@@ -17,6 +17,10 @@ final class HomeViewModel: ObservableObject {
     private var dataManager = DataManager.shared
     private var cancellables = Set<AnyCancellable>()
     
+    var isInGeneralPlaylist: Bool {
+        return selectedPlaylist?.name == "General" || selectedPlaylist == nil
+    }
+    
     init() {
         dataManager.$savedFiles
             .receive(on: DispatchQueue.main)
@@ -47,6 +51,14 @@ final class HomeViewModel: ObservableObject {
     
     func addSong(_ song: MusicFileEntity, to playlist: PlaylistEntity) {
         dataManager.addSong(song, to: playlist)
+    }
+    
+    func renameSong(_ song: MusicFileEntity, to newName: String) {
+        dataManager.renameSong(song, to: newName)
+    }
+    
+    func deleteMusicFileEntity(_ musicFile: MusicFileEntity) {
+        dataManager.deleteMusicFile(musicFile)
     }
     
     func deleteMusicFile(at offsets: IndexSet) {
