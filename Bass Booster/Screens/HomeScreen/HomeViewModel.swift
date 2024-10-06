@@ -1,10 +1,3 @@
-//
-//  HomeViewModel.swift
-//  Bass Booster
-//
-//  Created by Mac Book Air M1 on 04.09.2024.
-//
-
 import Foundation
 import SwiftUI
 import Combine
@@ -13,12 +6,23 @@ final class HomeViewModel: ObservableObject {
     @Published var musicFiles: [MusicFileEntity] = []
     @Published var playlists: [PlaylistEntity] = []
     @Published var selectedPlaylist: PlaylistEntity?
+    @Published var searchText: String = ""
     
     private var dataManager = DataManager.shared
     private var cancellables = Set<AnyCancellable>()
     
     var isInGeneralPlaylist: Bool {
         return selectedPlaylist?.name == "General" || selectedPlaylist == nil
+    }
+    
+    var filteredMusicFiles: [MusicFileEntity] {
+        if searchText.isEmpty || !isInGeneralPlaylist {
+            return musicFiles
+        } else {
+            return musicFiles.filter { file in
+                file.name?.lowercased().contains(searchText.lowercased()) ?? false
+            }
+        }
     }
     
     init() {
@@ -31,6 +35,14 @@ final class HomeViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: \.playlists, on: self)
             .store(in: &cancellables)
+        
+        // Обновление фильтрованных файлов при изменении searchText
+        $searchText
+            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
+            .sink { _ in
+                // Можно добавить дополнительную логику, если необходимо
+            }
+            .store(in: &cancellables)
     }
     
     func fetchSavedMusicFiles() {
@@ -42,7 +54,15 @@ final class HomeViewModel: ObservableObject {
     }
     
     func fetchMusicFiles(for playlist: PlaylistEntity?) {
+        selectedPlaylist = playlist
         dataManager.fetchMusicFiles(for: playlist)
+    }
+    
+    func goToGeneralPlaylist() {
+        if let generalPlaylist = playlists.first(where: { $0.name == "General" }) {
+            selectedPlaylist = generalPlaylist
+            fetchMusicFiles(for: generalPlaylist)
+        }
     }
     
     func addPlaylist(name: String) {
@@ -58,7 +78,15 @@ final class HomeViewModel: ObservableObject {
     }
     
     func deleteMusicFileEntity(_ musicFile: MusicFileEntity) {
-        dataManager.deleteMusicFile(musicFile)
+        if isInGeneralPlaylist {
+            // Удаление из общего плейлиста удаляет песню полностью
+            dataManager.deleteMusicFile(musicFile)
+        } else {
+            // Удаление из текущего плейлиста
+            if let currentPlaylist = selectedPlaylist {
+                dataManager.removeSong(musicFile, from: currentPlaylist)
+            }
+        }
     }
     
     func deleteMusicFile(at offsets: IndexSet) {

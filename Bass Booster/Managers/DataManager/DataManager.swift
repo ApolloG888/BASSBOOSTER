@@ -135,6 +135,11 @@ final class DataManager: ObservableObject {
         }
     }
     
+    func removeSong(_ song: MusicFileEntity, from playlist: PlaylistEntity) {
+        playlist.removeFromSongs(song)
+        saveData()
+    }
+    
     // MARK: - Сохранение данных
     
     func saveData() {
