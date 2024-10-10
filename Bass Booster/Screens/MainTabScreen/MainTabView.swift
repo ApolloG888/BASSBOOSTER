@@ -30,6 +30,21 @@ struct MainTabView: View {
                 .zIndex(1) // Убедитесь, что этот вид выше других
             }
             
+            if viewModel.isShowDeleteSongView, let song = viewModel.songToDelete {
+                DeleteSongView(
+                    isPresented: $viewModel.isShowDeleteSongView,
+                    songName: song.name ?? "Unknown",
+                    onConfirm: {
+                        viewModel.confirmDeleteSong()
+                    },
+                    onCancel: {
+                        viewModel.cancelDeleteSong()
+                    }
+                )
+                .transition(.opacity)
+                .zIndex(2) // Убедитесь, что этот вид выше других
+            }
+            
         }
         .hideNavigationBar()
         .background(Color.customBlack)
@@ -82,11 +97,11 @@ struct MainTabView: View {
                     
                     Button {
                         guard let selectedMusicFile = viewModel.selectedMusicFile else {
-                            viewModel.bottomSheetPosition = .hidden
+                            viewModel.hideBottomSheet()
                             return
                         }
-                        viewModel.deleteMusicFileEntity(selectedMusicFile)
-                        viewModel.hideBottomSheet()
+                        // Запрашиваем подтверждение удаления песни
+                        viewModel.requestDeleteSong(selectedMusicFile)
                     } label: {
                         HStack {
                             Image(.delete)

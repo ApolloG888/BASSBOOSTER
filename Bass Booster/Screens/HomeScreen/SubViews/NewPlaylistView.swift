@@ -18,10 +18,6 @@ struct NewPlaylistView: View {
             // Полупрозрачный фон
             Color.black.opacity(0.4)
                 .edgesIgnoringSafeArea(.all)
-                .onTapGesture {
-                    // Закрыть при нажатии на фон
-                    onCancel()
-                }
 
             // Центрированное модальное окно
             VStack(spacing: 20) {
