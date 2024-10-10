@@ -28,7 +28,7 @@ struct HomeView: View {
                 HStack(spacing: 16) {
                     // Кнопка для добавления нового плейлиста
                     Button(action: {
-                        showAddPlaylistSheet = true
+                        viewModel.isShowViewNewPlaylist = true
                     }) {
                         VStack {
                             Image(systemName: "plus")

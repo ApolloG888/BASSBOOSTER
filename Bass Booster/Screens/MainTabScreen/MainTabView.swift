@@ -17,6 +17,19 @@ struct MainTabView: View {
             downView
                 .ignoresSafeArea(.keyboard)
             
+            if viewModel.isShowViewNewPlaylist {
+                NewPlaylistView(
+                    isPresented: $viewModel.isShowViewNewPlaylist,
+                    onSave: { name in
+                        viewModel.createNewPlaylist(name: name)
+                    },
+                    onCancel: {
+                        viewModel.cancelNewPlaylist()
+                    }
+                )
+                .zIndex(1) // Убедитесь, что этот вид выше других
+            }
+            
         }
         .hideNavigationBar()
         .background(Color.customBlack)

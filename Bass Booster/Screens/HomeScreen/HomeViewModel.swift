@@ -8,6 +8,7 @@ final class HomeViewModel: ObservableObject {
     @Published var musicFiles: [MusicFileEntity] = []
     @Published var playlists: [PlaylistEntity] = []
     @Published var selectedPlaylist: PlaylistEntity?
+    @Published var isShowViewNewPlaylist: Bool = false
     
     // Новые свойства для BottomSheet
     @Published var bottomSheetPosition: BottomSheetPosition = .hidden
@@ -76,5 +77,14 @@ final class HomeViewModel: ObservableObject {
     func hideBottomSheet() {
         self.bottomSheetPosition = .hidden
         self.selectedMusicFile = nil
+    }
+    
+    func createNewPlaylist(name: String) {
+        addPlaylist(name: name)
+        isShowViewNewPlaylist = false
+    }
+    
+    func cancelNewPlaylist() {
+        isShowViewNewPlaylist = false
     }
 }
