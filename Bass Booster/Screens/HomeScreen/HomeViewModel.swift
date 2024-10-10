@@ -70,7 +70,7 @@ final class HomeViewModel: ObservableObject {
     // Методы для управления BottomSheet через position
     func showBottomSheet(for musicFile: MusicFileEntity) {
         self.selectedMusicFile = musicFile
-        self.bottomSheetPosition = .absolute(325)
+        self.bottomSheetPosition = .absolute(270)
     }
     
     func hideBottomSheet() {

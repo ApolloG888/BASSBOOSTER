@@ -15,7 +15,7 @@ struct MainTabView: View {
         ZStack {
             tabView
             downView
-            .ignoresSafeArea(.keyboard)
+                .ignoresSafeArea(.keyboard)
             
         }
         .hideNavigationBar()
@@ -28,27 +28,72 @@ struct MainTabView: View {
         .bottomSheet(
             bottomSheetPosition: $viewModel.bottomSheetPosition,
             switchablePositions: [
-                viewModel.bottomSheetPosition
+                .hidden
             ]) {
-                VStack {
+                VStack(alignment: .leading) {
                     Button {
                         guard let selectedMusicFile = viewModel.selectedMusicFile else {
                             viewModel.bottomSheetPosition = .hidden
                             return
                         }
                         viewModel.deleteMusicFileEntity(selectedMusicFile)
-                        viewModel.bottomSheetPosition = .hidden
+                        viewModel.hideBottomSheet()
                     } label: {
-                        Text("Delete")
+                        HStack {
+                            Image(.rename)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24, height: 24)
+                            Text("Rename")
+                            Spacer()
+                        }
+                    }
+                    
+                    Button {
+                        guard let selectedMusicFile = viewModel.selectedMusicFile else {
+                            viewModel.bottomSheetPosition = .hidden
+                            return
+                        }
+                        viewModel.deleteMusicFileEntity(selectedMusicFile)
+                        viewModel.hideBottomSheet()
+                    } label: {
+                        HStack {
+                            Image(.addToPlaylist)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24, height: 24)
+                            Text("Add to Playlist")
+                            Spacer()
+                        }
+                    }
+                    
+                    Button {
+                        guard let selectedMusicFile = viewModel.selectedMusicFile else {
+                            viewModel.bottomSheetPosition = .hidden
+                            return
+                        }
+                        viewModel.deleteMusicFileEntity(selectedMusicFile)
+                        viewModel.hideBottomSheet()
+                    } label: {
+                        HStack {
+                            Image(.delete)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24, height: 24)
+                            Text("Delete")
+                            Spacer()
+                        }
                     }
                 }
+                .font(.sfProText(type: .regular400, size: 18))
+                .foregroundStyle(.subProductPriceColor)
+                .padding()
+                .padding(.top, 30)
             }
             .enableTapToDismiss()
-            .showDragIndicator(false)
             .enableBackgroundBlur(true)
             .enableSwipeToDismiss(true)
     }
-
 }
 
 // MARK: - Tab View
