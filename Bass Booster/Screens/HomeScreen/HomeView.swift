@@ -5,17 +5,13 @@
 //  Created by Mac Book Air M1 on 04.09.2024.
 //
 
-
-
 import SwiftUI
 import CoreData
 import BottomSheet
 
 struct HomeView: View {
-    @StateObject var viewModel = HomeViewModel()
+    @EnvironmentObject var viewModel: HomeViewModel
     @State private var showAddPlaylistSheet = false
-    @State private var bottomSheetPosition: BottomSheetPosition = .hidden
-    @State private var selectedMusicFile: MusicFileEntity?
 
     var body: some View {
         VStack {
@@ -66,12 +62,6 @@ struct HomeView: View {
                 .padding(.vertical)
             }
             
-            // Здесь должен быть ваш SearchBarView, если он есть
-            // Если его нет, можете закомментировать или удалить следующую строку
-            // SearchBarView {
-            //     // Реализация поиска, если необходимо
-            // }
-            
             List {
                 ForEach(viewModel.musicFiles) { musicFile in
                     MusicFileRow(
@@ -87,7 +77,7 @@ struct HomeView: View {
                             viewModel.deleteMusicFileEntity(song)
                         },
                         isInGeneralPlaylist: viewModel.isInGeneralPlaylist,
-                        onOptionSelect: { selectedMusicFile = $0; bottomSheetPosition = .absolute(325) } // Handle options
+                        onOptionSelect: { viewModel.showBottomSheet(for: $0) } // Управляем через ViewModel
                     )
                 }
                 .onDelete(perform: viewModel.deleteMusicFile)
@@ -104,100 +94,17 @@ struct HomeView: View {
         .hideNavigationBar()
         .padding()
         .appGradientBackground()
-        .bottomSheet(bottomSheetPosition: self.$bottomSheetPosition, switchablePositions: [
-                        .dynamicBottom,
-                        .absolute(325)
-                    ], headerContent: {
-                        VStack(alignment: .leading) {
-                            Text("Options for \(selectedMusicFile?.name ?? "Music")")
-                                .font(.title).bold()
-                            Text("Manage your music")
-                                .font(.subheadline).foregroundColor(.secondary)
-                            Divider()
-                        }
-                        .padding([.top, .leading])
-                    }) {
-                        bottomSheetContent()
-                    }
-                    .showDragIndicator(false)
-                    .enableContentDrag()
-                    .showCloseButton()
-                    .enableSwipeToDismiss()
-                    .enableTapToDismiss()
-    }
-    @ViewBuilder
-    private func bottomSheetContent() -> some View {
-        VStack(spacing: 16) { // Space between buttons
-            Button(action: {
-                if let selected = selectedMusicFile {
-                    viewModel.renameSong(selected, to: "New Name") // Example
-                }
-                bottomSheetPosition = .hidden
-            }) {
-                Text("Rename")
-                    .font(.system(size: 18, weight: .medium))
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color(.systemGray5))
-                    .cornerRadius(8)
-                    .foregroundColor(.white)
-            }
-
-            Button(action: {
-                if let selected = selectedMusicFile {
-                    // Add to playlist logic
-                }
-                bottomSheetPosition = .hidden
-            }) {
-                Text("Add to Playlist")
-                    .font(.system(size: 18, weight: .medium))
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color(.systemGray5))
-                    .cornerRadius(8)
-                    .foregroundColor(.white)
-            }
-
-            Button(action: {
-                if let selected = selectedMusicFile {
-                    viewModel.deleteMusicFileEntity(selected)
-                }
-                bottomSheetPosition = .hidden
-            }) {
-                Text("Delete")
-                    .font(.system(size: 18, weight: .medium))
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color(.red))
-                    .cornerRadius(8)
-                    .foregroundColor(.white)
-            }
-            
-            Button(action: {
-                bottomSheetPosition = .hidden
-            }) {
-                Text("Cancel")
-                    .font(.system(size: 18, weight: .medium))
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .foregroundColor(.white)
-            }
-
-            Spacer(minLength: 0) // Spacer for bottom padding if needed
-        }
-        .padding()
-        .background(Color(.black))
-        .cornerRadius(16)
     }
 }
-
 // Превью для SwiftUI
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         let viewModel = HomeViewModel()
-        HomeView(viewModel: viewModel)
+        HomeView()
+            .environmentObject(viewModel) // Передаём HomeViewModel
     }
 }
+    
 
 // MARK: - Дополнительные компоненты
 

@@ -1,18 +1,17 @@
-//
-//  HomeViewModel.swift
-//  Bass Booster
-//
-//  Created by Mac Book Air M1 on 04.09.2024.
-//
-
+// HomeViewModel.swift
 import Foundation
 import SwiftUI
 import Combine
+import BottomSheet
 
 final class HomeViewModel: ObservableObject {
     @Published var musicFiles: [MusicFileEntity] = []
     @Published var playlists: [PlaylistEntity] = []
     @Published var selectedPlaylist: PlaylistEntity?
+    
+    // Новые свойства для BottomSheet
+    @Published var bottomSheetPosition: BottomSheetPosition = .hidden
+    @Published var selectedMusicFile: MusicFileEntity?
     
     private var dataManager = DataManager.shared
     private var cancellables = Set<AnyCancellable>()
@@ -66,5 +65,16 @@ final class HomeViewModel: ObservableObject {
             let musicFile = musicFiles[index]
             dataManager.deleteMusicFile(musicFile)
         }
+    }
+    
+    // Методы для управления BottomSheet через position
+    func showBottomSheet(for musicFile: MusicFileEntity) {
+        self.selectedMusicFile = musicFile
+        self.bottomSheetPosition = .absolute(325)
+    }
+    
+    func hideBottomSheet() {
+        self.bottomSheetPosition = .hidden
+        self.selectedMusicFile = nil
     }
 }

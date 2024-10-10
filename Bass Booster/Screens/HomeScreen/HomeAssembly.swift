@@ -12,6 +12,6 @@ struct HomeAssembly {
     @MainActor
     func build() -> some View {
         let viewModel = HomeViewModel()
-        return HomeView(viewModel: viewModel)
+        return HomeView().environmentObject(viewModel)
     }
 }
