@@ -1,10 +1,4 @@
-//
-//  DataManager.swift
-//  Bass Booster
-//
-//  Created by Protsak Dmytro on 28.09.2024.
-//
-
+// DataManager.swift
 import Foundation
 import CoreData
 import Combine
@@ -25,11 +19,11 @@ final class DataManager: ObservableObject {
             }
         }
         fetchMusicFiles()
-        fetchPlaylists()
-        
-        // Создаем плейлист "General", если его нет
-        if !savedPlaylists.contains(where: { $0.name == "General" }) {
-            savePlaylist(name: "General")
+        fetchPlaylists {
+            // Проверяем, существует ли плейлист "General"
+            if !self.savedPlaylists.contains(where: { $0.name == "General" }) {
+                self.savePlaylist(name: "General")
+            }
         }
     }
     
@@ -103,15 +97,17 @@ final class DataManager: ObservableObject {
     
     // MARK: - Работа с плейлистами
     
-    func fetchPlaylists() {
+    func fetchPlaylists(completion: (() -> Void)? = nil) {
         let request: NSFetchRequest<PlaylistEntity> = PlaylistEntity.fetchRequest()
         do {
             let playlists = try container.viewContext.fetch(request)
             DispatchQueue.main.async {
                 self.savedPlaylists = playlists
+                completion?()
             }
         } catch {
             print("Ошибка получения плейлистов: \(error)")
+            completion?()
         }
     }
     
@@ -121,7 +117,7 @@ final class DataManager: ObservableObject {
         newPlaylist.name = name
         
         saveData()
-        fetchPlaylists()
+        fetchPlaylists() // Обновляем список плейлистов после сохранения
     }
     
     func addSong(_ song: MusicFileEntity, to playlist: PlaylistEntity) {
