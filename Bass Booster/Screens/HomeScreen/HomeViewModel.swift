@@ -16,6 +16,9 @@ final class HomeViewModel: ObservableObject {
     @Published var isShowDeleteSongView: Bool = false
     @Published var songToDelete: MusicFileEntity?
     
+    // Флаг для отображения списка плейлистов в bottomSheet
+    @Published var isPlaylistList: Bool = false
+    
     // Свойства для BottomSheet
     @Published var bottomSheetPosition: BottomSheetPosition = .hidden
     @Published var selectedMusicFile: MusicFileEntity?
@@ -93,12 +96,14 @@ final class HomeViewModel: ObservableObject {
     
     func showBottomSheet(for musicFile: MusicFileEntity) {
         self.selectedMusicFile = musicFile
+        self.isPlaylistList = false
         self.bottomSheetPosition = .absolute(270)
     }
     
     func hideBottomSheet() {
         self.bottomSheetPosition = .hidden
         self.selectedMusicFile = nil
+        self.isPlaylistList = false
     }
     
     // MARK: - Delete Song Confirmation
@@ -115,11 +120,25 @@ final class HomeViewModel: ObservableObject {
         }
         self.isShowDeleteSongView = false
         self.songToDelete = nil
-        self.bottomSheetPosition = .hidden
     }
     
     func cancelDeleteSong() {
         self.isShowDeleteSongView = false
         self.songToDelete = nil
+    }
+    
+    // MARK: - Add To Playlist Management
+    
+    func requestAddToPlaylist(_ song: MusicFileEntity) {
+        self.selectedMusicFile = song
+        self.isPlaylistList = true
+        self.bottomSheetPosition = .absolute(400)
+    }
+    
+    func addSongToSelectedPlaylist(_ playlist: PlaylistEntity) {
+        if let song = selectedMusicFile {
+            addSong(song, to: playlist)
+        }
+        hideBottomSheet()
     }
 }

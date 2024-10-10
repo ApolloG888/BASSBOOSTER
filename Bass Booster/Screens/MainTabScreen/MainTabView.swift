@@ -17,6 +17,7 @@ struct MainTabView: View {
             downView
                 .ignoresSafeArea(.keyboard)
             
+            // Отображение NewPlaylistView
             if viewModel.isShowViewNewPlaylist {
                 NewPlaylistView(
                     isPresented: $viewModel.isShowViewNewPlaylist,
@@ -30,6 +31,7 @@ struct MainTabView: View {
                 .zIndex(1) // Убедитесь, что этот вид выше других
             }
             
+            // Отображение DeleteSongView
             if viewModel.isShowDeleteSongView, let song = viewModel.songToDelete {
                 DeleteSongView(
                     isPresented: $viewModel.isShowDeleteSongView,
@@ -44,7 +46,6 @@ struct MainTabView: View {
                 .transition(.opacity)
                 .zIndex(2) // Убедитесь, что этот вид выше других
             }
-            
         }
         .hideNavigationBar()
         .background(Color.customBlack)
@@ -58,65 +59,113 @@ struct MainTabView: View {
             switchablePositions: [
                 .hidden
             ]) {
-                VStack(alignment: .leading) {
-                    Button {
-                        guard let selectedMusicFile = viewModel.selectedMusicFile else {
-                            viewModel.bottomSheetPosition = .hidden
-                            return
-                        }
-                        viewModel.deleteMusicFileEntity(selectedMusicFile)
-                        viewModel.hideBottomSheet()
-                    } label: {
-                        HStack {
-                            Image(.rename)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 24, height: 24)
-                            Text("Rename")
-                            Spacer()
-                        }
-                    }
-                    
-                    Button {
-                        guard let selectedMusicFile = viewModel.selectedMusicFile else {
-                            viewModel.bottomSheetPosition = .hidden
-                            return
-                        }
-                        viewModel.deleteMusicFileEntity(selectedMusicFile)
-                        viewModel.hideBottomSheet()
-                    } label: {
-                        HStack {
-                            Image(.addToPlaylist)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 24, height: 24)
-                            Text("Add to Playlist")
-                            Spacer()
-                        }
-                    }
-                    
-                    Button {
-                        guard let selectedMusicFile = viewModel.selectedMusicFile else {
+                if !viewModel.isPlaylistList {
+                    VStack(alignment: .leading) {
+                        Button {
+                            guard let selectedMusicFile = viewModel.selectedMusicFile else {
+                                viewModel.hideBottomSheet()
+                                return
+                            }
+                            // Переименовать песню
+                            // Здесь можно вызвать RenameSongView, если реализуете его
                             viewModel.hideBottomSheet()
-                            return
+                            // Реализуйте вызов RenameSongView, если требуется
+                        } label: {
+                            HStack {
+                                Image(systemName: "pencil")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 24, height: 24)
+                                Text("Rename")
+                                Spacer()
+                            }
                         }
-                        // Запрашиваем подтверждение удаления песни
-                        viewModel.requestDeleteSong(selectedMusicFile)
-                    } label: {
-                        HStack {
-                            Image(.delete)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 24, height: 24)
-                            Text("Delete")
-                            Spacer()
+                        .padding(.vertical, 8)
+                        
+                        Button {
+                            guard let selectedMusicFile = viewModel.selectedMusicFile else {
+                                viewModel.hideBottomSheet()
+                                return
+                            }
+                            // Запросить добавление песни в плейлист
+                            viewModel.requestAddToPlaylist(selectedMusicFile)
+                        } label: {
+                            HStack {
+                                Image(systemName: "plus.circle")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 24, height: 24)
+                                Text("Add to Playlist")
+                                Spacer()
+                            }
                         }
+                        .padding(.vertical, 8)
+                        
+                        Button {
+                            guard let selectedMusicFile = viewModel.selectedMusicFile else {
+                                viewModel.hideBottomSheet()
+                                return
+                            }
+                            // Запрашиваем подтверждение удаления песни
+                            viewModel.requestDeleteSong(selectedMusicFile)
+                            viewModel.hideBottomSheet()
+                        } label: {
+                            HStack {
+                                Image(systemName: "trash")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 24, height: 24)
+                                Text("Delete")
+                                Spacer()
+                            }
+                        }
+                        .padding(.vertical, 8)
+                    }
+                    .font(.system(size: 18, weight: .regular))
+                    .foregroundColor(.white)
+                    .padding()
+                    .padding(.top, 30)
+                } else {
+                    // Отображение списка плейлистов
+                    VStack(alignment: .leading) {
+                        Text("Select Playlist")
+                            .font(.headline)
+                            .padding(.top, 20)
+                            .padding(.horizontal, 20)
+                        
+                        List(viewModel.playlists) { playlist in
+                            Button(action: {
+                                // Добавить песню в выбранный плейлист
+                                viewModel.addSongToSelectedPlaylist(playlist)
+                            }) {
+                                HStack {
+                                    Image(systemName: "music.note.list")
+                                        .foregroundColor(.blue)
+                                    Text("\(playlist.name ?? "Unknown playlist")")
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                }
+                            }
+                        }
+                        .listStyle(PlainListStyle())
+                        
+                        Button(action: {
+                            // Отмена выбора плейлиста
+                            viewModel.isShowViewNewPlaylist = true
+                            viewModel.bottomSheetPosition = .hidden
+                        }) {
+                            Text("New Playlist")
+                                .foregroundColor(.red)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .padding(.horizontal, 20)
+                                .padding(.bottom, 20)
+                        }
+                        .padding(.top, 10)
                     }
                 }
-                .font(.sfProText(type: .regular400, size: 18))
-                .foregroundStyle(.subProductPriceColor)
-                .padding()
-                .padding(.top, 30)
             }
             .enableTapToDismiss()
             .enableBackgroundBlur(true)
