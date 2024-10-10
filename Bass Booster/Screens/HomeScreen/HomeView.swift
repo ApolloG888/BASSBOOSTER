@@ -125,52 +125,69 @@ struct HomeView: View {
                     .enableSwipeToDismiss()
                     .enableTapToDismiss()
     }
-    
     @ViewBuilder
     private func bottomSheetContent() -> some View {
-        VStack(spacing: 0) {
-            Button("Rename") {
-                // Rename logic (trigger a rename action or state)
+        VStack(spacing: 16) { // Space between buttons
+            Button(action: {
                 if let selected = selectedMusicFile {
                     viewModel.renameSong(selected, to: "New Name") // Example
                 }
                 bottomSheetPosition = .hidden
+            }) {
+                Text("Rename")
+                    .font(.system(size: 18, weight: .medium))
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color(.systemGray5))
+                    .cornerRadius(8)
+                    .foregroundColor(.white)
             }
-            .padding(.horizontal)
 
-            if viewModel.isInGeneralPlaylist {
-                Button("Add to Playlist") {
+            Button(action: {
+                if let selected = selectedMusicFile {
                     // Add to playlist logic
-                    if let selected = selectedMusicFile {
-                        // Call a function to handle adding to a playlist
-                    }
-                    bottomSheetPosition = .hidden
                 }
-                .padding(.horizontal)
-            } else {
-                Button("Remove from Playlist") {
-                    // Remove from playlist logic
-                    bottomSheetPosition = .hidden
-                }
-                .padding(.horizontal)
+                bottomSheetPosition = .hidden
+            }) {
+                Text("Add to Playlist")
+                    .font(.system(size: 18, weight: .medium))
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color(.systemGray5))
+                    .cornerRadius(8)
+                    .foregroundColor(.white)
             }
 
-            Button("Delete", role: .destructive) {
+            Button(action: {
                 if let selected = selectedMusicFile {
                     viewModel.deleteMusicFileEntity(selected)
                 }
                 bottomSheetPosition = .hidden
+            }) {
+                Text("Delete")
+                    .font(.system(size: 18, weight: .medium))
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color(.red))
+                    .cornerRadius(8)
+                    .foregroundColor(.white)
             }
-            .padding(.horizontal)
-
-            Button("Cancel", role: .cancel) {
-                bottomSheetPosition = .hidden
-            }
-            .padding(.horizontal)
             
-            Spacer(minLength: 0)
+            Button(action: {
+                bottomSheetPosition = .hidden
+            }) {
+                Text("Cancel")
+                    .font(.system(size: 18, weight: .medium))
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .foregroundColor(.white)
+            }
+
+            Spacer(minLength: 0) // Spacer for bottom padding if needed
         }
-        .padding([.horizontal, .top])
+        .padding()
+        .background(Color(.black))
+        .cornerRadius(16)
     }
 }
 
