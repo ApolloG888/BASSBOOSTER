@@ -9,10 +9,13 @@
 
 import SwiftUI
 import CoreData
+import BottomSheet
 
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
     @State private var showAddPlaylistSheet = false
+    @State private var bottomSheetPosition: BottomSheetPosition = .hidden
+    @State private var selectedMusicFile: MusicFileEntity?
 
     var body: some View {
         VStack {
@@ -83,7 +86,8 @@ struct HomeView: View {
                         onDelete: { song in
                             viewModel.deleteMusicFileEntity(song)
                         },
-                        isInGeneralPlaylist: viewModel.isInGeneralPlaylist
+                        isInGeneralPlaylist: viewModel.isInGeneralPlaylist,
+                        onOptionSelect: { selectedMusicFile = $0; bottomSheetPosition = .absolute(325) } // Handle options
                     )
                 }
                 .onDelete(perform: viewModel.deleteMusicFile)
@@ -99,12 +103,74 @@ struct HomeView: View {
         }
         .hideNavigationBar()
         .padding()
-        .background(Color.black) // Или используйте ваш собственный модификатор appGradientBackground()
-        .sheet(isPresented: $showAddPlaylistSheet) {
-            AddPlaylistView(isPresented: $showAddPlaylistSheet, onAdd: { name in
-                viewModel.addPlaylist(name: name)
-            })
+        .appGradientBackground()
+        .bottomSheet(bottomSheetPosition: self.$bottomSheetPosition, switchablePositions: [
+                        .dynamicBottom,
+                        .absolute(325)
+                    ], headerContent: {
+                        VStack(alignment: .leading) {
+                            Text("Options for \(selectedMusicFile?.name ?? "Music")")
+                                .font(.title).bold()
+                            Text("Manage your music")
+                                .font(.subheadline).foregroundColor(.secondary)
+                            Divider()
+                        }
+                        .padding([.top, .leading])
+                    }) {
+                        bottomSheetContent()
+                    }
+                    .showDragIndicator(false)
+                    .enableContentDrag()
+                    .showCloseButton()
+                    .enableSwipeToDismiss()
+                    .enableTapToDismiss()
+    }
+    
+    @ViewBuilder
+    private func bottomSheetContent() -> some View {
+        VStack(spacing: 0) {
+            Button("Rename") {
+                // Rename logic (trigger a rename action or state)
+                if let selected = selectedMusicFile {
+                    viewModel.renameSong(selected, to: "New Name") // Example
+                }
+                bottomSheetPosition = .hidden
+            }
+            .padding(.horizontal)
+
+            if viewModel.isInGeneralPlaylist {
+                Button("Add to Playlist") {
+                    // Add to playlist logic
+                    if let selected = selectedMusicFile {
+                        // Call a function to handle adding to a playlist
+                    }
+                    bottomSheetPosition = .hidden
+                }
+                .padding(.horizontal)
+            } else {
+                Button("Remove from Playlist") {
+                    // Remove from playlist logic
+                    bottomSheetPosition = .hidden
+                }
+                .padding(.horizontal)
+            }
+
+            Button("Delete", role: .destructive) {
+                if let selected = selectedMusicFile {
+                    viewModel.deleteMusicFileEntity(selected)
+                }
+                bottomSheetPosition = .hidden
+            }
+            .padding(.horizontal)
+
+            Button("Cancel", role: .cancel) {
+                bottomSheetPosition = .hidden
+            }
+            .padding(.horizontal)
+            
+            Spacer(minLength: 0)
         }
+        .padding([.horizontal, .top])
     }
 }
 
@@ -118,7 +184,6 @@ struct HomeView_Previews: PreviewProvider {
 
 // MARK: - Дополнительные компоненты
 
-// Компонент MusicFileRow
 struct MusicFileRow: View {
     var musicFile: MusicFileEntity
     var playlists: [PlaylistEntity]
@@ -127,9 +192,7 @@ struct MusicFileRow: View {
     var onDelete: (MusicFileEntity) -> Void
     var isInGeneralPlaylist: Bool
 
-    @State private var showActionSheet = false
-    @State private var showRenameSheet = false
-    @State private var showAddToPlaylistSheet = false
+    var onOptionSelect: (MusicFileEntity) -> Void // New closure to handle options
 
     var body: some View {
         HStack {
@@ -145,71 +208,19 @@ struct MusicFileRow: View {
                     .font(.subheadline)
             }
             Spacer()
-            // Кнопка с тремя точками
+            // Button with three dots to trigger the bottom sheet globally
             Button(action: {
-                showActionSheet = true
+                onOptionSelect(musicFile)
             }) {
                 Image(systemName: "ellipsis")
                     .foregroundColor(.white)
                     .font(.title)
             }
-            .actionSheet(isPresented: $showActionSheet) {
-                actionSheet()
-            }
-            .sheet(isPresented: $showRenameSheet) {
-                RenameSongView(
-                    isPresented: $showRenameSheet,
-                    songName: musicFile.name ?? "",
-                    onSave: { newName in
-                        onRename(musicFile, newName)
-                    }
-                )
-            }
-            .sheet(isPresented: $showAddToPlaylistSheet) {
-                AddToPlaylistView(
-                    isPresented: $showAddToPlaylistSheet,
-                    playlists: playlists,
-                    onAddToPlaylist: { playlist in
-                        onAddToPlaylist(musicFile, playlist)
-                    }
-                )
-            }
         }
         .padding()
     }
-
-    private func actionSheet() -> ActionSheet {
-        if isInGeneralPlaylist {
-            // Действия для главного плейлиста
-            return ActionSheet(
-                title: Text("Options"),
-                buttons: [
-                    .default(Text("Rename")) {
-                        showRenameSheet = true
-                    },
-                    .default(Text("Add to Playlist")) {
-                        showAddToPlaylistSheet = true
-                    },
-                    .destructive(Text("Delete")) {
-                        onDelete(musicFile)
-                    },
-                    .cancel()
-                ]
-            )
-        } else {
-            // Действия для других плейлистов (например, только Add to Playlist)
-            return ActionSheet(
-                title: Text("Options"),
-                buttons: [
-                    .default(Text("Add to Playlist")) {
-                        showAddToPlaylistSheet = true
-                    },
-                    .cancel()
-                ]
-            )
-        }
-    }
 }
+
 
 // Компонент RenameSongView
 struct RenameSongView: View {

@@ -1,5 +1,5 @@
 {
-  "originHash" : "b76ae77ee6ea5460512c4f446b1e4b3002e85774028a3654b3712b4c402ae826",
+  "originHash" : "f0e83eeff3dbe7d268c7cc7e9ae37430acc24522c878e3071222524a7597de44",
   "pins" : [
     {
       "identity" : "apphudsdk",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "8b0a05fabec1a202b4ea716391c40caf5bd3fb1a",
         "version" : "3.4.0"
+      }
+    },
+    {
+      "identity" : "bottomsheet",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:lucaszischka/BottomSheet.git",
+      "state" : {
+        "revision" : "720ddbd1371fef2a09cc1ab65fc503df37767f9c",
+        "version" : "3.1.1"
       }
     }
   ],
