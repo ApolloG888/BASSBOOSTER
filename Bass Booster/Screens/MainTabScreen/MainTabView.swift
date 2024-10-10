@@ -57,7 +57,7 @@ struct MainTabView: View {
         .bottomSheet(
             bottomSheetPosition: $viewModel.bottomSheetPosition,
             switchablePositions: [
-                .hidden
+                .dynamic
             ]) {
                 if !viewModel.isPlaylistList {
                     VStack(alignment: .leading) {

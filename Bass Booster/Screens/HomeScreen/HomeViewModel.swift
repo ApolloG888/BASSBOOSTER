@@ -59,7 +59,20 @@ final class HomeViewModel: ObservableObject {
     // MARK: - Playlist Management
     
     func addPlaylist(name: String) {
-        dataManager.savePlaylist(name: name)
+        // Генерируем уникальное имя
+        let uniqueName = generateUniquePlaylistName(desiredName: name)
+        dataManager.savePlaylist(name: uniqueName)
+    }
+    
+    // Метод для генерации уникального имени плейлиста
+    private func generateUniquePlaylistName(desiredName: String) -> String {
+        var uniqueName = desiredName
+        var suffix = 1
+        while dataManager.savedPlaylists.contains(where: { $0.name?.lowercased() == uniqueName.lowercased() }) {
+            uniqueName = "\(desiredName)\(suffix)"
+            suffix += 1
+        }
+        return uniqueName
     }
     
     func createNewPlaylist(name: String) {
