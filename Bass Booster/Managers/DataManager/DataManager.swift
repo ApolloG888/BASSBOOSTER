@@ -2,6 +2,8 @@
 import Foundation
 import CoreData
 import Combine
+import AVFoundation
+import UIKit
 
 final class DataManager: ObservableObject {
     static let shared = DataManager()
@@ -13,18 +15,27 @@ final class DataManager: ObservableObject {
     
     private init() {
         container = NSPersistentContainer(name: "BassBoosterData")
+        
+        // Настройка опций миграции
+        let description = container.persistentStoreDescriptions.first
+        description?.shouldMigrateStoreAutomatically = true
+        description?.shouldInferMappingModelAutomatically = true
+        
         container.loadPersistentStores { description, error in
             if let error = error {
                 fatalError("Ошибка загрузки Core Data: \(error)")
             }
-        }
-        fetchMusicFiles()
-        fetchPlaylists {
-            // Проверяем, существует ли плейлист "General"
-            if !self.savedPlaylists.contains(where: { $0.name == "General" }) {
-                self.savePlaylist(name: "General")
+            // После загрузки хранилища, загрузим плейлисты
+            self.fetchPlaylists {
+                // Проверяем, существует ли плейлист "General" и был ли он уже создан
+                let hasCreatedGeneral = UserDefaults.standard.bool(forKey: "hasCreatedGeneralPlaylist")
+                if !self.savedPlaylists.contains(where: { $0.name == "General" }) && !hasCreatedGeneral {
+                    self.savePlaylist(name: "General")
+                    UserDefaults.standard.set(true, forKey: "hasCreatedGeneralPlaylist")
+                }
             }
         }
+        fetchMusicFiles()
     }
     
     // MARK: - Работа с музыкальными файлами
@@ -61,20 +72,65 @@ final class DataManager: ObservableObject {
                 if !FileManager.default.fileExists(atPath: destinationURL.path) {
                     try FileManager.default.copyItem(at: url, to: destinationURL)
                 }
-                saveMusicFile(name: fileName, url: destinationURL)
+                // Асинхронно сохраняем файл с метаданными
+                Task {
+                    await saveMusicFile(name: fileName, url: destinationURL)
+                }
             } catch {
                 print("Ошибка копирования файла: \(error)")
             }
         }
-        fetchMusicFiles()
+        // Не вызываем fetchMusicFiles() здесь, так как это будет сделано после сохранения каждого файла
     }
     
-    func saveMusicFile(name: String, url: URL) {
+    func extractMetadata(from url: URL) async -> (authorName: String?, songName: String?, image: Data?) {
+        let asset = AVAsset(url: url)
+        do {
+            // Асинхронно загружаем доступные форматы метаданных
+            let availableFormats = try await asset.load(.availableMetadataFormats)
+            
+            var authorName: String?
+            var songName: String?
+            var imageData: Data?
+            
+            for format in availableFormats {
+                // Асинхронно загружаем метаданные для каждого формата
+                let metadata = try await asset.loadMetadata(for: format)
+                for item in metadata {
+                    if let commonKey = item.commonKey {
+                        switch commonKey {
+                        case .commonKeyArtist:
+                            authorName = try await item.load(.stringValue)
+                        case .commonKeyTitle:
+                            songName = try await item.load(.stringValue)
+                        case .commonKeyArtwork:
+                            imageData = try await item.load(.dataValue)
+                        default:
+                            break
+                        }
+                    }
+                }
+            }
+            
+            return (authorName, songName, imageData)
+        } catch {
+            print("Error extracting metadata: \(error)")
+            return (nil, nil, nil)
+        }
+    }
+    
+    func saveMusicFile(name: String, url: URL) async {
         if !isMusicFileExists(withName: name) {
             let newFile = MusicFileEntity(context: container.viewContext)
             newFile.id = UUID()
             newFile.name = name
             newFile.url = url.absoluteString
+            
+            // Извлекаем метаданные асинхронно
+            let metadata = await extractMetadata(from: url)
+            newFile.authorName = metadata.authorName
+            newFile.songName = metadata.songName
+            newFile.image = metadata.image
             
             // Добавляем в плейлист "General"
             if let generalPlaylist = savedPlaylists.first(where: { $0.name == "General" }) {
@@ -82,6 +138,10 @@ final class DataManager: ObservableObject {
             }
             
             saveData()
+            
+            // Обновляем данные отдельно, чтобы избежать рекурсии
+            fetchMusicFiles()
+            fetchPlaylists()
         }
     }
     
@@ -117,7 +177,9 @@ final class DataManager: ObservableObject {
         newPlaylist.name = name
         
         saveData()
-        fetchPlaylists() // Обновляем список плейлистов после сохранения
+        
+        // Обновляем плейлисты после сохранения
+        fetchPlaylists()
     }
     
     func addSong(_ song: MusicFileEntity, to playlist: PlaylistEntity) {
@@ -134,13 +196,19 @@ final class DataManager: ObservableObject {
     // MARK: - Сохранение данных
     
     func saveData() {
-        if container.viewContext.hasChanges {
-            do {
-                try container.viewContext.save()
-                fetchMusicFiles()
-                fetchPlaylists()
-            } catch {
-                print("Ошибка сохранения данных: \(error)")
+        container.viewContext.perform {
+            if self.container.viewContext.hasChanges {
+                do {
+                    try self.container.viewContext.save()
+                } catch let error as NSError {
+                    if error.code == NSValidationMultipleErrorsError {
+                        for validationError in error.userInfo[NSDetailedErrorsKey] as? [NSError] ?? [] {
+                            print("Validation Error: \(validationError.localizedDescription)")
+                        }
+                    } else {
+                        print("Ошибка сохранения данных: \(error), \(error.userInfo)")
+                    }
+                }
             }
         }
     }

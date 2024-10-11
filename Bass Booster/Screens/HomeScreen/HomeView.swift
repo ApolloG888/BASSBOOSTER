@@ -108,6 +108,9 @@ struct HomeView_Previews: PreviewProvider {
 
 // MARK: - Дополнительные компоненты
 
+// MusicFileRow.swift
+import SwiftUI
+
 struct MusicFileRow: View {
     var musicFile: MusicFileEntity
     var playlists: [PlaylistEntity]
@@ -120,19 +123,33 @@ struct MusicFileRow: View {
 
     var body: some View {
         HStack {
-            Image(systemName: "music.note")
-                .foregroundColor(.white)
-                .font(.largeTitle)
+            // Отображение изображения, если есть, иначе дефолтное
+            if let imageData = musicFile.image, let uiImage = UIImage(data: imageData) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 50, height: 50)
+                    .cornerRadius(8)
+            } else {
+                Image(systemName: "music.note")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 50, height: 50)
+                    .foregroundColor(.white)
+                    .background(Color.gray)
+                    .cornerRadius(8)
+            }
+            
             VStack(alignment: .leading) {
-                Text(musicFile.name ?? "Unknown")
+                Text(musicFile.songName ?? musicFile.name ?? "Unknown Song")
                     .foregroundColor(.white)
                     .font(.headline)
-                Text("Additional Info")
+                Text(musicFile.authorName ?? "Unknown Artist")
                     .foregroundColor(.gray)
                     .font(.subheadline)
             }
             Spacer()
-            // Button with three dots to trigger the bottom sheet globally
+            // Button с тремя точками для вызова нижнего листа
             Button(action: {
                 onOptionSelect(musicFile)
             }) {
