@@ -61,15 +61,25 @@ extension HomeView {
                     .foregroundColor(.white.opacity(0.5))
                     .font(.sfProText(type: .regular400, size: 14))
             )
-            .foregroundColor(.white.opacity(0.5))
+            .foregroundColor(.white)
             .font(.sfProText(type: .medium500, size: 16))
             
-            Image(.magnifer)
-                .foregroundColor(.gray)
+            if viewModel.searchText.isEmpty {
+                Image(.magnifer)
+                    .foregroundColor(.gray)
+            } else {
+                Button(action: {
+                    viewModel.searchText = ""
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.gray)
+                }
+                .buttonStyle(PlainButtonStyle()) // Убираем эффект кнопки
+            }
         }
         .padding(.horizontal)
         .padding(.vertical)
-        .background(.white.opacity(0.07))
+        .background(Color.white.opacity(0.07))
         .cornerRadius(8)
     }
 }
