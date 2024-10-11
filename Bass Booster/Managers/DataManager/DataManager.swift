@@ -174,7 +174,6 @@ final class DataManager: ObservableObject {
         if container.viewContext.hasChanges {
             do {
                 try container.viewContext.save()
-                fetchMusicFiles()
                 if shouldFetchPlaylists {
                     fetchPlaylists()
                 }

@@ -98,10 +98,12 @@ final class HomeViewModel: ObservableObject {
     }
     
     func deleteMusicFileEntity(_ musicFile: MusicFileEntity) {
-        dataManager.deleteMusicFile(musicFile)
-        if let selectedPlaylist = selectedPlaylist {
-            fetchMusicFiles(for: selectedPlaylist)
+        // Сначала удаляем объект из массива musicFiles
+        if let index = musicFiles.firstIndex(of: musicFile) {
+            musicFiles.remove(at: index)
         }
+        // Затем удаляем объект из Core Data
+        dataManager.deleteMusicFile(musicFile)
     }
     
     func showBottomSheet(for musicFile: MusicFileEntity) {
