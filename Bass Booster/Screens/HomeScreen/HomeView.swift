@@ -115,24 +115,29 @@ struct MusicFileRow: View {
     var onRename: (MusicFileEntity, String) -> Void
     var onDelete: (MusicFileEntity) -> Void
     var isInGeneralPlaylist: Bool
-
-    var onOptionSelect: (MusicFileEntity) -> Void // New closure to handle options
+    var onOptionSelect: (MusicFileEntity) -> Void
 
     var body: some View {
         HStack {
-            Image(systemName: "music.note")
-                .foregroundColor(.white)
-                .font(.largeTitle)
+            if let albumArt = musicFile.albumArt, let image = UIImage(data: albumArt) {
+                Image(uiImage: image)
+                    .resizable()
+                    .frame(width: 50, height: 50)
+                    .clipShape(RoundedRectangle(cornerRadius: 5))
+            } else {
+                Image(systemName: "music.note")
+                    .foregroundColor(.white)
+                    .font(.largeTitle)
+            }
             VStack(alignment: .leading) {
                 Text(musicFile.name ?? "Unknown")
                     .foregroundColor(.white)
                     .font(.headline)
-                Text("Additional Info")
+                Text(musicFile.artist ?? "Unknown Artist")
                     .foregroundColor(.gray)
                     .font(.subheadline)
             }
             Spacer()
-            // Button with three dots to trigger the bottom sheet globally
             Button(action: {
                 onOptionSelect(musicFile)
             }) {
@@ -142,68 +147,6 @@ struct MusicFileRow: View {
             }
         }
         .padding()
-    }
-}
-
-
-// Компонент RenameSongView
-struct RenameSongView: View {
-    @Binding var isPresented: Bool
-    @State private var newSongName: String
-    var onSave: (String) -> Void
-
-    init(isPresented: Binding<Bool>, songName: String, onSave: @escaping (String) -> Void) {
-        self._isPresented = isPresented
-        self._newSongName = State(initialValue: songName)
-        self.onSave = onSave
-    }
-
-    var body: some View {
-        NavigationView {
-            VStack {
-                TextField("Song Name", text: $newSongName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                Spacer()
-            }
-            .navigationBarTitle("Rename Song", displayMode: .inline)
-            .navigationBarItems(
-                leading: Button("Cancel") {
-                    isPresented = false
-                },
-                trailing: Button("Save") {
-                    onSave(newSongName)
-                    isPresented = false
-                }
-                .disabled(newSongName.isEmpty)
-            )
-        }
-    }
-}
-
-// Компонент AddToPlaylistView
-struct AddToPlaylistView: View {
-    @Binding var isPresented: Bool
-    var playlists: [PlaylistEntity]
-    var onAddToPlaylist: (PlaylistEntity) -> Void
-
-    var body: some View {
-        NavigationView {
-            List {
-                ForEach(playlists) { playlist in
-                    Button(action: {
-                        onAddToPlaylist(playlist)
-                        isPresented = false
-                    }) {
-                        Text(playlist.name ?? "Unknown")
-                    }
-                }
-            }
-            .navigationBarTitle("Select Playlist", displayMode: .inline)
-            .navigationBarItems(trailing: Button("Cancel") {
-                isPresented = false
-            })
-        }
     }
 }
 
@@ -227,37 +170,6 @@ struct PlaylistCell: View {
         .cornerRadius(10)
         .onTapGesture {
             onTap()
-        }
-    }
-}
-
-// Компонент AddPlaylistView
-struct AddPlaylistView: View {
-    @Binding var isPresented: Bool
-    @State private var playlistName: String = ""
-    var onAdd: (String) -> Void
-
-    var body: some View {
-        NavigationView {
-            VStack {
-                TextField("Playlist Name", text: $playlistName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                Spacer()
-            }
-            .navigationBarTitle("New Playlist", displayMode: .inline)
-            .navigationBarItems(
-                leading: Button("Cancel") {
-                    isPresented = false
-                },
-                trailing: Button("Add") {
-                    if !playlistName.isEmpty {
-                        onAdd(playlistName)
-                        isPresented = false
-                    }
-                }
-                .disabled(playlistName.isEmpty)
-            )
         }
     }
 }

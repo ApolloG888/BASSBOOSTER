@@ -2,6 +2,7 @@
 import Foundation
 import CoreData
 import Combine
+import AVFoundation
 
 final class DataManager: ObservableObject {
     static let shared = DataManager()
@@ -61,19 +62,45 @@ final class DataManager: ObservableObject {
                 if !FileManager.default.fileExists(atPath: destinationURL.path) {
                     try FileManager.default.copyItem(at: url, to: destinationURL)
                 }
-                saveMusicFile(name: fileName, url: destinationURL)
+                // Извлекаем метаданные
+                let asset = AVAsset(url: destinationURL)
+                let metadata = extractMetadata(from: asset)
+                
+                // Сохраняем файл с метаданными
+                saveMusicFile(name: metadata.songTitle, artist: metadata.artist, albumArt: metadata.albumArt, url: destinationURL)
             } catch {
                 print("Ошибка копирования файла: \(error)")
             }
         }
         fetchMusicFiles()
     }
+
+    // Функция для извлечения метаданных
+    func extractMetadata(from asset: AVAsset) -> (songTitle: String, artist: String, albumArt: Data?) {
+        var songTitle = "Unknown"
+        var artist = "Unknown"
+        var albumArt: Data?
+
+        for format in asset.commonMetadata {
+            if format.commonKey?.rawValue == "title" {
+                songTitle = format.stringValue ?? "Unknown"
+            } else if format.commonKey?.rawValue == "artist" {
+                artist = format.stringValue ?? "Unknown"
+            } else if format.commonKey?.rawValue == "artwork", let data = format.dataValue {
+                albumArt = data
+            }
+        }
+
+        return (songTitle, artist, albumArt)
+    }
     
-    func saveMusicFile(name: String, url: URL) {
+    func saveMusicFile(name: String, artist: String, albumArt: Data?, url: URL) {
         if !isMusicFileExists(withName: name) {
             let newFile = MusicFileEntity(context: container.viewContext)
             newFile.id = UUID()
             newFile.name = name
+            newFile.artist = artist
+            newFile.albumArt = albumArt  // Сохраняем обложку как бинарные данные
             newFile.url = url.absoluteString
             
             // Добавляем в плейлист "General"
