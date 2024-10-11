@@ -125,6 +125,7 @@ extension HomeView {
                         .foregroundStyle(.white)
                     Spacer()
                 }
+                .ignoresSafeArea(.keyboard)
             } else if !viewModel.searchText.isEmpty {
                 VStack {
                     Spacer()
@@ -133,6 +134,7 @@ extension HomeView {
                         .foregroundStyle(.white)
                     Spacer()
                 }
+                .ignoresSafeArea(.keyboard)
             } else {
                 ScrollView(showsIndicators: false) {
                     ForEach(Array(viewModel.filteredMusicFiles.enumerated()), id: \.element.id) { index, musicFile in

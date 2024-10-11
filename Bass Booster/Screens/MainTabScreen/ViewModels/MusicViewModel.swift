@@ -18,6 +18,7 @@ final class MusicViewModel: ObservableObject {
     @Published var selectedMusicFile: MusicFileEntity?
     
     @Published var searchText: String = ""
+    @Published var isLoading: Bool = false
     
     private var dataManager = DataManager.shared
     private var cancellables = Set<AnyCancellable>()
@@ -48,6 +49,26 @@ final class MusicViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: \.playlists, on: self)
             .store(in: &cancellables)
+    }
+    
+    // Добавляем новый метод для обработки выбранных файлов
+    func handlePickedFiles(urls: [URL]) {
+        isLoading = true  // Устанавливаем состояние загрузки
+        dataManager.handlePickedFiles(urls: urls) {
+            // Этот блок выполнится после завершения обработки файлов
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                if let myPlayerPlaylist = self.playlists.first(where: { $0.name == "My Player" }) {
+                    self.selectedPlaylist = myPlayerPlaylist
+                    self.fetchMusicFiles(for: myPlayerPlaylist)
+                } else {
+                    // Если плейлист "My Player" не найден, загружаем все песни
+                    self.selectedPlaylist = nil
+                    self.fetchSavedMusicFiles()
+                }
+            }
+        }
     }
     
     func fetchSavedMusicFiles() {

@@ -55,24 +55,36 @@ final class DataManager: ObservableObject {
         }
     }
     
-    func handlePickedFiles(urls: [URL]) {
-        for url in urls {
-            let fileName = url.lastPathComponent
-            let destinationURL = getDocumentsDirectory().appendingPathComponent(fileName)
-            do {
-                if !FileManager.default.fileExists(atPath: destinationURL.path) {
-                    try FileManager.default.copyItem(at: url, to: destinationURL)
+    func handlePickedFiles(urls: [URL], completion: @escaping () -> Void) {
+        let backgroundContext = container.newBackgroundContext()
+        backgroundContext.perform {
+            for url in urls {
+                let fileName = url.lastPathComponent
+                let destinationURL = self.getDocumentsDirectory().appendingPathComponent(fileName)
+                do {
+                    if !FileManager.default.fileExists(atPath: destinationURL.path) {
+                        try FileManager.default.copyItem(at: url, to: destinationURL)
+                    }
+                    let asset = AVAsset(url: destinationURL)
+                    let metadata = self.extractMetadata(from: asset)
+                    
+                    self.saveMusicFile(name: metadata.songTitle, artist: metadata.artist, albumArt: metadata.albumArt, url: destinationURL)
+                } catch {
+                    print("Ошибка копирования файла: \(error)")
                 }
-                let asset = AVAsset(url: destinationURL)
-                let metadata = extractMetadata(from: asset)
-                
-                saveMusicFile(name: metadata.songTitle, artist: metadata.artist, albumArt: metadata.albumArt, url: destinationURL)
+            }
+            do {
+                try backgroundContext.save()
             } catch {
-                print("Ошибка копирования файла: \(error)")
+                print("Ошибка сохранения данных в фоне: \(error)")
+            }
+            DispatchQueue.main.async {
+                self.fetchMusicFiles()
+                completion()  // Вызываем обработчик завершения
             }
         }
-        fetchMusicFiles()
     }
+
 
     func extractMetadata(from asset: AVAsset) -> (songTitle: String, artist: String, albumArt: Data?) {
         var songTitle = "Unknown"

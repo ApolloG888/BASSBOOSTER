@@ -17,6 +17,18 @@ struct MainTabView: View {
             downView
                 .ignoresSafeArea(.keyboard)
             
+            if viewModel.isLoading {
+                ZStack {
+                    Color.black.opacity(0.5)
+                        .edgesIgnoringSafeArea(.all)
+                    ProgressView("Loading...")
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .foregroundColor(.white)
+                        .scaleEffect(1.5)
+                }
+                .zIndex(2) // Устанавливаем более высокий zIndex
+            }
+            
             // Отображение NewPlaylistView
             if viewModel.isShowViewNewPlaylist {
                 NewPlaylistView(
@@ -321,7 +333,7 @@ extension MainTabView {
         if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let rootViewController = scene.windows.first?.rootViewController {
             let manager = DocumentPickerManager { urls in
-                DataManager.shared.handlePickedFiles(urls: urls)
+                viewModel.handlePickedFiles(urls: urls)
             }
             manager.showDocumentPicker()
             self.documentPickerManager = manager
