@@ -16,63 +16,7 @@ struct MainTabView: View {
             tabView
             downView
                 .ignoresSafeArea(.keyboard)
-            
-            if viewModel.isLoading {
-                ZStack {
-                    Color.black.opacity(0.5)
-                        .edgesIgnoringSafeArea(.all)
-                    ProgressView("Loading...")
-                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                        .foregroundColor(.white)
-                        .scaleEffect(1.5)
-                }
-                .zIndex(2) // Устанавливаем более высокий zIndex
-            }
-            
-            // Отображение NewPlaylistView
-            if viewModel.isShowViewNewPlaylist {
-                NewPlaylistView(
-                    isPresented: $viewModel.isShowViewNewPlaylist,
-                    onSave: { name in
-                        viewModel.createNewPlaylist(name: name)
-                    },
-                    onCancel: {
-                        viewModel.cancelNewPlaylist()
-                    }
-                )
-                .zIndex(1) // Убедитесь, что этот вид выше других
-            }
-            
-            // Отображение DeleteSongView
-            if viewModel.isShowDeleteSongView, let song = viewModel.songToDelete {
-                DeleteSongView(
-                    isPresented: $viewModel.isShowDeleteSongView,
-                    songName: song.name ?? "Unknown",
-                    onConfirm: {
-                        viewModel.confirmDeleteSong()
-                    },
-                    onCancel: {
-                        viewModel.cancelDeleteSong()
-                    }
-                )
-                .transition(.opacity)
-                .zIndex(1) // Убедитесь, что этот вид выше других
-            }
-            
-            if viewModel.isShowRenameSongView, let song = viewModel.selectedMusicFile {
-                RenameSongView(
-                    isPresented: $viewModel.isShowRenameSongView,
-                    authorName: song.artist ?? "",
-                    songName: song.name ?? "",
-                    onSave: { newAuthor, newSongName in
-                        viewModel.confirmRenameSong(newArtist: newAuthor, newSongName: newSongName)
-                    },
-                    onCancel: {
-                        viewModel.cancelRenameSong()
-                    }
-                )
-                .zIndex(1)
-            }
+            overlayViews
         }
         .hideNavigationBar()
         .background(Color.customBlack)
@@ -386,6 +330,82 @@ extension MainTabView {
             }
         }
         .padding(.vertical, 8)
+    }
+}
+
+extension MainTabView {
+    @ViewBuilder
+    var overlayViews: some View {
+        if viewModel.isLoading {
+            loadingView
+        }
+        
+        if viewModel.isShowViewNewPlaylist {
+            newPlaylistOverlay
+        }
+        
+        if viewModel.isShowDeleteSongView, let song = viewModel.songToDelete {
+            deleteSongOverlay(song: song)
+        }
+        
+        if viewModel.isShowRenameSongView, let song = viewModel.selectedMusicFile {
+            renameSongOverlay(song: song)
+        }
+    }
+    
+    var loadingView: some View {
+        ZStack {
+            Color.black.opacity(0.5)
+                .edgesIgnoringSafeArea(.all)
+            ProgressView("Loading...")
+                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                .foregroundColor(.white)
+                .scaleEffect(1.5)
+        }
+        .zIndex(2)
+    }
+    
+    var newPlaylistOverlay: some View {
+        NewPlaylistView(
+            isPresented: $viewModel.isShowViewNewPlaylist,
+            onSave: { name in
+                viewModel.createNewPlaylist(name: name)
+            },
+            onCancel: {
+                viewModel.cancelNewPlaylist()
+            }
+        )
+        .zIndex(1)
+    }
+    
+    func deleteSongOverlay(song: MusicFileEntity) -> some View {
+        DeleteSongView(
+            isPresented: $viewModel.isShowDeleteSongView,
+            songName: song.name ?? "Unknown",
+            onConfirm: {
+                viewModel.confirmDeleteSong()
+            },
+            onCancel: {
+                viewModel.cancelDeleteSong()
+            }
+        )
+        .transition(.opacity)
+        .zIndex(1)
+    }
+    
+    func renameSongOverlay(song: MusicFileEntity) -> some View {
+        RenameSongView(
+            isPresented: $viewModel.isShowRenameSongView,
+            authorName: song.artist ?? "",
+            songName: song.name ?? "",
+            onSave: { newAuthor, newSongName in
+                viewModel.confirmRenameSong(newArtist: newAuthor, newSongName: newSongName)
+            },
+            onCancel: {
+                viewModel.cancelRenameSong()
+            }
+        )
+        .zIndex(1)
     }
 }
 
