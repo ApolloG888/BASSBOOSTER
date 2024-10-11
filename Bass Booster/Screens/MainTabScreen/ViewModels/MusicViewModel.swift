@@ -63,7 +63,6 @@ final class MusicViewModel: ObservableObject {
                     self.selectedPlaylist = myPlayerPlaylist
                     self.fetchMusicFiles(for: myPlayerPlaylist)
                 } else {
-                    // Если плейлист "My Player" не найден, загружаем все песни
                     self.selectedPlaylist = nil
                     self.fetchSavedMusicFiles()
                 }

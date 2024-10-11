@@ -24,8 +24,13 @@ struct HomeView: View {
         .padding()
         .appGradientBackground()
         .onAppear {
-            viewModel.fetchSavedMusicFiles()
-            viewModel.fetchPlaylists()
+            if let myPlayerPlaylist = viewModel.playlists.first(where: { $0.name == "My Player" }) {
+                viewModel.selectedPlaylist = myPlayerPlaylist
+                viewModel.fetchMusicFiles(for: myPlayerPlaylist)
+            } else {
+                viewModel.selectedPlaylist = nil
+                viewModel.fetchSavedMusicFiles()
+            }
         }
     }
 }
