@@ -122,24 +122,26 @@ extension HomeView {
                     .foregroundStyle(.white)
                 Spacer()
             }
-            if viewModel.filteredMusicFiles.isEmpty && viewModel.searchText.isEmpty {
-                VStack {
-                    Spacer()
-                    Text("No music yet")
-                        .font(.sfProDisplay(type: .bold700, size: 30))
-                        .foregroundStyle(.white)
-                    Spacer()
+            if viewModel.filteredMusicFiles.isEmpty {
+                if viewModel.searchText.isEmpty {
+                    VStack {
+                        Spacer()
+                        Text("No music yet")
+                            .font(.sfProDisplay(type: .bold700, size: 30))
+                            .foregroundStyle(.white)
+                        Spacer()
+                    }
+                    .ignoresSafeArea(.keyboard)
+                } else {
+                    VStack {
+                        Spacer()
+                        Text("No results found")
+                            .font(.sfProDisplay(type: .bold700, size: 30))
+                            .foregroundStyle(.white)
+                        Spacer()
+                    }
+                    .ignoresSafeArea(.keyboard)
                 }
-                .ignoresSafeArea(.keyboard)
-            } else if !viewModel.searchText.isEmpty {
-                VStack {
-                    Spacer()
-                    Text("No results found")
-                        .font(.sfProDisplay(type: .bold700, size: 30))
-                        .foregroundStyle(.white)
-                    Spacer()
-                }
-                .ignoresSafeArea(.keyboard)
             } else {
                 ScrollView(showsIndicators: false) {
                     ForEach(Array(viewModel.filteredMusicFiles.enumerated()), id: \.element.id) { index, musicFile in
