@@ -83,142 +83,16 @@ struct MainTabView: View {
         }
         .bottomSheet(
             bottomSheetPosition: $viewModel.bottomSheetPosition,
-            switchablePositions: [
-                .dynamic
-            ]) {
-                if !viewModel.isPlaylistList {
-                    VStack(alignment: .leading) {
-                        Button {
-                            guard let selectedMusicFile = viewModel.selectedMusicFile else {
-                                viewModel.hideBottomSheet()
-                                return
-                            }
-                            // Открываем окно для переименования
-                            viewModel.requestRenameSong(selectedMusicFile)
-                        } label: {
-                            HStack {
-                                Image(systemName: "pencil")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 24, height: 24)
-                                Text("Rename")
-                                Spacer()
-                            }
-                        }
-                        .padding(.vertical, 8)
-                        
-                        if viewModel.isInGeneralPlaylist {
-                            Button {
-                                guard let selectedMusicFile = viewModel.selectedMusicFile else {
-                                    viewModel.hideBottomSheet()
-                                    return
-                                }
-                                // Запросить добавление песни в плейлист
-                                viewModel.requestAddToPlaylist(selectedMusicFile)
-                            } label: {
-                                HStack {
-                                    Image(systemName: "plus.circle")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 24, height: 24)
-                                    Text("Add to Playlist")
-                                    Spacer()
-                                }
-                            }
-                            .padding(.vertical, 8)
-                        } else {
-                            Button {
-                                guard let selectedMusicFile = viewModel.selectedMusicFile else {
-                                    viewModel.hideBottomSheet()
-                                    return
-                                }
-                                // Удаляем песню из текущего плейлиста
-                                if let selectedPlaylist = viewModel.selectedPlaylist {
-                                    viewModel.removeSongFromPlaylist(selectedMusicFile, from: selectedPlaylist)
-                                }
-                                viewModel.hideBottomSheet()
-                            } label: {
-                                HStack {
-                                    Image(systemName: "minus.circle")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 24, height: 24)
-                                    Text("Remove from Playlist")
-                                    Spacer()
-                                }
-                            }
-                            .padding(.vertical, 8)
-                        }
-                        
-                        Button {
-                            guard let selectedMusicFile = viewModel.selectedMusicFile else {
-                                viewModel.hideBottomSheet()
-                                return
-                            }
-                            // Запрашиваем подтверждение удаления песни
-                            viewModel.requestDeleteSong(selectedMusicFile)
-                            viewModel.hideBottomSheet()
-                        } label: {
-                            HStack {
-                                Image(systemName: "trash")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 24, height: 24)
-                                Text("Delete")
-                                Spacer()
-                            }
-                        }
-                        .padding(.vertical, 8)
-                    }
-                    .font(.system(size: 18, weight: .regular))
-                    .foregroundColor(.white)
-                    .padding()
-                    .padding(.top, 30)
-                } else {
-                    // Отображение списка плейлистов
-                    VStack(alignment: .leading) {
-                        Text("Select Playlist")
-                            .font(.headline)
-                            .padding(.top, 20)
-                            .padding(.horizontal, 20)
-                        
-                        List(viewModel.playlists) { playlist in
-                            Button(action: {
-                                // Добавить песню в выбранный плейлист
-                                viewModel.addSongToSelectedPlaylist(playlist)
-                            }) {
-                                HStack {
-                                    Image(systemName: "music.note.list")
-                                        .foregroundColor(.blue)
-                                    Text("\(playlist.name ?? "Unknown playlist")")
-                                        .foregroundColor(.primary)
-                                    Spacer()
-                                }
-                            }
-                        }
-                        .listStyle(PlainListStyle())
-                        
-                        Button(action: {
-                            // Отмена выбора плейлиста
-                            viewModel.isShowViewNewPlaylist = true
-                            viewModel.bottomSheetPosition = .hidden
-                        }) {
-                            Text("New Playlist")
-                                .foregroundColor(.red)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.white)
-                                .cornerRadius(10)
-                                .padding(.horizontal, 20)
-                                .padding(.bottom, 20)
-                        }
-                        .padding(.top, 10)
-                    }
-                }
+            switchablePositions: [.dynamic]) {
+                bottomSheetContent()
             }
             .enableTapToDismiss()
             .enableBackgroundBlur(true)
             .enableSwipeToDismiss(true)
+            .customBackground(
+                Color.bottomSheetColor
+                    .cornerRadius(15)
+            )
     }
 }
 
@@ -358,6 +232,149 @@ extension MainTabView {
         .appGradientBackground()
         .frame(height: 70)
         .ignoresSafeArea(.keyboard)
+    }
+}
+
+// MARK: - BottomSheetContent
+
+extension MainTabView {
+    @ViewBuilder
+    func bottomSheetContent() -> some View {
+        if !viewModel.isPlaylistList {
+            VStack(alignment: .leading) {
+                let buttons = getBottomSheetButtons()
+                let lastIndex = buttons.indices.last
+                ForEach(buttons.indices, id: \.self) { index in
+                    bottomSheetButton(
+                        imageName: buttons[index].imageName,
+                        text: buttons[index].text,
+                        action: buttons[index].action
+                    )
+                    
+                    if index != lastIndex {
+                        RoundedRectangle(cornerRadius: 0)
+                            .frame(maxWidth: .infinity, maxHeight: 0.5)
+                            .foregroundStyle(.subProductPriceColor.opacity(0.4))
+                    }
+                }
+            }
+            .font(.sfProText(type: .regular400, size: 16))
+            .foregroundColor(.subProductPriceColor)
+            .padding()
+            .padding(.top, 20)
+        } else {
+            playlistSelectionContent()
+        }
+    }
+}
+
+// MARK: - BottomSheetButtons
+
+extension MainTabView {
+    private func getBottomSheetButtons() -> [(imageName: String, text: String, action: () -> Void)] {
+        var buttons: [(imageName: String, text: String, action: () -> Void)] = []
+        
+        buttons.append((imageName: "rename", text: "Rename", action: {
+            guard let selectedMusicFile = viewModel.selectedMusicFile else {
+                viewModel.hideBottomSheet()
+                return
+            }
+            viewModel.requestRenameSong(selectedMusicFile)
+        }))
+        
+        if viewModel.isInGeneralPlaylist {
+            buttons.append((imageName: "addToPlaylist", text: "Add to Playlist", action: {
+                guard let selectedMusicFile = viewModel.selectedMusicFile else {
+                    viewModel.hideBottomSheet()
+                    return
+                }
+                viewModel.requestAddToPlaylist(selectedMusicFile)
+            }))
+        } else {
+            buttons.append((imageName: "Forward", text: "Remove from Playlist", action: {
+                guard let selectedMusicFile = viewModel.selectedMusicFile else {
+                    viewModel.hideBottomSheet()
+                    return
+                }
+                if let selectedPlaylist = viewModel.selectedPlaylist {
+                    viewModel.removeSongFromPlaylist(selectedMusicFile, from: selectedPlaylist)
+                }
+                viewModel.hideBottomSheet()
+            }))
+        }
+        
+        buttons.append((imageName: "delete", text: "Delete", action: {
+            guard let selectedMusicFile = viewModel.selectedMusicFile else {
+                viewModel.hideBottomSheet()
+                return
+            }
+            viewModel.requestDeleteSong(selectedMusicFile)
+            viewModel.hideBottomSheet()
+        }))
+        return buttons
+    }
+}
+
+extension MainTabView {
+    @ViewBuilder
+    func playlistSelectionContent() -> some View {
+        VStack(alignment: .leading) {
+            Text("Select Playlist")
+                .font(.headline)
+                .padding(.top, 20)
+                .padding(.horizontal, 20)
+            
+            List(viewModel.playlists) { playlist in
+                Button(action: {
+                    // Добавить песню в выбранный плейлист
+                    viewModel.addSongToSelectedPlaylist(playlist)
+                }) {
+                    HStack {
+                        Image(systemName: "music.note.list")
+                            .foregroundColor(.blue)
+                        Text("\(playlist.name ?? "Unknown playlist")")
+                            .foregroundColor(.primary)
+                        Spacer()
+                    }
+                }
+            }
+            .listStyle(PlainListStyle())
+            
+            Button(action: {
+                viewModel.isShowViewNewPlaylist = true
+                viewModel.bottomSheetPosition = .hidden
+            }) {
+                Text("New Playlist")
+                    .foregroundColor(.red)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(10)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 20)
+            }
+            .padding(.top, 10)
+        }
+    }
+}
+
+extension MainTabView {
+    private func bottomSheetButton(
+        imageName: String,
+        text: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            HStack {
+                Image(imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                Text(text)
+                Spacer()
+            }
+        }
+        .padding(.vertical, 8)
     }
 }
 

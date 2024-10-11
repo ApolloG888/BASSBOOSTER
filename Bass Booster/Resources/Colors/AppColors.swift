@@ -28,4 +28,5 @@ extension ShapeStyle where Self == Color {
     public static var musicInfoSubColor:Color { Color(hex: 0x797979) }
     public static var musicInfoColor:Color { Color(hex: 0x18191B) }
     public static var musicProgressBar:Color { Color(hex: 0xFACD66) }
+    public static var bottomSheetColor :Color { Color(hex: 0x131314) }
 }
