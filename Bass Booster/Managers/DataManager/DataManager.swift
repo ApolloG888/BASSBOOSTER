@@ -1,4 +1,3 @@
-// DataManager.swift
 import Foundation
 import CoreData
 import Combine
@@ -63,11 +62,9 @@ final class DataManager: ObservableObject {
                 if !FileManager.default.fileExists(atPath: destinationURL.path) {
                     try FileManager.default.copyItem(at: url, to: destinationURL)
                 }
-                // Извлекаем метаданные
                 let asset = AVAsset(url: destinationURL)
                 let metadata = extractMetadata(from: asset)
                 
-                // Сохраняем файл с метаданными
                 saveMusicFile(name: metadata.songTitle, artist: metadata.artist, albumArt: metadata.albumArt, url: destinationURL)
             } catch {
                 print("Ошибка копирования файла: \(error)")
@@ -76,7 +73,6 @@ final class DataManager: ObservableObject {
         fetchMusicFiles()
     }
 
-    // Функция для извлечения метаданных
     func extractMetadata(from asset: AVAsset) -> (songTitle: String, artist: String, albumArt: Data?) {
         var songTitle = "Unknown"
         var artist = "Unknown"
@@ -101,15 +97,14 @@ final class DataManager: ObservableObject {
             newFile.id = UUID()
             newFile.name = name
             newFile.artist = artist
-            newFile.albumArt = albumArt  // Сохраняем обложку как бинарные данные
+            newFile.albumArt = albumArt
             newFile.url = url.absoluteString
             
-            // Добавляем в плейлист "General"
             if let generalPlaylist = savedPlaylists.first(where: { $0.name == "General" }) {
                 newFile.addToPlaylist(generalPlaylist)
             }
             
-            saveData()
+            saveData(shouldFetchPlaylists: false)
         }
     }
     
@@ -117,17 +112,16 @@ final class DataManager: ObservableObject {
         let validArtist = newArtist.isEmpty ? song.artist : newArtist
         let validName = newName.isEmpty ? song.name : newName
         
-        // Проверяем, изменилось ли что-то
         if song.artist != validArtist || song.name != validName {
             song.artist = validArtist
             song.name = validName
-            saveData()
+            saveData(shouldFetchPlaylists: false)
         }
     }
     
     func deleteMusicFile(_ musicFile: MusicFileEntity) {
         container.viewContext.delete(musicFile)
-        saveData()
+        saveData(shouldFetchPlaylists: false)
     }
     
     func removeSongFromPlaylist(_ song: MusicFileEntity, from playlist: PlaylistEntity) {
@@ -138,7 +132,7 @@ final class DataManager: ObservableObject {
         
         playlist.removeFromSongs(song)
         
-        saveData()  // Сохраняем изменения в Core Data
+        saveData(shouldFetchPlaylists: false)
     }
     
     // MARK: - Работа с плейлистами
@@ -162,29 +156,28 @@ final class DataManager: ObservableObject {
         newPlaylist.id = UUID()
         newPlaylist.name = name
         
-        saveData()
-        fetchPlaylists() // Обновляем список плейлистов после сохранения
+        saveData(shouldFetchPlaylists: true)  // Здесь происходит сохранение с уникальным именем
     }
     
     func addSong(_ song: MusicFileEntity, to playlist: PlaylistEntity) {
-        // Проверяем, есть ли песня уже в плейлисте
         if let songs = playlist.songs as? Set<MusicFileEntity>, !songs.contains(song) {
             playlist.addToSongs(song)
-            saveData()
+            saveData(shouldFetchPlaylists: false)
         } else {
-            // Песня уже в плейлисте, можно показать уведомление или игнорировать
             print("Песня уже находится в плейлисте \(playlist.name ?? "Unknown")")
         }
     }
     
     // MARK: - Сохранение данных
     
-    func saveData() {
+    func saveData(shouldFetchPlaylists: Bool = false) {
         if container.viewContext.hasChanges {
             do {
                 try container.viewContext.save()
                 fetchMusicFiles()
-                fetchPlaylists()
+                if shouldFetchPlaylists {
+                    fetchPlaylists()
+                }
             } catch {
                 print("Ошибка сохранения данных: \(error)")
             }

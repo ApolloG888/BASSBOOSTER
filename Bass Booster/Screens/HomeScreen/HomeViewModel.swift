@@ -1,4 +1,3 @@
-// HomeViewModel.swift
 import Foundation
 import SwiftUI
 import Combine
@@ -9,19 +8,12 @@ final class HomeViewModel: ObservableObject {
     @Published var playlists: [PlaylistEntity] = []
     @Published var selectedPlaylist: PlaylistEntity?
     
-    // Свойства для управления NewPlaylistView
     @Published var isShowViewNewPlaylist: Bool = false
-    
-    // Свойства для управления DeleteSongView
     @Published var isShowDeleteSongView: Bool = false
     @Published var songToDelete: MusicFileEntity?
     
     @Published var isShowRenameSongView: Bool = false
-    
-    // Флаг для отображения списка плейлистов в bottomSheet
     @Published var isPlaylistList: Bool = false
-    
-    // Свойства для BottomSheet
     @Published var bottomSheetPosition: BottomSheetPosition = .hidden
     @Published var selectedMusicFile: MusicFileEntity?
     
@@ -44,8 +36,6 @@ final class HomeViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    // MARK: - Fetch Methods
-    
     func fetchSavedMusicFiles() {
         dataManager.fetchMusicFiles()
     }
@@ -58,15 +48,12 @@ final class HomeViewModel: ObservableObject {
         dataManager.fetchMusicFiles(for: playlist)
     }
     
-    // MARK: - Playlist Management
-    
+    // Playlist Management
     func addPlaylist(name: String) {
-        // Генерируем уникальное имя
         let uniqueName = generateUniquePlaylistName(desiredName: name)
         dataManager.savePlaylist(name: uniqueName)
     }
     
-    // Метод для генерации уникального имени плейлиста
     private func generateUniquePlaylistName(desiredName: String) -> String {
         var uniqueName = desiredName
         var suffix = 1
@@ -86,82 +73,72 @@ final class HomeViewModel: ObservableObject {
         isShowViewNewPlaylist = false
     }
     
-    // MARK: - Song Management
-    
+    // Song Management
     func addSong(_ song: MusicFileEntity, to playlist: PlaylistEntity) {
         dataManager.addSong(song, to: playlist)
     }
     
-    // MARK: - Rename Song Management
-
     func requestRenameSong(_ song: MusicFileEntity) {
-        self.selectedMusicFile = song
-        self.isShowRenameSongView = true
-        self.bottomSheetPosition = .hidden
+        selectedMusicFile = song
+        isShowRenameSongView = true
+        bottomSheetPosition = .hidden
     }
     
     func confirmRenameSong(newArtist: String, newSongName: String) {
         if let song = selectedMusicFile {
             dataManager.renameSong(song, newArtist: newArtist, newName: newSongName)
         }
-        self.isShowRenameSongView = false
-        self.selectedMusicFile = nil
+        isShowRenameSongView = false
+        selectedMusicFile = nil
     }
     
     func cancelRenameSong() {
-        self.isShowRenameSongView = false
-        self.selectedMusicFile = nil
+        isShowRenameSongView = false
+        selectedMusicFile = nil
     }
     
     func deleteMusicFileEntity(_ musicFile: MusicFileEntity) {
         dataManager.deleteMusicFile(musicFile)
-        
         if let selectedPlaylist = selectedPlaylist {
             fetchMusicFiles(for: selectedPlaylist)
         }
     }
     
-    // MARK: - BottomSheet Management
-    
     func showBottomSheet(for musicFile: MusicFileEntity) {
-        self.selectedMusicFile = musicFile
-        self.isPlaylistList = false
-        self.bottomSheetPosition = .absolute(270)
+        selectedMusicFile = musicFile
+        isPlaylistList = false
+        bottomSheetPosition = .absolute(270)
     }
     
     func hideBottomSheet() {
-        self.bottomSheetPosition = .hidden
-        self.selectedMusicFile = nil
-        self.isPlaylistList = false
+        bottomSheetPosition = .hidden
+        selectedMusicFile = nil
+        isPlaylistList = false
     }
     
-    // MARK: - Delete Song Confirmation
-    
     func requestDeleteSong(_ song: MusicFileEntity) {
-        self.songToDelete = song
-        self.isShowDeleteSongView = true
-        self.bottomSheetPosition = .hidden
+        songToDelete = song
+        isShowDeleteSongView = true
+        bottomSheetPosition = .hidden
     }
     
     func confirmDeleteSong() {
         if let song = songToDelete {
             deleteMusicFileEntity(song)
         }
-        self.isShowDeleteSongView = false
-        self.songToDelete = nil
+        isShowDeleteSongView = false
+        songToDelete = nil
     }
     
     func cancelDeleteSong() {
-        self.isShowDeleteSongView = false
-        self.songToDelete = nil
+        isShowDeleteSongView = false
+        songToDelete = nil
     }
     
-    // MARK: - Add To Playlist Management
-    
     func requestAddToPlaylist(_ song: MusicFileEntity) {
-        self.selectedMusicFile = song
-        self.isPlaylistList = true
-        self.bottomSheetPosition = .absolute(400)
+        selectedMusicFile = song
+        isPlaylistList = true
+        bottomSheetPosition = .absolute(400)
     }
     
     func addSongToSelectedPlaylist(_ playlist: PlaylistEntity) {
@@ -173,7 +150,6 @@ final class HomeViewModel: ObservableObject {
     
     func removeSongFromPlaylist(_ song: MusicFileEntity, from playlist: PlaylistEntity) {
         dataManager.removeSongFromPlaylist(song, from: playlist)
-        
         fetchMusicFiles(for: playlist)
     }
 }
