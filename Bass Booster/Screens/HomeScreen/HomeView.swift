@@ -125,7 +125,7 @@ extension HomeView {
             if viewModel.filteredMusicFiles.isEmpty && viewModel.searchText.isEmpty {
                 VStack {
                     Spacer()
-                    Text("No musics")
+                    Text("No music yet")
                         .font(.sfProDisplay(type: .bold700, size: 30))
                         .foregroundStyle(.white)
                     Spacer()

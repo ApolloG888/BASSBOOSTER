@@ -255,6 +255,7 @@ extension MainTabView {
                         RoundedRectangle(cornerRadius: 0)
                             .frame(maxWidth: .infinity, maxHeight: 0.5)
                             .foregroundStyle(.subProductPriceColor.opacity(0.4))
+                            .padding(.vertical, 8)
                     }
                 }
             }
@@ -319,41 +320,51 @@ extension MainTabView {
     @ViewBuilder
     func playlistSelectionContent() -> some View {
         VStack(alignment: .leading) {
-            Text("Select Playlist")
-                .font(.headline)
-                .padding(.top, 20)
-                .padding(.horizontal, 20)
-            
-            List(viewModel.playlists) { playlist in
-                Button(action: {
-                    // Добавить песню в выбранный плейлист
-                    viewModel.addSongToSelectedPlaylist(playlist)
-                }) {
-                    HStack {
-                        Image(systemName: "music.note.list")
-                            .foregroundColor(.blue)
-                        Text("\(playlist.name ?? "Unknown playlist")")
-                            .foregroundColor(.primary)
-                        Spacer()
+            ScrollView {
+                VStack(spacing: 0) {
+                    ForEach(viewModel.playlists.indices, id: \.self) { index in
+                        let playlist = viewModel.playlists[index]
+                        Button(action: {
+                            viewModel.addSongToSelectedPlaylist(playlist)
+                        }) {
+                            HStack {
+                                Image(.musicNoteYellow)
+                                Text("\(playlist.name ?? "Unknown playlist")")
+                                    .foregroundColor(.primary)
+                                Spacer()
+                            }
+                            .padding()
+                        }
+                        
+                        if index != viewModel.playlists.count - 1 {
+                            RoundedRectangle(cornerRadius: 0)
+                                .frame(height: 0.5)
+                                .foregroundColor(Color.gray.opacity(0.4))
+                                .padding(.vertical, 8)
+                        }
                     }
                 }
+                .padding()
             }
-            .listStyle(PlainListStyle())
             
             Button(action: {
                 viewModel.isShowViewNewPlaylist = true
                 viewModel.bottomSheetPosition = .hidden
             }) {
-                Text("New Playlist")
-                    .foregroundColor(.red)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 20)
+                HStack {
+                    Image(systemName: "plus")
+                    Text("New Playlist")
+                }
+                .font(.sfProDisplay(type: .bold700, size: 17))
+                .foregroundColor(.black)
+                .frame(maxWidth: .infinity, minHeight: 64)
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .foregroundColor(.selectionButtonBaseColor)
+                )
+                .padding(.horizontal, 20)
+                .padding(.vertical, 30)
             }
-            .padding(.top, 10)
         }
     }
 }

@@ -174,7 +174,7 @@ final class MusicViewModel: ObservableObject {
     func requestAddToPlaylist(_ song: MusicFileEntity) {
         selectedMusicFile = song
         isPlaylistList = true
-        bottomSheetPosition = .absolute(400)
+        bottomSheetPosition = .relative(0.85)
     }
     
     func addSongToSelectedPlaylist(_ playlist: PlaylistEntity) {
