@@ -59,7 +59,6 @@ struct DeleteSongView: View {
             .shadow(radius: 10)
             .padding(.horizontal, 40)
         }
-        .animation(.easeInOut, value: isPresented)
     }
 }
 

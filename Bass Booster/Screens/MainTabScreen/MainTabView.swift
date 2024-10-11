@@ -59,7 +59,7 @@ struct MainTabView: View {
                         viewModel.cancelRenameSong()
                     }
                 )
-                .zIndex(1) // Убедитесь, что этот вид выше других
+                .zIndex(1)
             }
         }
         .hideNavigationBar()
@@ -95,24 +95,48 @@ struct MainTabView: View {
                         }
                         .padding(.vertical, 8)
                         
-                        Button {
-                            guard let selectedMusicFile = viewModel.selectedMusicFile else {
+                        if viewModel.isInGeneralPlaylist {
+                            Button {
+                                guard let selectedMusicFile = viewModel.selectedMusicFile else {
+                                    viewModel.hideBottomSheet()
+                                    return
+                                }
+                                // Запросить добавление песни в плейлист
+                                viewModel.requestAddToPlaylist(selectedMusicFile)
+                            } label: {
+                                HStack {
+                                    Image(systemName: "plus.circle")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 24, height: 24)
+                                    Text("Add to Playlist")
+                                    Spacer()
+                                }
+                            }
+                            .padding(.vertical, 8)
+                        } else {
+                            Button {
+                                guard let selectedMusicFile = viewModel.selectedMusicFile else {
+                                    viewModel.hideBottomSheet()
+                                    return
+                                }
+                                // Удаляем песню из текущего плейлиста
+                                if let selectedPlaylist = viewModel.selectedPlaylist {
+                                    viewModel.removeSongFromPlaylist(selectedMusicFile, from: selectedPlaylist)
+                                }
                                 viewModel.hideBottomSheet()
-                                return
+                            } label: {
+                                HStack {
+                                    Image(systemName: "minus.circle")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 24, height: 24)
+                                    Text("Remove from Playlist")
+                                    Spacer()
+                                }
                             }
-                            // Запросить добавление песни в плейлист
-                            viewModel.requestAddToPlaylist(selectedMusicFile)
-                        } label: {
-                            HStack {
-                                Image(systemName: "plus.circle")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 24, height: 24)
-                                Text("Add to Playlist")
-                                Spacer()
-                            }
+                            .padding(.vertical, 8)
                         }
-                        .padding(.vertical, 8)
                         
                         Button {
                             guard let selectedMusicFile = viewModel.selectedMusicFile else {

@@ -52,7 +52,6 @@ struct NewPlaylistView: View {
             .shadow(radius: 10)
             .padding(.horizontal, 40) // Для отступа от краёв экрана
         }
-        .animation(.easeInOut, value: isPresented)
     }
 }
 

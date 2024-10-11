@@ -115,12 +115,9 @@ final class HomeViewModel: ObservableObject {
     
     func deleteMusicFileEntity(_ musicFile: MusicFileEntity) {
         dataManager.deleteMusicFile(musicFile)
-    }
-    
-    func deleteMusicFile(at offsets: IndexSet) {
-        for index in offsets {
-            let musicFile = musicFiles[index]
-            dataManager.deleteMusicFile(musicFile)
+        
+        if let selectedPlaylist = selectedPlaylist {
+            fetchMusicFiles(for: selectedPlaylist)
         }
     }
     
@@ -172,5 +169,11 @@ final class HomeViewModel: ObservableObject {
             addSong(song, to: playlist)
         }
         hideBottomSheet()
+    }
+    
+    func removeSongFromPlaylist(_ song: MusicFileEntity, from playlist: PlaylistEntity) {
+        dataManager.removeSongFromPlaylist(song, from: playlist)
+        
+        fetchMusicFiles(for: playlist)
     }
 }

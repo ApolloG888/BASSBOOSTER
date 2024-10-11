@@ -16,7 +16,7 @@ struct HomeView: View {
     var body: some View {
         VStack {
             HStack {
-                Text("My Player")
+                Text("\(viewModel.selectedPlaylist?.name ?? "My Player")")
                     .font(.system(size: 32, weight: .medium))
                     .foregroundColor(.white)
                 Spacer()
@@ -70,7 +70,6 @@ struct HomeView: View {
                         onOptionSelect: { viewModel.showBottomSheet(for: $0) } // Управляем через ViewModel
                     )
                 }
-                .onDelete(perform: viewModel.deleteMusicFile)
             }
             .listStyle(PlainListStyle())
             .background(Color.clear)

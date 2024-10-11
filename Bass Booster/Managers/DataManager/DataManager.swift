@@ -130,6 +130,17 @@ final class DataManager: ObservableObject {
         saveData()
     }
     
+    func removeSongFromPlaylist(_ song: MusicFileEntity, from playlist: PlaylistEntity) {
+        guard let songs = playlist.songs as? Set<MusicFileEntity>, songs.contains(song) else {
+            print("Песня не найдена в плейлисте \(playlist.name ?? "Unknown")")
+            return
+        }
+        
+        playlist.removeFromSongs(song)
+        
+        saveData()  // Сохраняем изменения в Core Data
+    }
+    
     // MARK: - Работа с плейлистами
     
     func fetchPlaylists(completion: (() -> Void)? = nil) {
