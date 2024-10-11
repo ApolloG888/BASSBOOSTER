@@ -117,22 +117,40 @@ extension HomeView {
                     .foregroundStyle(.white)
                 Spacer()
             }
-            ScrollView(showsIndicators: false) {
-                ForEach(Array(viewModel.filteredMusicFiles.enumerated()), id: \.element.id) { index, musicFile in
-                    HStack {
-                        Text("\(index + 1)")
-                            .font(.sfProDisplay(type: .regular400, size: 16))
-                            .foregroundStyle(.white)
-                            .frame(width: 30, alignment: .leading)
-                        MusicFileRow(
-                            musicFile: musicFile,
-                            playlists: viewModel.playlists.filter { $0.name != "My Player" },
-                            onOptionSelect: { viewModel.showBottomSheet(for: $0) }
-                        )
-                    }
-                    .padding(.vertical, 10)
+            if viewModel.filteredMusicFiles.isEmpty && viewModel.searchText.isEmpty {
+                VStack {
+                    Spacer()
+                    Text("No musics")
+                        .font(.sfProDisplay(type: .bold700, size: 30))
+                        .foregroundStyle(.white)
+                    Spacer()
                 }
-                .padding(.bottom, 80)
+            } else if !viewModel.searchText.isEmpty {
+                VStack {
+                    Spacer()
+                    Text("No results found")
+                        .font(.sfProDisplay(type: .bold700, size: 30))
+                        .foregroundStyle(.white)
+                    Spacer()
+                }
+            } else {
+                ScrollView(showsIndicators: false) {
+                    ForEach(Array(viewModel.filteredMusicFiles.enumerated()), id: \.element.id) { index, musicFile in
+                        HStack {
+                            Text("\(index + 1)")
+                                .font(.sfProDisplay(type: .regular400, size: 16))
+                                .foregroundStyle(.white)
+                                .frame(width: 30, alignment: .leading)
+                            MusicFileRow(
+                                musicFile: musicFile,
+                                playlists: viewModel.playlists.filter { $0.name != "My Player" },
+                                onOptionSelect: { viewModel.showBottomSheet(for: $0) }
+                            )
+                        }
+                        .padding(.vertical, 10)
+                    }
+                    .padding(.bottom, 80)
+                }
             }
         }
         .padding(.top)
