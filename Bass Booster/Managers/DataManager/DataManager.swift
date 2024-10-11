@@ -17,12 +17,13 @@ final class DataManager: ObservableObject {
             if let error = error {
                 fatalError("Ошибка загрузки Core Data: \(error)")
             }
-        }
-        fetchMusicFiles()
-        fetchPlaylists {
-            DispatchQueue.main.async {
-                if !self.savedPlaylists.contains(where: { $0.name == "General" }) {
-                    self.savePlaylist(name: "General")
+            // Хранилища данных успешно загружены, теперь можно выполнять запросы
+            self.fetchMusicFiles()
+            self.fetchPlaylists {
+                DispatchQueue.main.async {
+                    if !self.savedPlaylists.contains(where: { $0.name == "General" }) {
+                        self.savePlaylist(name: "General")
+                    }
                 }
             }
         }

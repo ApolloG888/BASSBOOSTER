@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @State private var state: MainTabScreenState = .settings
     @StateObject var viewModel: SettingsViewModel
     @State private var isSubscriptionLinkActive = false
     
@@ -37,7 +36,7 @@ struct SettingsView: View {
 extension SettingsView {
     var header: some View {
         HStack {
-            Text(state.name)
+            Text("Settings")
                 .font(.sfProDisplay(type: .medium500, size: 32))
                 .foregroundColor(.white)
             Spacer()

@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct FeaturesView: View {
-    @State private var state: MainTabScreenState = .features
     @StateObject var viewModel: FeaturesViewModel
     
     var body: some View {
@@ -29,7 +28,7 @@ extension FeaturesView {
     var header: some View {
         VStack {
             HStack {
-                Text(state.name)
+                Text("Features")
                     .font(.sfProDisplay(type: .medium500, size: 32))
                     .foregroundColor(.white)
                 Spacer()
@@ -37,7 +36,7 @@ extension FeaturesView {
             .padding(.bottom, Space.xs)
             
             HStack {
-                Text(state.possibilities)
+                Text("Customize the sound yourself")
                     .font(.sfProText(type: .regular400, size: 14))
                     .foregroundColor(.white.opacity(0.5))
                 Spacer()

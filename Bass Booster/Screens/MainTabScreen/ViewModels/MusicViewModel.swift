@@ -3,7 +3,7 @@ import SwiftUI
 import Combine
 import BottomSheet
 
-final class HomeViewModel: ObservableObject {
+final class MusicViewModel: ObservableObject {
     @Published var musicFiles: [MusicFileEntity] = []
     @Published var playlists: [PlaylistEntity] = []
     @Published var selectedPlaylist: PlaylistEntity?

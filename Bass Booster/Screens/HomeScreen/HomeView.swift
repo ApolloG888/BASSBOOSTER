@@ -10,7 +10,7 @@ import CoreData
 import BottomSheet
 
 struct HomeView: View {
-    @EnvironmentObject var viewModel: HomeViewModel
+    @EnvironmentObject var viewModel: MusicViewModel
     @State private var showAddPlaylistSheet = false
 
     var body: some View {
@@ -107,7 +107,7 @@ struct HomeView: View {
 // Превью для SwiftUI
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        let viewModel = HomeViewModel()
+        let viewModel = MusicViewModel()
         HomeView()
             .environmentObject(viewModel) // Передаём HomeViewModel
     }

@@ -49,7 +49,6 @@
 		5FF2549D2CB886B60004E391 /* DeleteSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF2549C2CB886B60004E391 /* DeleteSongView.swift */; };
 		5FF254A12CB93BA80004E391 /* RenameSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF254A02CB93BA80004E391 /* RenameSongView.swift */; };
 		6D0E33522C8481720087493E /* ProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E33512C8481720087493E /* ProductView.swift */; };
-		6D363B562C85C8C90053761C /* MainTabScreenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B552C85C8C90053761C /* MainTabScreenState.swift */; };
 		6D363B592C85F26A0053761C /* ModesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B582C85F2690053761C /* ModesView.swift */; };
 		6D363B5C2C85F7F10053761C /* ModesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B5B2C85F7F10053761C /* ModesViewModel.swift */; };
 		6D363B5E2C85F84F0053761C /* ModesAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B5D2C85F84F0053761C /* ModesAssembly.swift */; };
@@ -57,8 +56,7 @@
 		6D363B632C85FA050053761C /* FeaturesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B622C85FA050053761C /* FeaturesViewModel.swift */; };
 		6D363B652C85FA220053761C /* FeaturesAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B642C85FA220053761C /* FeaturesAssembly.swift */; };
 		6D363B6C2C888D510053761C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B6B2C888D510053761C /* HomeView.swift */; };
-		6D363B6E2C888D680053761C /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B6D2C888D680053761C /* HomeViewModel.swift */; };
-		6D363B702C888D760053761C /* HomeAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B6F2C888D760053761C /* HomeAssembly.swift */; };
+		6D363B6E2C888D680053761C /* MusicViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B6D2C888D680053761C /* MusicViewModel.swift */; };
 		6D363B722C888E910053761C /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B712C888E910053761C /* SearchBarView.swift */; };
 		6D363B742C88A55C0053761C /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B732C88A55C0053761C /* PlaylistView.swift */; };
 		6D4600E62C945EA0003F92BC /* MusicInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4600E52C945EA0003F92BC /* MusicInfo.swift */; };
@@ -121,7 +119,6 @@
 		5FF2549C2CB886B60004E391 /* DeleteSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteSongView.swift; sourceTree = "<group>"; };
 		5FF254A02CB93BA80004E391 /* RenameSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameSongView.swift; sourceTree = "<group>"; };
 		6D0E33512C8481720087493E /* ProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductView.swift; sourceTree = "<group>"; };
-		6D363B552C85C8C90053761C /* MainTabScreenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabScreenState.swift; sourceTree = "<group>"; };
 		6D363B582C85F2690053761C /* ModesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModesView.swift; sourceTree = "<group>"; };
 		6D363B5B2C85F7F10053761C /* ModesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModesViewModel.swift; sourceTree = "<group>"; };
 		6D363B5D2C85F84F0053761C /* ModesAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModesAssembly.swift; sourceTree = "<group>"; };
@@ -129,8 +126,7 @@
 		6D363B622C85FA050053761C /* FeaturesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesViewModel.swift; sourceTree = "<group>"; };
 		6D363B642C85FA220053761C /* FeaturesAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesAssembly.swift; sourceTree = "<group>"; };
 		6D363B6B2C888D510053761C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		6D363B6D2C888D680053761C /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
-		6D363B6F2C888D760053761C /* HomeAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeAssembly.swift; sourceTree = "<group>"; };
+		6D363B6D2C888D680053761C /* MusicViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicViewModel.swift; sourceTree = "<group>"; };
 		6D363B712C888E910053761C /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		6D363B732C88A55C0053761C /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
 		6D4600E52C945EA0003F92BC /* MusicInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicInfo.swift; sourceTree = "<group>"; };
@@ -259,8 +255,8 @@
 		5FD59D922C84EC7700D3508B /* MainTabScreen */ = {
 			isa = PBXGroup;
 			children = (
+				5FE7DC582CB9B10500001F61 /* ViewModels */,
 				5FD59D932C84EC9200D3508B /* MainTabView.swift */,
-				6D363B552C85C8C90053761C /* MainTabScreenState.swift */,
 				5FD00C5F2C8D35FE008F2B4B /* MainTabAssembly.swift */,
 				6D4600E52C945EA0003F92BC /* MusicInfo.swift */,
 				6D4600E72C945EBD003F92BC /* MusicView.swift */,
@@ -386,6 +382,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		5FE7DC582CB9B10500001F61 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				6D363B6D2C888D680053761C /* MusicViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		5FF254992CB8857E0004E391 /* SubViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -421,8 +425,6 @@
 			children = (
 				5FF254992CB8857E0004E391 /* SubViews */,
 				6D363B6B2C888D510053761C /* HomeView.swift */,
-				6D363B6D2C888D680053761C /* HomeViewModel.swift */,
-				6D363B6F2C888D760053761C /* HomeAssembly.swift */,
 			);
 			path = HomeScreen;
 			sourceTree = "<group>";
@@ -563,7 +565,7 @@
 				6D363B5E2C85F84F0053761C /* ModesAssembly.swift in Sources */,
 				5FD00C6D2C8E1A85008F2B4B /* SettingsAssembly.swift in Sources */,
 				5FDBE7E32C833C3300E623B5 /* BassBoosterApp.swift in Sources */,
-				6D363B6E2C888D680053761C /* HomeViewModel.swift in Sources */,
+				6D363B6E2C888D680053761C /* MusicViewModel.swift in Sources */,
 				5FDBE7FC2C83478200E623B5 /* AppColors.swift in Sources */,
 				5F54B3B52C83D5260012E1C0 /* URLManager.swift in Sources */,
 				5F54B3AC2C83C8D00012E1C0 /* Space.swift in Sources */,
@@ -592,8 +594,6 @@
 				6DA0B4752C84765A0035751E /* SubscriptionScreenState.swift in Sources */,
 				5F4BF3B82C8D238C00F313E2 /* PurchaseManager.swift in Sources */,
 				6D363B742C88A55C0053761C /* PlaylistView.swift in Sources */,
-				6D363B562C85C8C90053761C /* MainTabScreenState.swift in Sources */,
-				6D363B702C888D760053761C /* HomeAssembly.swift in Sources */,
 				5FD00C6B2C8E1A7B008F2B4B /* SettingsViewModel.swift in Sources */,
 				5FD59D962C84EFB400D3508B /* CustomToggle.swift in Sources */,
 				5FD59D942C84EC9200D3508B /* MainTabView.swift in Sources */,

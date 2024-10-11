@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct ModesView: View {
-    
-    @State private var state: MainTabScreenState = .modes
+
     @StateObject var viewModel: ModesViewModel
     
     var body: some View {
@@ -31,7 +30,7 @@ extension ModesView {
     var header: some View {
         VStack {
             HStack {
-                Text(state.name)
+                Text("Modes")
                     .font(.sfProDisplay(type: .medium500, size: 32))
                     .foregroundColor(.white)
                 Spacer()
@@ -39,7 +38,7 @@ extension ModesView {
             .padding(.bottom, Space.xs)
             
             HStack {
-                Text(state.possibilities)
+                Text("Customize the sound yourself")
                     .font(.sfProText(type: .regular400, size: 14))
                     .foregroundColor(.white.opacity(0.5))
                 Spacer()

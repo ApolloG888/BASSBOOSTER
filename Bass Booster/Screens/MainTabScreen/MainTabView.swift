@@ -9,7 +9,7 @@ struct MainTabView: View {
     @State private var documentPickerManager: DocumentPickerManager?
     
     // Инициализируем общий ViewModel
-    @StateObject var viewModel = HomeViewModel()
+    @StateObject var viewModel = MusicViewModel()
     
     var body: some View {
         ZStack {
