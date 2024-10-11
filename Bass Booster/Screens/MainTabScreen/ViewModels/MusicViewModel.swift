@@ -23,7 +23,7 @@ final class MusicViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     var isInGeneralPlaylist: Bool {
-        return selectedPlaylist?.name == "General" || selectedPlaylist == nil
+        return selectedPlaylist?.name == "My Player" || selectedPlaylist == nil
     }
     
     var filteredMusicFiles: [MusicFileEntity] {

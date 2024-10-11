@@ -21,8 +21,8 @@ final class DataManager: ObservableObject {
             self.fetchMusicFiles()
             self.fetchPlaylists {
                 DispatchQueue.main.async {
-                    if !self.savedPlaylists.contains(where: { $0.name == "General" }) {
-                        self.savePlaylist(name: "General")
+                    if !self.savedPlaylists.contains(where: { $0.name == "My Player" }) {
+                        self.savePlaylist(name: "My Player")
                     }
                 }
             }
@@ -101,7 +101,7 @@ final class DataManager: ObservableObject {
             newFile.albumArt = albumArt
             newFile.url = url.absoluteString
             
-            if let generalPlaylist = savedPlaylists.first(where: { $0.name == "General" }) {
+            if let generalPlaylist = savedPlaylists.first(where: { $0.name == "My Player" }) {
                 newFile.addToPlaylist(generalPlaylist)
             }
             

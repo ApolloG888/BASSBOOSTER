@@ -7,173 +7,142 @@
 
 import SwiftUI
 import CoreData
-import BottomSheet
 
 struct HomeView: View {
     @EnvironmentObject var viewModel: MusicViewModel
-    @State private var showAddPlaylistSheet = false
 
     var body: some View {
         VStack {
-            HStack {
-                Text("\(viewModel.selectedPlaylist?.name ?? "My Player")")
-                    .font(.system(size: 32, weight: .medium))
-                    .foregroundColor(.white)
-                Spacer()
-            }
-            .padding(.bottom, 8)
-            
-            HStack {
-                Image(systemName: "magnifyingglass")
-                    .foregroundColor(.gray)
-                TextField("Search by song or artist", text: $viewModel.searchText)
-                    .foregroundColor(.white)
-            }
-            .padding()
-            .background(Color(.systemGray5).opacity(0.5))
-            .cornerRadius(10)
-            .padding(.horizontal)
-            .padding(.top)
-            
+            header
+            search
             if viewModel.searchText.isEmpty {
-                // Горизонтальный список плейлистов
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 16) {
-                        // Кнопка для добавления нового плейлиста
-                        Button(action: {
-                            viewModel.isShowViewNewPlaylist = true
-                        }) {
-                            VStack {
-                                Image(systemName: "plus")
-                                    .font(.largeTitle)
-                                    .foregroundColor(.white)
-                                Text("Add Playlist")
-                                    .foregroundColor(.white)
-                                    .font(.caption)
-                            }
-                            .frame(width: 100, height: 100)
-                            .background(Color.blue)
-                            .cornerRadius(10)
-                        }
-                        
-                        // Плейлист "General" всегда отображается вторым
-                        if let generalPlaylist = viewModel.playlists.first(where: { $0.name == "General" }) {
-                            PlaylistCell(playlist: generalPlaylist) {
-                                viewModel.selectedPlaylist = generalPlaylist
-                                viewModel.fetchMusicFiles(for: generalPlaylist)
-                            }
-                        }
-                        
-                        // Остальные плейлисты
-                        ForEach(viewModel.playlists.filter { $0.name != "General" }) { playlist in
-                            PlaylistCell(playlist: playlist) {
-                                viewModel.selectedPlaylist = playlist
-                                viewModel.fetchMusicFiles(for: playlist)
-                            }
-                        }
-                    }
-                    .padding(.vertical)
-                }
+                playLists
             }
-            
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(viewModel.filteredMusicFiles) { musicFile in
-                        MusicFileRow(
-                            musicFile: musicFile,
-                            playlists: viewModel.playlists.filter { $0.name != "General" },
-                            onOptionSelect: { viewModel.showBottomSheet(for: $0) }
-                        )
-                        Divider()
-                            .background(Color.gray)
-                    }
-                }
-                .padding(.horizontal)
-            }
-            Spacer()
-            .background(Color.clear)
-            .onAppear {
-                viewModel.fetchSavedMusicFiles()
-                viewModel.fetchPlaylists()
-            }
-            
-            Spacer()
+            musicList
         }
         .hideNavigationBar()
         .padding()
         .appGradientBackground()
+        .onAppear {
+            viewModel.fetchSavedMusicFiles()
+            viewModel.fetchPlaylists()
+        }
     }
 }
-// Превью для SwiftUI
+
+// MARK: - Header
+
+extension HomeView {
+    var header: some View {
+        HStack {
+            Text("\(viewModel.selectedPlaylist?.name ?? "My Player")")
+                .font(.sfProDisplay(type: .medium500, size: 32))
+                .foregroundColor(.white)
+            Spacer()
+        }
+        .padding(.bottom, Space.xs)
+    }
+}
+
+// MARK: - Search
+
+extension HomeView {
+    var search: some View {
+        HStack {
+            TextField(
+                "",
+                text: $viewModel.searchText,
+                prompt: Text("Start Type")
+                    .foregroundColor(.white.opacity(0.5))
+                    .font(.sfProText(type: .regular400, size: 14))
+            )
+            .foregroundColor(.white.opacity(0.5))
+            .font(.sfProText(type: .medium500, size: 16))
+            
+            Image(.magnifer)
+                .foregroundColor(.gray)
+        }
+        .padding(.horizontal)
+        .padding(.vertical)
+        .background(.white.opacity(0.07))
+        .cornerRadius(8)
+    }
+}
+
+// MARK: - PlayLists
+
+extension HomeView {
+    var playLists: some View {
+        VStack(spacing: 16) {
+            HStack {
+                Text("PlayList")
+                    .font(.sfProDisplay(type: .regular400, size: 16))
+                    .foregroundStyle(.white)
+                Spacer()
+            }
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    Button {
+                        viewModel.isShowViewNewPlaylist = true
+                    } label: {
+                        PlaylistView(state: .createNew)
+                    }
+                    
+                    if let generalPlaylist = viewModel.playlists.first(where: { $0.name == "My Player" }) {
+                        PlaylistCell(playlist: generalPlaylist) {
+                            viewModel.selectedPlaylist = generalPlaylist
+                            viewModel.fetchMusicFiles(for: generalPlaylist)
+                        }
+                    }
+                    
+                    ForEach(viewModel.playlists.filter { $0.name != "My Player" }) { playlist in
+                        PlaylistCell(playlist: playlist) {
+                            viewModel.selectedPlaylist = playlist
+                            viewModel.fetchMusicFiles(for: playlist)
+                        }
+                    }
+                }
+            }
+        }
+        .padding(.top)
+    }
+}
+
+extension HomeView {
+    var musicList: some View {
+        VStack {
+            HStack {
+                Text("List")
+                    .font(.sfProDisplay(type: .regular400, size: 16))
+                    .foregroundStyle(.white)
+                Spacer()
+            }
+            ScrollView(showsIndicators: false) {
+                ForEach(Array(viewModel.filteredMusicFiles.enumerated()), id: \.element.id) { index, musicFile in
+                    HStack {
+                        Text("\(index + 1)")
+                            .font(.sfProDisplay(type: .regular400, size: 16))
+                            .foregroundStyle(.white)
+                            .frame(width: 30, alignment: .leading)
+                        MusicFileRow(
+                            musicFile: musicFile,
+                            playlists: viewModel.playlists.filter { $0.name != "My Player" },
+                            onOptionSelect: { viewModel.showBottomSheet(for: $0) }
+                        )
+                    }
+                    .padding(.vertical, 10)
+                }
+                .padding(.bottom, 80)
+            }
+        }
+        .padding(.top)
+    }
+}
+
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         let viewModel = MusicViewModel()
         HomeView()
-            .environmentObject(viewModel) // Передаём HomeViewModel
-    }
-}
-    
-
-// MARK: - Дополнительные компоненты
-
-struct MusicFileRow: View {
-    var musicFile: MusicFileEntity
-    var playlists: [PlaylistEntity]
-    var onOptionSelect: (MusicFileEntity) -> Void
-
-    var body: some View {
-        HStack {
-            if let albumArt = musicFile.albumArt, let image = UIImage(data: albumArt) {
-                Image(uiImage: image)
-                    .resizable()
-                    .frame(width: 50, height: 50)
-                    .clipShape(RoundedRectangle(cornerRadius: 5))
-            } else {
-                Image(systemName: "music.note")
-                    .foregroundColor(.white)
-                    .font(.largeTitle)
-            }
-            VStack(alignment: .leading) {
-                Text(musicFile.name ?? "Unknown")
-                    .foregroundColor(.white)
-                    .font(.headline)
-                Text(musicFile.artist ?? "Unknown Artist")
-                    .foregroundColor(.gray)
-                    .font(.subheadline)
-            }
-            Spacer()
-            Button(action: {
-                onOptionSelect(musicFile)
-            }) {
-                Image(systemName: "ellipsis")
-                    .foregroundColor(.white)
-                    .font(.title)
-            }
-        }
-        .padding()
-    }
-}
-
-// Компонент PlaylistCell
-struct PlaylistCell: View {
-    var playlist: PlaylistEntity
-    var onTap: () -> Void
-    
-    var body: some View {
-        VStack {
-            Image(systemName: "music.note.list")
-                .font(.largeTitle)
-                .foregroundColor(.white)
-            Text(playlist.name ?? "Unknown")
-                .foregroundColor(.white)
-                .font(.caption)
-                .lineLimit(1)
-        }
-        .frame(width: 100, height: 100)
-        .background(Color.green)
-        .cornerRadius(10)
-        .onTapGesture {
-            onTap()
-        }
+            .environmentObject(viewModel)
     }
 }
