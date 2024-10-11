@@ -16,6 +16,8 @@ final class HomeViewModel: ObservableObject {
     @Published var isShowDeleteSongView: Bool = false
     @Published var songToDelete: MusicFileEntity?
     
+    @Published var isShowRenameSongView: Bool = false
+    
     // Флаг для отображения списка плейлистов в bottomSheet
     @Published var isPlaylistList: Bool = false
     
@@ -90,8 +92,25 @@ final class HomeViewModel: ObservableObject {
         dataManager.addSong(song, to: playlist)
     }
     
-    func renameSong(_ song: MusicFileEntity, to newName: String) {
-        dataManager.renameSong(song, to: newName)
+    // MARK: - Rename Song Management
+
+    func requestRenameSong(_ song: MusicFileEntity) {
+        self.selectedMusicFile = song
+        self.isShowRenameSongView = true
+        self.bottomSheetPosition = .hidden
+    }
+    
+    func confirmRenameSong(newArtist: String, newSongName: String) {
+        if let song = selectedMusicFile {
+            dataManager.renameSong(song, newArtist: newArtist, newName: newSongName)
+        }
+        self.isShowRenameSongView = false
+        self.selectedMusicFile = nil
+    }
+    
+    func cancelRenameSong() {
+        self.isShowRenameSongView = false
+        self.selectedMusicFile = nil
     }
     
     func deleteMusicFileEntity(_ musicFile: MusicFileEntity) {

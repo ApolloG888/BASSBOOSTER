@@ -67,16 +67,6 @@ struct HomeView: View {
                     MusicFileRow(
                         musicFile: musicFile,
                         playlists: viewModel.playlists.filter { $0.name != "General" },
-                        onAddToPlaylist: { song, playlist in
-                            viewModel.addSong(song, to: playlist)
-                        },
-                        onRename: { song, newName in
-                            viewModel.renameSong(song, to: newName)
-                        },
-                        onDelete: { song in
-                            viewModel.deleteMusicFileEntity(song)
-                        },
-                        isInGeneralPlaylist: viewModel.isInGeneralPlaylist,
                         onOptionSelect: { viewModel.showBottomSheet(for: $0) } // Управляем через ViewModel
                     )
                 }
@@ -111,10 +101,6 @@ struct HomeView_Previews: PreviewProvider {
 struct MusicFileRow: View {
     var musicFile: MusicFileEntity
     var playlists: [PlaylistEntity]
-    var onAddToPlaylist: (MusicFileEntity, PlaylistEntity) -> Void
-    var onRename: (MusicFileEntity, String) -> Void
-    var onDelete: (MusicFileEntity) -> Void
-    var isInGeneralPlaylist: Bool
     var onOptionSelect: (MusicFileEntity) -> Void
 
     var body: some View {

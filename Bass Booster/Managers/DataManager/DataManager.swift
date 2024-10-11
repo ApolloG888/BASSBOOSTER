@@ -21,9 +21,10 @@ final class DataManager: ObservableObject {
         }
         fetchMusicFiles()
         fetchPlaylists {
-            // Проверяем, существует ли плейлист "General"
-            if !self.savedPlaylists.contains(where: { $0.name == "General" }) {
-                self.savePlaylist(name: "General")
+            DispatchQueue.main.async {
+                if !self.savedPlaylists.contains(where: { $0.name == "General" }) {
+                    self.savePlaylist(name: "General")
+                }
             }
         }
     }
@@ -112,9 +113,16 @@ final class DataManager: ObservableObject {
         }
     }
     
-    func renameSong(_ song: MusicFileEntity, to newName: String) {
-        song.name = newName
-        saveData()
+    func renameSong(_ song: MusicFileEntity, newArtist: String, newName: String) {
+        let validArtist = newArtist.isEmpty ? song.artist : newArtist
+        let validName = newName.isEmpty ? song.name : newName
+        
+        // Проверяем, изменилось ли что-то
+        if song.artist != validArtist || song.name != validName {
+            song.artist = validArtist
+            song.name = validName
+            saveData()
+        }
     }
     
     func deleteMusicFile(_ musicFile: MusicFileEntity) {

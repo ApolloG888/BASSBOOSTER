@@ -44,7 +44,22 @@ struct MainTabView: View {
                     }
                 )
                 .transition(.opacity)
-                .zIndex(2) // Убедитесь, что этот вид выше других
+                .zIndex(1) // Убедитесь, что этот вид выше других
+            }
+            
+            if viewModel.isShowRenameSongView, let song = viewModel.selectedMusicFile {
+                RenameSongView(
+                    isPresented: $viewModel.isShowRenameSongView,
+                    authorName: song.artist ?? "",
+                    songName: song.name ?? "",
+                    onSave: { newAuthor, newSongName in
+                        viewModel.confirmRenameSong(newArtist: newAuthor, newSongName: newSongName)
+                    },
+                    onCancel: {
+                        viewModel.cancelRenameSong()
+                    }
+                )
+                .zIndex(1) // Убедитесь, что этот вид выше других
             }
         }
         .hideNavigationBar()
@@ -66,10 +81,8 @@ struct MainTabView: View {
                                 viewModel.hideBottomSheet()
                                 return
                             }
-                            // Переименовать песню
-                            // Здесь можно вызвать RenameSongView, если реализуете его
-                            viewModel.hideBottomSheet()
-                            // Реализуйте вызов RenameSongView, если требуется
+                            // Открываем окно для переименования
+                            viewModel.requestRenameSong(selectedMusicFile)
                         } label: {
                             HStack {
                                 Image(systemName: "pencil")
