@@ -17,11 +17,25 @@ final class HomeViewModel: ObservableObject {
     @Published var bottomSheetPosition: BottomSheetPosition = .hidden
     @Published var selectedMusicFile: MusicFileEntity?
     
+    @Published var searchText: String = ""
+    
     private var dataManager = DataManager.shared
     private var cancellables = Set<AnyCancellable>()
     
     var isInGeneralPlaylist: Bool {
         return selectedPlaylist?.name == "General" || selectedPlaylist == nil
+    }
+    
+    var filteredMusicFiles: [MusicFileEntity] {
+        if searchText.isEmpty {
+            return musicFiles
+        } else {
+            return musicFiles.filter { musicFile in
+                let nameMatches = musicFile.name?.localizedCaseInsensitiveContains(searchText) ?? false
+                let artistMatches = musicFile.artist?.localizedCaseInsensitiveContains(searchText) ?? false
+                return nameMatches || artistMatches
+            }
+        }
     }
     
     init() {
