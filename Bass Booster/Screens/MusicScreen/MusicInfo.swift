@@ -50,19 +50,20 @@ struct MusicInfo: View {
                         .matchedGeometryEffect(id: "SONGCOVER", in: animation)
                     }
                 }
-                .frame(width: 55, height: 55)
+                .frame(width: 43, height: 43)
+                .padding(.top, 4)
                 
-                VStack(spacing: 8) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text("The Chain - 2004 Remaster")
                         .foregroundStyle(.white)
+                        .font(.helvetica(type: .regular400, size: 14))
                     Text("The Chain - 2004 Remaster")
                         .foregroundStyle(.musicInfoSubColor)
-                       
+                        .font(.helvetica(type: .medium500, size: 14))
                 }
-                .font(.sfProText(size: 14))
                 .multilineTextAlignment(.leading)
                 .padding(.horizontal, 12)
-                .padding(.top, 4)
+                .padding(.top, 10)
                 .lineLimit(1)
                 
                 Spacer()
@@ -76,10 +77,11 @@ struct MusicInfo: View {
                         .scaledToFit()
                         .foregroundStyle(.white)
                         .frame(height: 20)
+                        .padding(.top, 10)
                 }
             }
             .padding(.horizontal,20)
-            .padding(.bottom)
+            .padding(.bottom, 12)
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     expandSheet = true

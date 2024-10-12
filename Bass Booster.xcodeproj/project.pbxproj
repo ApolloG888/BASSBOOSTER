@@ -75,8 +75,11 @@
 		6DA0B4732C845F750035751E /* SubscriptionAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4722C845F750035751E /* SubscriptionAssembly.swift */; };
 		6DA0B4752C84765A0035751E /* SubscriptionScreenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA0B4742C84765A0035751E /* SubscriptionScreenState.swift */; };
 		6DE5AE1E2CA9D16B000A9BB2 /* MusicProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE5AE1D2CA9D16B000A9BB2 /* MusicProgressView.swift */; };
-		6DF32B972CA9BB2900D346A0 /* helvetica-neue-medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DF32B952CA9BB2900D346A0 /* helvetica-neue-medium.ttf */; };
-		6DF32B982CA9BB2900D346A0 /* helvetica-neue-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DF32B962CA9BB2900D346A0 /* helvetica-neue-regular.ttf */; };
+		6DEED4312CBA85EE00990C34 /* HelveticaNeueCyr-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DEED42F2CBA85EE00990C34 /* HelveticaNeueCyr-Medium.ttf */; };
+		6DEED4322CBA85EE00990C34 /* Helvetica.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DEED4302CBA85EE00990C34 /* Helvetica.ttf */; };
+		6DEED4342CBAECCD00990C34 /* CustomProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DEED4332CBAECCD00990C34 /* CustomProgressBar.swift */; };
+		6DEED43A2CBB04E300990C34 /* Sliders in Frameworks */ = {isa = PBXBuildFile; productRef = 6DEED4392CBB04E300990C34 /* Sliders */; };
+		6DEED43C2CBB31BB00990C34 /* PlayerSelectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DEED43B2CBB31BB00990C34 /* PlayerSelectionButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -148,8 +151,10 @@
 		6DA0B4722C845F750035751E /* SubscriptionAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionAssembly.swift; sourceTree = "<group>"; };
 		6DA0B4742C84765A0035751E /* SubscriptionScreenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionScreenState.swift; sourceTree = "<group>"; };
 		6DE5AE1D2CA9D16B000A9BB2 /* MusicProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicProgressView.swift; sourceTree = "<group>"; };
-		6DF32B952CA9BB2900D346A0 /* helvetica-neue-medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "helvetica-neue-medium.ttf"; sourceTree = "<group>"; };
-		6DF32B962CA9BB2900D346A0 /* helvetica-neue-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "helvetica-neue-regular.ttf"; sourceTree = "<group>"; };
+		6DEED42F2CBA85EE00990C34 /* HelveticaNeueCyr-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeueCyr-Medium.ttf"; sourceTree = "<group>"; };
+		6DEED4302CBA85EE00990C34 /* Helvetica.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Helvetica.ttf; sourceTree = "<group>"; };
+		6DEED4332CBAECCD00990C34 /* CustomProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomProgressBar.swift; sourceTree = "<group>"; };
+		6DEED43B2CBB31BB00990C34 /* PlayerSelectionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSelectionButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +162,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6DEED43A2CBB04E300990C34 /* Sliders in Frameworks */,
 				5FADBEBE2C8D00E500ACBC98 /* ApphudSDK in Frameworks */,
 				5F727F5E2CB7DFCC00865DD4 /* BottomSheet in Frameworks */,
 			);
@@ -448,6 +454,8 @@
 				6D363B732C88A55C0053761C /* PlaylistView.swift */,
 				5FD00C612C8D36B7008F2B4B /* TabBarButton.swift */,
 				6DE5AE1D2CA9D16B000A9BB2 /* MusicProgressView.swift */,
+				6DEED4332CBAECCD00990C34 /* CustomProgressBar.swift */,
+				6DEED43B2CBB31BB00990C34 /* PlayerSelectionButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -466,8 +474,8 @@
 		6DB326A02CA8BADB003311F1 /* HelveticaNeue */ = {
 			isa = PBXGroup;
 			children = (
-				6DF32B952CA9BB2900D346A0 /* helvetica-neue-medium.ttf */,
-				6DF32B962CA9BB2900D346A0 /* helvetica-neue-regular.ttf */,
+				6DEED4302CBA85EE00990C34 /* Helvetica.ttf */,
+				6DEED42F2CBA85EE00990C34 /* HelveticaNeueCyr-Medium.ttf */,
 			);
 			path = HelveticaNeue;
 			sourceTree = "<group>";
@@ -500,6 +508,7 @@
 			packageProductDependencies = (
 				5FADBEBD2C8D00E500ACBC98 /* ApphudSDK */,
 				5F727F5D2CB7DFCC00865DD4 /* BottomSheet */,
+				6DEED4392CBB04E300990C34 /* Sliders */,
 			);
 			productName = "Bass Booster";
 			productReference = 5FDBE7DF2C833C3300E623B5 /* Bass Booster.app */;
@@ -532,6 +541,8 @@
 			packageReferences = (
 				5FADBEBC2C8D00E500ACBC98 /* XCRemoteSwiftPackageReference "ApphudSDK" */,
 				5F727F5C2CB7DFCC00865DD4 /* XCRemoteSwiftPackageReference "BottomSheet" */,
+				6DEED4352CBAF8D800990C34 /* XCRemoteSwiftPackageReference "RRRangeSliderSwiftUI" */,
+				6DEED4382CBB04E300990C34 /* XCRemoteSwiftPackageReference "swiftui-sliders" */,
 			);
 			productRefGroup = 5FDBE7E02C833C3300E623B5 /* Products */;
 			projectDirPath = "";
@@ -548,16 +559,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F54B3932C83B7760012E1C0 /* SF-Pro-Display-Semibold.ttf in Resources */,
+				6DEED4312CBA85EE00990C34 /* HelveticaNeueCyr-Medium.ttf in Resources */,
 				5F54B39B2C83B8A60012E1C0 /* SFProText-Medium.ttf in Resources */,
 				5F54B3922C83B7760012E1C0 /* SF-Pro-Display-Medium.ttf in Resources */,
 				5F54B39E2C83B8A60012E1C0 /* SFProText-Semibold.ttf in Resources */,
 				5F54B3962C83B80F0012E1C0 /* SF-Pro-Display-Bold.ttf in Resources */,
 				5F54B3A02C83B9120012E1C0 /* SFProText-Light.ttf in Resources */,
-				6DF32B972CA9BB2900D346A0 /* helvetica-neue-medium.ttf in Resources */,
 				5FDBE7EA2C833C3500E623B5 /* Preview Assets.xcassets in Resources */,
+				6DEED4322CBA85EE00990C34 /* Helvetica.ttf in Resources */,
 				5F54B3942C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf in Resources */,
 				5FDBE7E72C833C3500E623B5 /* Assets.xcassets in Resources */,
-				6DF32B982CA9BB2900D346A0 /* helvetica-neue-regular.ttf in Resources */,
 				5F54B39D2C83B8A60012E1C0 /* SFProText-Bold.ttf in Resources */,
 				5F54B39C2C83B8A60012E1C0 /* SFProText-Regular.ttf in Resources */,
 			);
@@ -577,6 +588,7 @@
 				6D363B6C2C888D510053761C /* HomeView.swift in Sources */,
 				6D363B5C2C85F7F10053761C /* ModesViewModel.swift in Sources */,
 				5FDBE7E52C833C3300E623B5 /* OnboardingView.swift in Sources */,
+				6DEED4342CBAECCD00990C34 /* CustomProgressBar.swift in Sources */,
 				6D363B632C85FA050053761C /* FeaturesViewModel.swift in Sources */,
 				5FDBE7F62C83441000E623B5 /* Typography.swift in Sources */,
 				6D363B5E2C85F84F0053761C /* ModesAssembly.swift in Sources */,
@@ -616,6 +628,7 @@
 				6D363B742C88A55C0053761C /* PlaylistView.swift in Sources */,
 				5FD00C6B2C8E1A7B008F2B4B /* SettingsViewModel.swift in Sources */,
 				5FD59D962C84EFB400D3508B /* CustomToggle.swift in Sources */,
+				6DEED43C2CBB31BB00990C34 /* PlayerSelectionButton.swift in Sources */,
 				5FD59D942C84EC9200D3508B /* MainTabView.swift in Sources */,
 				5FDBE7FA2C83463800E623B5 /* Color+Extension.swift in Sources */,
 				5F54B3AA2C83C83F0012E1C0 /* CGSize+Extension.swift in Sources */,
@@ -860,6 +873,22 @@
 				minimumVersion = 3.4.0;
 			};
 		};
+		6DEED4352CBAF8D800990C34 /* XCRemoteSwiftPackageReference "RRRangeSliderSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Rahul-Mayani/RRRangeSliderSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		6DEED4382CBB04E300990C34 /* XCRemoteSwiftPackageReference "swiftui-sliders" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:spacenation/swiftui-sliders.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -872,6 +901,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5FADBEBC2C8D00E500ACBC98 /* XCRemoteSwiftPackageReference "ApphudSDK" */;
 			productName = ApphudSDK;
+		};
+		6DEED4392CBB04E300990C34 /* Sliders */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6DEED4382CBB04E300990C34 /* XCRemoteSwiftPackageReference "swiftui-sliders" */;
+			productName = Sliders;
 		};
 /* End XCSwiftPackageProductDependency section */
 

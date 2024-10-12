@@ -1,5 +1,5 @@
 {
-  "originHash" : "f0e83eeff3dbe7d268c7cc7e9ae37430acc24522c878e3071222524a7597de44",
+  "originHash" : "74f3b7f20d295dfc7e5ff57e62fa1591a2f058b0f1e7c8a164051cfb99392b1b",
   "pins" : [
     {
       "identity" : "apphudsdk",
@@ -17,6 +17,24 @@
       "state" : {
         "revision" : "720ddbd1371fef2a09cc1ab65fc503df37767f9c",
         "version" : "3.1.1"
+      }
+    },
+    {
+      "identity" : "rrrangesliderswiftui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Rahul-Mayani/RRRangeSliderSwiftUI",
+      "state" : {
+        "revision" : "6626257dff85168a95b0b5f0b8807cf442ccdaa6",
+        "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "swiftui-sliders",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:spacenation/swiftui-sliders.git",
+      "state" : {
+        "revision" : "d5a7d856655d5c91f891c2b69d982c30fd5c7bdf",
+        "version" : "2.1.0"
       }
     }
   ],

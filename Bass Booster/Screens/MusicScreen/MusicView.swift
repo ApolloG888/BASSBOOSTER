@@ -15,89 +15,104 @@ struct MusicView: View {
     // View Properties
     @State private var animateContent: Bool = false
     @State private var offsetY: CGFloat = 0
-    @State var value = 11.0
+    @State var musicProgress = 0.1
     @State var state: SongState
+    @State var songName: String
+    @State var songAuthor: String
+    @State var music: [MusicFileEntity] = []
     
     var body: some View {
-        GeometryReader {
-            let size = $0.size
-            let safeArea = $0.safeAreaInsets
+        GeometryReader { geometry in
+            let size = geometry.size
+            let safeArea = geometry.safeAreaInsets
             
-            ZStack(alignment: .top) {
+            ZStack {
                 RoundedRectangle(cornerRadius: animateContent ? deviceCornerRadius : 0, style: .continuous)
                     .fill(.black)
                     .overlay {
                         Rectangle()
-                        // I forget to start recording ;) so please check and change gray to black
-                            .fill(.gray)
                             .opacity(animateContent ? 1 : 0)
                     }
                     .overlay(alignment: .top) {
                         MusicInfo(expandSheet: $expandSheet, state: .play, animation: animation)
                             .allowsHitTesting(false)
-                        // Here first when animateContent is true then musicInfo is hide and if animatecontent is false the musicInfo is visible
                             .opacity(animateContent ? 0 : 1)
                     }
                     .matchedGeometryEffect(id: "BACKGROUNDVIEW", in: animation)
-                    
-
-                VStack(spacing: 10) {
-                    HStack(alignment: .top) {
-                        Image(systemName: "chevron.down")
+                
+                VStack {
+                    HStack {
+                        Image(.downElipse)
                             .imageScale(.large)
                             .onTapGesture {
-                                expandSheet = false
-                                animateContent = false
+                                withAnimation(.easeInOut(duration: 0.36)) {
+                                    expandSheet = false
+                                    animateContent = false
+                                }
                             }
-                                            
-                        Spacer()
-                        
-                        VStack(alignment: .center, content: {
-                            Text("Playlist from album")
-                                .opacity(0.5)
-                                .font(.caption)
-                            Text("Top Hits")
-                                .font(.title2)
-                        })
                         
                         Spacer()
                         
-                        Image(systemName: "ellipsis")
+                        Image(.more)
                             .imageScale(.large)
-
-                        
                     }
                     .padding(.horizontal)
                     .padding(.top, 80)
                     
-                    GeometryReader {
-                        let size = $0.size
-                        Image("music 1")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: size.width, height: size.height)
-                            .clipShape(RoundedRectangle(cornerRadius: animateContent ? 30 : 60, style: .continuous))
-                    }
-                    .matchedGeometryEffect(id: "SONGCOVER", in: animation)
-                    .frame(height: size.width - 50)
-                    .padding(.vertical, size.height < 700 ? 30 : 40)
+//                    ScrollView(.horizontal, showsIndicators: false) {
+//                        HStack(spacing: 20) {
+//                            ForEach(1..4) { album in
+//                                Image(.home)
+//                                    .resizable()
+//                                    .aspectRatio(contentMode: .fill)
+//                                    .frame(width: 200, height: 200)
+//                                    .cornerRadius(15)
+//                                    .overlay(
+//                                        RoundedRectangle(cornerRadius: 15)
+//                                            .stroke(Color.purple, lineWidth: 2) // Обводка фиолетового цвета
+//                                    )
+//                                    .shadow(radius: 5)
+//                            }
+//                        }
+//                        .padding(.horizontal, 20)
+//                    }
+//                    
                     
-                
-                PlayerView(size)
-                    .offset(y: animateContent ? 0 : size.height)
-                }
-                .padding(.top, safeArea.top + (safeArea.bottom == 0 ? 10 : 0))
-                .padding(.bottom, safeArea.bottom == 0 ? 10 : safeArea.bottom)
-                .padding(.horizontal, 25)
-                .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, maxHeight: .infinity, alignment: .top)
-                .onTapGesture {
-                    withAnimation(.easeInOut(duration: 0.36)) {
-                        expandSheet = false
-                        animateContent = false
+                    // нечем проверить эту шляпу ебаную на картинки музыки
+                    
+                    
+                    HStack {
+                        CustomButton(state: .equalizer, action: {})
+                        CustomButton(state: .booster, action: {})
+                        CustomButton(state: .volume, action: {})
                     }
+                    .padding(.bottom, 32)
+                    
+                    HStack {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("\(songName)")
+                                .font(.sfProDisplay(type: .bold700, size: 20))
+                                .foregroundStyle(.white)
+                            Text("\(songAuthor)")
+                                .font(.helvetica(type: .medium500, size: 14))
+                                .foregroundStyle(.musicPlayerAuthor)
+                        }
+                        .padding(.bottom, 32)
+                        Spacer()
+                    }
+                    
+                    CustomProgressBar(value: $musicProgress)
+                        .frame(height: 20)
+                        .shadow(radius: 6)
+
+                    PlayerView(size)
+                        .frame(maxWidth: .infinity)
+                        .padding(.bottom, safeArea.bottom + 20)
+                        .offset(y: animateContent ? 0 : size.height)
                 }
+                .padding(.horizontal, 25)
+                .appGradientBackground()
             }
-            .contentShape(Rectangle())
             .offset(y: offsetY)
             .gesture(
                 DragGesture()
@@ -114,75 +129,68 @@ struct MusicView: View {
                             }
                         }
                     })
-            ).ignoresSafeArea(.container, edges: .all)
-                        
-        }
-        .edgesIgnoringSafeArea(.top)
-        .onAppear() {
-            withAnimation(.easeInOut(duration: 0.35)) {
-                animateContent = true
+            )
+            .ignoresSafeArea(.container, edges: .all)
+            .onAppear {
+                withAnimation(.easeInOut(duration: 0.35)) {
+                    animateContent = true
+                }
             }
         }
-        
+        .edgesIgnoringSafeArea(.top)
     }
     
     @ViewBuilder
     func PlayerView(_ mainSize: CGSize) -> some View {
-        GeometryReader {
-            let size = $0.size
-            
-            HStack(alignment: .center) {
-                Button(action: {
-                    // Действие при нажатии на shuffle
-                }) {
-                    Image(.shuffle)
-                        .imageScale(.medium)
-                }
-                
-                Spacer()
-                
-                Button(action: {
-                    // Действие при нажатии на previous
-                }) {
-                    Image(.previous)
-                        .imageScale(.medium)
-                }
-                
-                Spacer()
-                
-                Button(action: {
-                    state.toggle()
-                }) {
-                    state.image
-                        .imageScale(.large)
-                        .padding()
-                        .background(.musicProgressBar)
-                        .clipShape(Circle())
-                        .frame(width: 30,height: 30)
-                        .foregroundStyle(Color.black)
-                        .shadow(color: Color.white.opacity(0.8), radius: 10, x: 0, y: 0)
-                }
-                
-                Spacer()
-                
-                Button(action: {
-                    // Действие при нажатии на next
-                }) {
-                    Image(.next)
-                        .imageScale(.medium)
-                }
-                
-                Spacer()
-                
-                Button(action: {
-                    // Действие при нажатии на repeat
-                }) {
-                    Image(.repeate)
-                        .imageScale(.medium)
-                }
+        HStack(alignment: .center) {
+            Button(action: {
+            }) {
+                Image(.shuffle)
+                    .imageScale(.medium)
             }
-
+            
+            Spacer()
+            
+            Button(action: {
+            }) {
+                Image(.previous)
+                    .imageScale(.medium)
+            }
+            
+            Spacer()
+            
+            Button(action: {
+                state.toggle()
+            }) {
+                state.image
+                    .imageScale(.large)
+                    .padding()
+                    .background(.musicProgressBar)
+                    .clipShape(Circle())
+                    .frame(width: 30, height: 30)
+                    .foregroundStyle(Color.black)
+                    .shadow(color: Color.white.opacity(0.8), radius: 10, x: 0, y: 0)
+            }
+            
+            Spacer()
+            
+            Button(action: {
+                
+            }) {
+                Image(.next)
+                    .imageScale(.medium)
+            }
+            
+            Spacer()
+            
+            Button(action: {
+                
+            }) {
+                Image(.repeate)
+                    .imageScale(.medium)
+            }
         }
+        .padding()
     }
 }
 
@@ -190,8 +198,6 @@ struct MusicView: View {
     MainTabView()
 }
 
-
-// Extension For Corner Radius
 extension View {
     var deviceCornerRadius: CGFloat {
         let key = "_displayCornerRadius"

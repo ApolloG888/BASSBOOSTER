@@ -22,7 +22,7 @@ struct MainTabView: View {
         .background(Color.customBlack)
         .overlay {
             if expandSheet {
-                MusicView(expandSheet: $expandSheet, animation: animation, state: .play)
+                MusicView(expandSheet: $expandSheet, animation: animation, state: .play, songName: "The Chain - 2004 Remaster", songAuthor: "The Chain - 2004 Remaster")
             }
         }
         .bottomSheet(
@@ -163,7 +163,7 @@ extension MainTabView {
         ZStack {
             if expandSheet {
                 Rectangle()
-                    .fill(Color.red)
+                    .fill(.musicInfoColor)
             } else {
                 Rectangle()
                     .fill(Color.musicInfoColor)

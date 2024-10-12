@@ -23,8 +23,8 @@ enum SFProDisplayFont: String {
 }
 
 enum HelveticaNeueFont: String {
-    case regular400 = "helvetica-neue-regular"
-    case medium500 = "helvetica-neue-medium"
+    case regular400 = "Helvetica"
+    case medium500 = "HelveticaNeueCyr-Medium"
 }
 
 extension Font {
