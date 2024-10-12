@@ -22,7 +22,7 @@ struct MainTabView: View {
         .background(Color.customBlack)
         .overlay {
             if expandSheet {
-                MusicView(expandSheet: $expandSheet, animation: animation)
+                MusicView(expandSheet: $expandSheet, animation: animation, state: .play)
             }
         }
         .bottomSheet(

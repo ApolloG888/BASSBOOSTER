@@ -95,16 +95,4 @@ struct MusicInfo: View {
 }
 
 
-struct MusicProgressView: View {
-    let progress: Double
 
-    var body: some View {
-        ZStack {
-            VStack {
-                Spacer()
-                ProgressView(value: 0.5)
-                    .tint(.musicProgressBar)
-            }
-        }
-    }
-}

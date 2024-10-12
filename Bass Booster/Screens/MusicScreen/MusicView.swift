@@ -16,6 +16,7 @@ struct MusicView: View {
     @State private var animateContent: Bool = false
     @State private var offsetY: CGFloat = 0
     @State var value = 11.0
+    @State var state: SongState
     
     var body: some View {
         GeometryReader {
@@ -129,59 +130,58 @@ struct MusicView: View {
     func PlayerView(_ mainSize: CGSize) -> some View {
         GeometryReader {
             let size = $0.size
-            let spacing = size.height * 0.04
             
-            // sizing t for more compact look
-            VStack(spacing: spacing, content: {
-                VStack(spacing: spacing, content: {
-                    VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 15, content: {
-                        VStack(alignment: .center, spacing: 10, content: {
-                            Text("Song Title")
-                                .font(.title)
-                                .fontWeight(.semibold)
-                            
-                            Text("Artist")
-                                .font(.title3)
-                                .foregroundStyle(.gray)
-                        })
-                        .frame(maxWidth: .infinity)
-                        
-                        Slider(value: $value, in: 0...100)
-                        HStack {
-                            Text("0:50")
-                                .font(.caption)
-                            
-                            Spacer()
-                            
-                            Text("3:55")
-                                .font(.caption)
-                        }
-                        
-                        HStack(alignment: .center, spacing: 30, content: {
-                            Image(systemName: "shuffle")
-                                .imageScale(.medium)
-                            
-                            Image(systemName: "backward.end.fill")
-                                .imageScale(.medium)
-                            
-                            Image(systemName: "play.fill")
-                                .imageScale(.large)
-                                .padding()
-                                .background(.white)
-                                .clipShape(Circle())
-                                .foregroundStyle(.black)
-                            
-                            Image(systemName: "forward.end.fill")
-                                .imageScale(.medium)
-                            
-                            Image(systemName: "repeat")
-                                .imageScale(.medium)
-                            
-                            
-                        })
-                    })
-                })
-            })
+            HStack(alignment: .center) {
+                Button(action: {
+                    // Действие при нажатии на shuffle
+                }) {
+                    Image(.shuffle)
+                        .imageScale(.medium)
+                }
+                
+                Spacer()
+                
+                Button(action: {
+                    // Действие при нажатии на previous
+                }) {
+                    Image(.previous)
+                        .imageScale(.medium)
+                }
+                
+                Spacer()
+                
+                Button(action: {
+                    state.toggle()
+                }) {
+                    state.image
+                        .imageScale(.large)
+                        .padding()
+                        .background(.musicProgressBar)
+                        .clipShape(Circle())
+                        .frame(width: 30,height: 30)
+                        .foregroundStyle(Color.black)
+                        .shadow(color: Color.white.opacity(0.8), radius: 10, x: 0, y: 0)
+                }
+                
+                Spacer()
+                
+                Button(action: {
+                    // Действие при нажатии на next
+                }) {
+                    Image(.next)
+                        .imageScale(.medium)
+                }
+                
+                Spacer()
+                
+                Button(action: {
+                    // Действие при нажатии на repeat
+                }) {
+                    Image(.repeate)
+                        .imageScale(.medium)
+                }
+            }
+
         }
     }
 }
