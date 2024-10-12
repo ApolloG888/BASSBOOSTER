@@ -16,11 +16,9 @@ struct RenameSongView: View {
 
     var body: some View {
         ZStack {
-            // Полупрозрачный фон
             Color.black.opacity(0.4)
                 .edgesIgnoringSafeArea(.all)
 
-            // Центрированное модальное окно
             VStack(spacing: 20) {
                 Text("Rename a song")
                     .font(.headline)
@@ -55,7 +53,7 @@ struct RenameSongView: View {
             .background(Color(.systemBackground))
             .cornerRadius(20)
             .shadow(radius: 10)
-            .padding(.horizontal, 40) // Для отступа от краёв экрана
+            .padding(.horizontal, 40)
         }
     }
 }

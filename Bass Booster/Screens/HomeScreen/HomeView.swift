@@ -74,7 +74,7 @@ extension HomeView {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.gray)
                 }
-                .buttonStyle(PlainButtonStyle()) // Убираем эффект кнопки
+                .buttonStyle(PlainButtonStyle())
             }
         }
         .padding(.horizontal)

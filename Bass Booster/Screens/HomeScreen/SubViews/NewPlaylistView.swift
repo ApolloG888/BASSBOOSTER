@@ -15,11 +15,9 @@ struct NewPlaylistView: View {
 
     var body: some View {
         ZStack {
-            // Полупрозрачный фон
             Color.black.opacity(0.4)
                 .edgesIgnoringSafeArea(.all)
 
-            // Центрированное модальное окно
             VStack(spacing: 20) {
                 Text("New Playlist")
                     .font(.headline)
@@ -50,7 +48,7 @@ struct NewPlaylistView: View {
             .background(Color(.systemBackground))
             .cornerRadius(20)
             .shadow(radius: 10)
-            .padding(.horizontal, 40) // Для отступа от краёв экрана
+            .padding(.horizontal, 40)
         }
     }
 }

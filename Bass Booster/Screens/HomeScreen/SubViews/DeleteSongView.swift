@@ -15,11 +15,9 @@ struct DeleteSongView: View {
 
     var body: some View {
         ZStack {
-            // Полупрозрачный фон
             Color.black.opacity(0.4)
                 .edgesIgnoringSafeArea(.all)
 
-            // Центрированное модальное окно
             VStack(spacing: 20) {
                 Text("Delete Song")
                     .font(.headline)
