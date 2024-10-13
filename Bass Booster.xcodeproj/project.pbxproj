@@ -81,8 +81,6 @@
 		6DEED43A2CBB04E300990C34 /* Sliders in Frameworks */ = {isa = PBXBuildFile; productRef = 6DEED4392CBB04E300990C34 /* Sliders */; };
 		6DEED43C2CBB31BB00990C34 /* PlayerSelectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DEED43B2CBB31BB00990C34 /* PlayerSelectionButton.swift */; };
 		6DEED43F2CBBDA0300990C34 /* Quicksand-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DEED43E2CBBDA0300990C34 /* Quicksand-Bold.ttf */; };
-		6DEED4412CBBF25C00990C34 /* CarouselViewChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DEED4402CBBF25C00990C34 /* CarouselViewChild.swift */; };
-		6DEED4432CBBF27000990C34 /* CarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DEED4422CBBF27000990C34 /* CarouselView.swift */; };
 		6DEED4472CBC2FB400990C34 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DEED4462CBC2FB400990C34 /* CircularProgressView.swift */; };
 		6DEED4492CBC494800990C34 /* TypeSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DEED4482CBC494800990C34 /* TypeSwitcher.swift */; };
 		6DEED44C2CBC5B1800990C34 /* Inter_18pt-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DEED44B2CBC5B1800990C34 /* Inter_18pt-SemiBold.ttf */; };
@@ -162,8 +160,6 @@
 		6DEED4332CBAECCD00990C34 /* CustomProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomProgressBar.swift; sourceTree = "<group>"; };
 		6DEED43B2CBB31BB00990C34 /* PlayerSelectionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSelectionButton.swift; sourceTree = "<group>"; };
 		6DEED43E2CBBDA0300990C34 /* Quicksand-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Quicksand-Bold.ttf"; sourceTree = "<group>"; };
-		6DEED4402CBBF25C00990C34 /* CarouselViewChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselViewChild.swift; sourceTree = "<group>"; };
-		6DEED4422CBBF27000990C34 /* CarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselView.swift; sourceTree = "<group>"; };
 		6DEED4462CBC2FB400990C34 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 		6DEED4482CBC494800990C34 /* TypeSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeSwitcher.swift; sourceTree = "<group>"; };
 		6DEED44B2CBC5B1800990C34 /* Inter_18pt-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter_18pt-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -501,8 +497,6 @@
 			children = (
 				6D4600E72C945EBD003F92BC /* MusicView.swift */,
 				6D4600E52C945EA0003F92BC /* MusicInfo.swift */,
-				6DEED4402CBBF25C00990C34 /* CarouselViewChild.swift */,
-				6DEED4422CBBF27000990C34 /* CarouselView.swift */,
 			);
 			path = MusicScreen;
 			sourceTree = "<group>";
@@ -622,7 +616,6 @@
 				6DA0B4552C838D990035751E /* String+Extension.swift in Sources */,
 				5F54B3A72C83C7F80012E1C0 /* Size.swift in Sources */,
 				6D363B6C2C888D510053761C /* HomeView.swift in Sources */,
-				6DEED4412CBBF25C00990C34 /* CarouselViewChild.swift in Sources */,
 				6D363B5C2C85F7F10053761C /* ModesViewModel.swift in Sources */,
 				5FDBE7E52C833C3300E623B5 /* OnboardingView.swift in Sources */,
 				6DEED4342CBAECCD00990C34 /* CustomProgressBar.swift in Sources */,
@@ -645,7 +638,6 @@
 				5FF254A12CB93BA80004E391 /* RenameSongView.swift in Sources */,
 				5F3D3A7F2CA8AC3200CD9D5A /* DataManager.swift in Sources */,
 				6DA0B4572C838EEB0035751E /* OptionsView.swift in Sources */,
-				6DEED4432CBBF27000990C34 /* CarouselView.swift in Sources */,
 				5F2DA4C92CA8C245009EA6D0 /* BassBoosterData.xcdatamodeld in Sources */,
 				6D4600E82C945EBD003F92BC /* MusicView.swift in Sources */,
 				5FD00C672C8E1A5E008F2B4B /* SettingsView.swift in Sources */,
