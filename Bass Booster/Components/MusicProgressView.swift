@@ -14,7 +14,7 @@ struct MusicProgressView: View {
         ZStack {
             VStack {
                 Spacer()
-                ProgressView(value: 0.5)
+                ProgressView(value: progress)
                     .tint(.musicProgressBar)
             }
         }
