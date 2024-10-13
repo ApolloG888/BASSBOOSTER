@@ -52,9 +52,9 @@ extension MainTabView {
             HomeView().environmentObject(viewModel)
                 .tabItem {
                     TabBarButton(
-                        icon: "Home",
+                        icon: selectedIndex == 0 ? "homeSelected" : "home",
                         isSelected: selectedIndex == 0,
-                        label: "Home"
+                        label: selectedIndex == 0 ? "" : "Home"
                     ) {
                         selectedIndex = 0
                     }
@@ -64,9 +64,9 @@ extension MainTabView {
             ModesAssembly().build()
                 .tabItem {
                     TabBarButton(
-                        icon: "modes",
+                        icon: selectedIndex == 1 ? "modesSelected" : "modes",
                         isSelected: selectedIndex == 1,
-                        label: "Modes"
+                        label: selectedIndex == 1 ? "" : "Modes"
                     ) {
                         selectedIndex = 1
                     }
@@ -82,9 +82,9 @@ extension MainTabView {
             FeaturesAssembly().build()
                 .tabItem {
                     TabBarButton(
-                        icon: "features",
+                        icon: selectedIndex == 3 ? "featuresSelected" : "features",
                         isSelected: selectedIndex == 3,
-                        label: "Features"
+                        label: selectedIndex == 3 ? "" : "Features"
                     ) {
                         selectedIndex = 3
                     }
@@ -94,15 +94,16 @@ extension MainTabView {
             SettingsAssembly().build()
                 .tabItem {
                     TabBarButton(
-                        icon: "settings",
+                        icon: selectedIndex == 4 ? "settingsSelected" : "settings",
                         isSelected: selectedIndex == 4,
-                        label: "Settings"
+                        label: selectedIndex == 4 ? "" : "Settings"
                     ) {
                         selectedIndex = 4
                     }
                 }
                 .tag(4)
         }
+        .accentColor(.musicProgressBar)
     }
 }
 
