@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FeaturesView: View {
-    @StateObject var viewModel: FeaturesViewModel
+    @EnvironmentObject var viewModel: MusicViewModel
     
     var body: some View {
         VStack {
@@ -52,20 +52,15 @@ extension FeaturesView {
     var toggles: some View {
         VStack {
             Toggle(isOn: $viewModel.isQuietSoundSelected, label: {
-                Text(FeaturesViewModel.Features.quietSounds.rawValue)
+                Text(Features.quietSounds.rawValue)
                     .font(.sfProText(type: .medium500, size: 15))
             })
            
             Toggle(isOn: $viewModel.isSuppressionSelected, label: {
-                Text(FeaturesViewModel.Features.noiseSuppression.rawValue)
+                Text(Features.noiseSuppression.rawValue)
                     .font(.sfProText(type: .medium500, size: 15))
             })
         }
         .toggleStyle(CustomToggleStyle(gradient: selectionButtonGradient()))
     }
-}
-
-#Preview {
-    FeaturesView(viewModel: FeaturesViewModel())
-        .appGradientBackground()
 }

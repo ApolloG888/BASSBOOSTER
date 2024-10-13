@@ -8,6 +8,9 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     @AppStorage("userPurchaseIsActive") var userPurchaseIsActive: Bool = false
     @AppStorage("shouldShowPromotion") var shouldShowPromotion = true
+    @AppStorage("isQuietSoundSelected") var isQuietSoundSelected: Bool = false
+    @AppStorage("isSuppressionSelected") var isSuppressionSelected: Bool = false
+    @AppStorage("selectedMode") var selectedMode: Modes = .normal
     
     private let urlManager: URLManagerProtocol = URLManager()
     

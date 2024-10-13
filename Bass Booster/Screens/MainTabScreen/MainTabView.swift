@@ -67,7 +67,7 @@ extension MainTabView {
                 }
                 .tag(0)
             
-            ModesAssembly().build()
+            ModesView().environmentObject(viewModel)
                 .tabItem {
                     TabBarButton(
                         icon: selectedIndex == 1 ? "modesSelected" : "modes",
@@ -85,7 +85,7 @@ extension MainTabView {
                 }
                 .tag(2)
             
-            FeaturesAssembly().build()
+            FeaturesView().environmentObject(viewModel)
                 .tabItem {
                     TabBarButton(
                         icon: selectedIndex == 3 ? "featuresSelected" : "features",

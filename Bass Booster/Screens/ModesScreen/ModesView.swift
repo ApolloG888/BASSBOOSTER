@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ModesView: View {
 
-    @StateObject var viewModel: ModesViewModel
+    @EnvironmentObject var viewModel: MusicViewModel
     
     var body: some View {
         VStack {
@@ -52,7 +52,7 @@ extension ModesView {
 
 extension ModesView {
     var modes: some View {
-        ForEach(ModesViewModel.Modes.allCases, id: \.self) { mode in
+        ForEach(Modes.allCases, id: \.self) { mode in
             PrimaryButton(
                 type: .modeSelection,
                 title: mode.rawValue,
@@ -64,8 +64,4 @@ extension ModesView {
             .padding(.bottom, Space.xs)
         }
     }
-}
-
-#Preview {
-    ModesView(viewModel: ModesViewModel())
 }

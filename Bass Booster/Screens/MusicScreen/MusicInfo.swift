@@ -95,6 +95,7 @@ struct MusicInfo: View {
             }
             .padding(.horizontal,20)
             .padding(.bottom, 12)
+            .contentShape(Rectangle())
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     viewModel.isExpandedSheet = true
