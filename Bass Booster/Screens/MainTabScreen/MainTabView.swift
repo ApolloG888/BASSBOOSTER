@@ -24,7 +24,7 @@ struct MainTabView: View {
             if viewModel.isExpandedSheet {
                 MusicView(
                     expandSheet: $viewModel.isExpandedSheet,
-                    animation: animation, state: .play
+                    animation: animation
                 )
                     .environmentObject(viewModel)
             }

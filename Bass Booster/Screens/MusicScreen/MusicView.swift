@@ -1,16 +1,4 @@
-//
-//  MusicView.swift
-//  Music App
-//
-//  Created by Gurjot Singh on 28/10/23.
-//
-
 import SwiftUI
-
-struct MusicImage: Identifiable {
-    let id = UUID()
-    let image: Image
-}
 
 struct MusicView: View {
     
@@ -22,10 +10,6 @@ struct MusicView: View {
     // View Properties
     @State private var animateContent: Bool = false
     @State private var offsetY: CGFloat = 0
-    @State var musicProgress = 0.1
-    @State var state: SongState
-    
-    @State private var selectedIndex: Int = 0
     
     var body: some View {
         GeometryReader { geometry in
@@ -34,7 +18,7 @@ struct MusicView: View {
             
             ZStack {
                 RoundedRectangle(cornerRadius: animateContent ? deviceCornerRadius : 0, style: .continuous)
-                    .fill(.black)
+                    .fill(Color.black)
                     .overlay {
                         Rectangle()
                             .opacity(animateContent ? 1 : 0)
@@ -107,9 +91,15 @@ struct MusicView: View {
                         Spacer()
                     }
                     
-                    FanSlider(progress: viewModel.playbackProgress, width: UIScreen.main.bounds.width - 40)
-                        .frame(height: 10)
-                        .padding(.bottom, 16)
+                    // Integrate the updated FanSlider
+                    FanSlider(progress: Binding(
+                        get: { viewModel.playbackProgress },
+                        set: { newValue in
+                            viewModel.seek(to: newValue)
+                        }
+                    ))
+                    .frame(height: 30) // Ensure fixed height
+                    .padding(.bottom, 16)
                     
                     PlayerView(size)
                         .frame(maxWidth: .infinity)
@@ -123,8 +113,8 @@ struct MusicView: View {
             .gesture(
                 DragGesture()
                     .onChanged({ value in
-                        let tranlationY = value.translation.height
-                        offsetY = (tranlationY > 0 ? tranlationY : 0)
+                        let translationY = value.translation.height
+                        offsetY = (translationY > 0 ? translationY : 0)
                     }).onEnded({ value in
                         withAnimation(.easeInOut(duration: 0.3)) {
                             if offsetY > size.height * 0.4 {
@@ -150,7 +140,7 @@ struct MusicView: View {
     func PlayerView(_ mainSize: CGSize) -> some View {
         HStack(alignment: .center) {
             Button(action: {
-               // $viewModel.shuffleToggle
+               // viewModel.shuffleToggle()
             }) {
                 Image(.shuffle)
                     .imageScale(.medium)
@@ -173,9 +163,9 @@ struct MusicView: View {
                 (viewModel.isPlaying ? Image(.pausee) : Image(.play))
                     .imageScale(.large)
                     .padding()
-                    .background(.musicProgressBar)
+                    .background(Color.musicProgressBar)
                     .clipShape(Circle())
-                    .frame(width: 30, height: 30)
+                    .frame(width: 60, height: 60) // Increased size for better touch area
                     .foregroundStyle(Color.black)
                     .shadow(color: Color.white.opacity(0.8), radius: 10, x: 0, y: 0)
             }
@@ -202,10 +192,6 @@ struct MusicView: View {
     }
 }
 
-#Preview {
-    MainTabView()
-}
-
 extension View {
     var deviceCornerRadius: CGFloat {
         let key = "_displayCornerRadius"
@@ -213,9 +199,16 @@ extension View {
             if let cornerRadius = screen.value(forKey: key) as? CGFloat {
                 return cornerRadius
             }
-            
             return 0
         }
         return 0
+    }
+}
+
+struct MusicView_Previews: PreviewProvider {
+    @Namespace static var animation
+    static var previews: some View {
+        MusicView(expandSheet: .constant(true), animation: animation)
+            .environmentObject(MusicViewModel())
     }
 }

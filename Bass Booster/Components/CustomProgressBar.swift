@@ -1,42 +1,23 @@
-import Sliders
 import SwiftUI
 
-struct FanSliderView: View {
-    var body: some View {
-        VStack {
-            GeometryReader { geometry in
-                FanSlider(width: geometry.size.width)
-                    .padding(.top, 6)
-            }
-            .frame(height: 50)
-        }
-    }
-}
-
 struct FanSlider: View {
-    @State var progress: CGFloat = 0.0
-    @State var knobPosition: CGFloat = 0.0
+    @Binding var progress: Double
     let sliderConfig = FanSliderConfig()
-    let width: CGFloat
+    
+    @State private var draggingProgress: Double? = nil
     
     var body: some View {
-        VStack {
+        GeometryReader { geometry in
+            let width = geometry.size.width
+            let height: CGFloat = 30 // Fixed height for the slider
+            
             ZStack(alignment: .leading) {
+                // Background Slider Track
                 RoundedRectangle(cornerRadius: 5)
-                    .fill(Color.secondary)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 5)
-                            .fill(Color.black.opacity(0.95))
-                            .mask(RoundedRectangle(cornerRadius: 5))
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 5)
-                            .fill(Color.musicPlayerSlider)
-                            .blur(radius: 3)
-                            .offset(y: 6)
-                            .mask(RoundedRectangle(cornerRadius: 5))
-                    )
+                    .fill(Color.musicPlayerSlider)
                     .frame(height: 7.5)
+                
+                // Progress Fill
                 RoundedRectangle(cornerRadius: 5)
                     .fill(LinearGradient(
                         gradient: Gradient(colors: [
@@ -46,52 +27,41 @@ struct FanSlider: View {
                         startPoint: .leading,
                         endPoint: .trailing
                     ))
-                    .frame(width: knobPosition, height: 6)
+                    .frame(width: CGFloat(currentProgress()) * width, height: 6)
                 
+                // Knob
                 KnobView(radius: sliderConfig.knobRadius)
-                    .offset(x: knobPosition - 5)
+                    .offset(x: CGFloat(currentProgress()) * width - sliderConfig.knobRadius)
                     .gesture(DragGesture(minimumDistance: 0)
                                 .onChanged({ value in
-                                    calculateProgressWidth(xLocation: value.location.x)
+                                    let newProgress = calculateProgressWidth(xLocation: value.location.x, width: width)
+                                    draggingProgress = newProgress
                                 })
                                 .onEnded({ value in
-                                    calculateStep(xLocation: value.location.x)
+                                    let finalProgress = calculateProgressWidth(xLocation: value.location.x, width: width)
+                                    draggingProgress = nil
+                                    progress = finalProgress // Update binding only on drag end
                                 })
                     )
             }
+            .frame(height: height)
         }
+        .frame(height: 30) // Ensure the slider has a fixed height
     }
     
-    func calculateInitialKnobPosition() {
-        progress = sliderConfig.minimumValue
-        knobPosition = (progress * width) - knobPosition
+    // Calculate progress based on drag location, clamped between 0.0 and 1.0
+    private func calculateProgressWidth(xLocation: CGFloat, width: CGFloat) -> Double {
+        let tempProgress = min(max(Double(xLocation / width), 0.0), 1.0)
+        return tempProgress
     }
     
-    func calculateProgressWidth(xLocation: CGFloat) {
-        let tempProgress = xLocation/width
-        if tempProgress > 0 && tempProgress <= 1 {
-            progress = (tempProgress * (sliderConfig.maximumValue - sliderConfig.minimumValue)) + sliderConfig.minimumValue
-            let tempPosition = (tempProgress * width) - sliderConfig.knobRadius
-            knobPosition = tempPosition > 0 ? tempPosition : 0
-        }
-    }
-    
-    func calculateStep(xLocation: CGFloat) {
-        let tempProgress = xLocation/width
-        if tempProgress >= 0 && tempProgress <= 1 {
-            var roundedProgress = (tempProgress * (sliderConfig.maximumValue - sliderConfig.minimumValue)) + sliderConfig.minimumValue
-            roundedProgress = roundedProgress.rounded()
-            progress = roundedProgress
-            
-            let updatedTempProgress = (roundedProgress - sliderConfig.minimumValue) / (sliderConfig.maximumValue - sliderConfig.minimumValue)
-            knobPosition = updatedTempProgress == 0 ? 0 : (updatedTempProgress * width) - sliderConfig.knobRadius
-        }
+    // Determine current progress (draggingProgress takes precedence if dragging)
+    private func currentProgress() -> Double {
+        return draggingProgress ?? progress
     }
 }
 
 struct FanSliderConfig {
-    let minimumValue: CGFloat = 1.0
-    let maximumValue: CGFloat = 100.0
     let knobRadius: CGFloat = 14
 }
 
@@ -113,16 +83,16 @@ struct KnobView: View {
                 .frame(width: radius * 2, height: radius * 2)
             
             Circle()
-                .fill(.musicProgressBar)
+                .fill(Color.musicProgressBar)
                 .frame(width: 4, height: 4)
         }
     }
 }
 
-#Preview {
-    ZStack {
-        Color.white.opacity(0.1)
-        FanSliderView()
+struct FanSlider_Previews: PreviewProvider {
+    static var previews: some View {
+        FanSlider(progress: .constant(0.5))
+            .frame(width: 300, height: 30)
             .padding()
     }
 }
