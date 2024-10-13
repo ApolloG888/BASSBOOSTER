@@ -14,6 +14,8 @@ struct MusicImage: Identifiable {
 
 struct MusicView: View {
     
+    @EnvironmentObject var viewModel: MusicViewModel
+    
     @Binding var expandSheet: Bool
     var animation: Namespace.ID
     
@@ -22,8 +24,6 @@ struct MusicView: View {
     @State private var offsetY: CGFloat = 0
     @State var musicProgress = 0.1
     @State var state: SongState
-    @State var songName: String
-    @State var songAuthor: String
     @State var music = [MusicFileEntity]() // пока что пустой просто для примера
     @State var musicImages = [
         MusicImage(image: Image(.mockMusic)),
@@ -59,7 +59,7 @@ struct MusicView: View {
                             .imageScale(.large)
                             .onTapGesture {
                                 withAnimation(.easeInOut(duration: 0.36)) {
-                                    expandSheet = false
+                                    viewModel.isExpandedSheet = false
                                     animateContent = false
                                 }
                             }
@@ -72,9 +72,16 @@ struct MusicView: View {
                     .padding(.horizontal)
                     .padding(.top, 80)
                     
-//                    Carousel(items: musicImages ,duration: 2.0) { item in
-//                        item.image
-//                    }
+                    Text(viewModel.currentSong?.name ?? "Unknown")
+                    
+                 VStack(alignment: .leading, spacing: 10) {
+                    Text(viewModel.currentSong?.name ?? "Unknown")
+                        .font(.quicksand(size: 20))
+                        .foregroundStyle(.white)
+                    Text(viewModel.currentSong?.artist ?? "Unknown Artist")
+                        .font(.quicksand(size: 14))
+                        .foregroundStyle(.musicPlayerAuthor)
+                }
 
                     Spacer()
                     
@@ -87,10 +94,10 @@ struct MusicView: View {
                     
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("\(songName)")
+                            Text("\(viewModel.currentSong?.name ?? "Unknown")")
                                 .font(.quicksand(size: 20))
                                 .foregroundStyle(.white)
-                            Text("\(songAuthor)")
+                            Text("\(viewModel.currentSong?.artist ?? "Unknown Artist")")
                                 .font(.quicksand(size: 14))
                                 .foregroundStyle(.musicPlayerAuthor)
                         }
@@ -98,9 +105,17 @@ struct MusicView: View {
                         Spacer()
                     }
                     
-                    FanSlider(progress: musicProgress, width: UIScreen.main.bounds.width - 32)
+                    FanSlider(progress: viewModel.playbackProgress, width: UIScreen.main.bounds.width - 40)
                         .frame(height: 10)
                         .padding(.bottom, 16)
+//                        .gesture(
+//                            DragGesture()
+//                                .onChanged { value in
+//                                    let width = UIScreen.main.bounds.width - 40
+//                                    let newProgress = min(max(0, value.location.x / width), 1)
+//                                    viewModel.seek(to: newProgress)
+//                                }
+//                        )
                     
                     PlayerView(size)
                         .frame(maxWidth: .infinity)
@@ -141,25 +156,23 @@ struct MusicView: View {
     func PlayerView(_ mainSize: CGSize) -> some View {
         HStack(alignment: .center) {
             Button(action: {
+               // $viewModel.shuffleToggle
             }) {
                 Image(.shuffle)
                     .imageScale(.medium)
             }
-            
-            Spacer()
-            
+
             Button(action: {
+                viewModel.previousSong()
             }) {
                 Image(.previous)
                     .imageScale(.medium)
             }
-            
-            Spacer()
-            
+
             Button(action: {
-                state.toggle()
+                viewModel.playPauseMusic()
             }) {
-                state.image
+                (viewModel.isPlaying ? Image(.pausee) : Image(.play))
                     .imageScale(.large)
                     .padding()
                     .background(.musicProgressBar)
@@ -168,20 +181,16 @@ struct MusicView: View {
                     .foregroundStyle(Color.black)
                     .shadow(color: Color.white.opacity(0.8), radius: 10, x: 0, y: 0)
             }
-            
-            Spacer()
-            
+
             Button(action: {
-                
+                viewModel.nextSong()
             }) {
                 Image(.next)
                     .imageScale(.medium)
             }
-            
-            Spacer()
-            
+
             Button(action: {
-                
+               // viewModel.repeatToggle()
             }) {
                 Image(.repeate)
                     .imageScale(.medium)

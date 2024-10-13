@@ -2,8 +2,13 @@ import Foundation
 import SwiftUI
 import Combine
 import BottomSheet
+import AVFoundation
 
-final class MusicViewModel: ObservableObject {
+final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
+    
+    var audioPlayer: AVAudioPlayer?
+    private var progressTimer: Timer?
+    
     @Published var musicFiles: [MusicFileEntity] = []
     @Published var playlists: [PlaylistEntity] = []
     @Published var selectedPlaylist: PlaylistEntity?
@@ -17,8 +22,14 @@ final class MusicViewModel: ObservableObject {
     @Published var bottomSheetPosition: BottomSheetPosition = .hidden
     @Published var selectedMusicFile: MusicFileEntity?
     
+    @Published var isExpandedSheet: Bool = false
+    @Published var currentSong: MusicFileEntity?
+    @Published var isPlaying: Bool = false
+    
     @Published var searchText: String = ""
     @Published var isLoading: Bool = false
+    
+    @Published var playbackProgress: Double = 0.0
     
     private var dataManager = DataManager.shared
     private var cancellables = Set<AnyCancellable>()
@@ -39,7 +50,8 @@ final class MusicViewModel: ObservableObject {
         }
     }
     
-    init() {
+    override init() {
+        super.init()
         dataManager.$savedFiles
             .receive(on: DispatchQueue.main)
             .assign(to: \.musicFiles, on: self)
@@ -187,5 +199,55 @@ final class MusicViewModel: ObservableObject {
     func removeSongFromPlaylist(_ song: MusicFileEntity, from playlist: PlaylistEntity) {
         dataManager.removeSongFromPlaylist(song, from: playlist)
         fetchMusicFiles(for: playlist)
+    }
+    
+    func playMusic() {
+        guard let song = currentSong, let urlString = song.url, let url = URL(string: urlString) else {
+            print("Invalid song URL")
+            return
+        }
+        do {
+            audioPlayer?.stop()
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.delegate = self
+            audioPlayer?.play()
+            isPlaying = true
+        } catch {
+            print("Error playing music: \(error)")
+        }
+    }
+
+    func pauseMusic() {
+        audioPlayer?.pause()
+        isPlaying = false
+    }
+
+    func playPauseMusic() {
+        if isPlaying {
+            pauseMusic()
+        } else {
+            playMusic()
+        }
+    }
+
+    func nextSong() {
+        guard let currentSong = currentSong else { return }
+        guard let currentIndex = musicFiles.firstIndex(of: currentSong) else { return }
+        let nextIndex = (currentIndex + 1) % musicFiles.count
+        self.currentSong = musicFiles[nextIndex]
+        playMusic()
+    }
+
+    func previousSong() {
+        guard let currentSong = currentSong else { return }
+        guard let currentIndex = musicFiles.firstIndex(of: currentSong) else { return }
+        let previousIndex = (currentIndex - 1 + musicFiles.count) % musicFiles.count
+        self.currentSong = musicFiles[previousIndex]
+        playMusic()
+    }
+
+    // AVAudioPlayerDelegate method
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        nextSong()
     }
 }

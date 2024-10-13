@@ -30,7 +30,7 @@ enum SongState {
 }
 
 struct MusicInfo: View {
-    
+    @EnvironmentObject var viewModel: MusicViewModel
     @Binding var expandSheet: Bool
     @State var state: SongState
     var animation: Namespace.ID
@@ -54,10 +54,10 @@ struct MusicInfo: View {
                 .padding(.top, 4)
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("The Chain - 2004 Remaster")
+                    Text(viewModel.currentSong?.name ?? "Unknown")
                         .foregroundStyle(.white)
                         .font(.helvetica(type: .regular400, size: 14))
-                    Text("The Chain - 2004 Remaster")
+                    Text(viewModel.currentSong?.artist ?? "Unknown Artist")
                         .foregroundStyle(.musicInfoSubColor)
                         .font(.helvetica(type: .medium500, size: 14))
                 }
@@ -69,9 +69,9 @@ struct MusicInfo: View {
                 Spacer()
                 
                 Button {
-                    state.toggle()
+                    viewModel.playPauseMusic()
                 } label: {
-                    state.image
+                    (viewModel.isPlaying ? Image(.pausee) : Image(.play))
                         .resizable()
                         .renderingMode(.template)
                         .scaledToFit()
@@ -84,10 +84,10 @@ struct MusicInfo: View {
             .padding(.bottom, 12)
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    expandSheet = true
+                    viewModel.isExpandedSheet = true
                 }
-        }
-            MusicProgressView(progress: 0.5)
+            }
+            MusicProgressView(progress: viewModel.playbackProgress)
         }
     }
 }

@@ -21,8 +21,12 @@ struct MainTabView: View {
         .hideNavigationBar()
         .background(Color.customBlack)
         .overlay {
-            if expandSheet {
-                MusicView(expandSheet: $expandSheet, animation: animation, state: .play, songName: "The Chain - 2004 Remaster", songAuthor: "The Chain - 2004 Remaster")
+            if viewModel.isExpandedSheet {
+                MusicView(
+                    expandSheet: $viewModel.isExpandedSheet,
+                    animation: animation, state: .play
+                )
+                    .environmentObject(viewModel)
             }
         }
         .bottomSheet(
@@ -161,14 +165,19 @@ extension MainTabView {
     @ViewBuilder
     func customBottomSheet() -> some View {
         ZStack {
-            if expandSheet {
+            if viewModel.isExpandedSheet {
                 Rectangle()
                     .fill(.musicInfoColor)
             } else {
                 Rectangle()
                     .fill(Color.musicInfoColor)
                     .overlay {
-                        MusicInfo(expandSheet: $expandSheet, state: .pause, animation: animation)
+                        MusicInfo(
+                            expandSheet: $viewModel.isExpandedSheet,
+                            state: .pause,
+                            animation: animation
+                        )
+                        .environmentObject(viewModel)
                     }
                     .matchedGeometryEffect(id: "BACKGROUNDVIEW", in: animation)
             }

@@ -12,6 +12,7 @@ struct MusicFileRow: View {
     var musicFile: MusicFileEntity
     var playlists: [PlaylistEntity]
     var onOptionSelect: (MusicFileEntity) -> Void
+    var onPlay: (MusicFileEntity) -> Void
 
     var body: some View {
         HStack {
@@ -48,6 +49,10 @@ struct MusicFileRow: View {
                     .foregroundColor(.white)
                     .font(.title)
             }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onPlay(musicFile)
         }
     }
 }
