@@ -19,7 +19,7 @@ struct DeleteSongView: View {
                 .edgesIgnoringSafeArea(.all)
 
             VStack(spacing: 12) {
-                Text("Delete Song")
+                Text("Delete a song")
                     .font(.quicksand(type: .bold700, size: 20))
                     .foregroundStyle(.white)
                 

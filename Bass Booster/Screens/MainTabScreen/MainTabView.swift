@@ -52,7 +52,7 @@ extension MainTabView {
             HomeView().environmentObject(viewModel)
                 .tabItem {
                     TabBarButton(
-                        icon: selectedIndex == 0 ? "homeSelected" : "home",
+                        icon: selectedIndex == 0 ? "homeSelected" : "Home",
                         isSelected: selectedIndex == 0,
                         label: selectedIndex == 0 ? "" : "Home"
                     ) {

@@ -36,7 +36,7 @@ struct RenameSongView: View {
                 CustomTextField(input: $authorName, text: "Author")
                     .padding(.bottom)
                 
-                CustomTextField(input: $authorName, text: "Song name")
+                CustomTextField(input: $songName, text: "Song name")
                     .padding(.bottom)
                 
                 HStack(spacing: 20) {
