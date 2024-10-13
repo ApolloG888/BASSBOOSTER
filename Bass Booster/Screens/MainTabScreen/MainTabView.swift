@@ -97,7 +97,7 @@ extension MainTabView {
                 }
                 .tag(3)
             
-            SettingsAssembly().build()
+            SettingsView().environmentObject(viewModel)
                 .tabItem {
                     TabBarButton(
                         icon: selectedIndex == 4 ? "settingsSelected" : "settings",

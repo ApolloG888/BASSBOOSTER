@@ -33,8 +33,6 @@
 		5FD00C622C8D36B7008F2B4B /* TabBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD00C612C8D36B7008F2B4B /* TabBarButton.swift */; };
 		5FD00C642C8D3BC9008F2B4B /* EdgeInsets+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD00C632C8D3BC9008F2B4B /* EdgeInsets+Extensions.swift */; };
 		5FD00C672C8E1A5E008F2B4B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD00C662C8E1A5E008F2B4B /* SettingsView.swift */; };
-		5FD00C6B2C8E1A7B008F2B4B /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD00C6A2C8E1A7B008F2B4B /* SettingsViewModel.swift */; };
-		5FD00C6D2C8E1A85008F2B4B /* SettingsAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD00C6C2C8E1A85008F2B4B /* SettingsAssembly.swift */; };
 		5FD59D942C84EC9200D3508B /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD59D932C84EC9200D3508B /* MainTabView.swift */; };
 		5FD59D962C84EFB400D3508B /* CustomToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD59D952C84EFB400D3508B /* CustomToggle.swift */; };
 		5FDBE7E32C833C3300E623B5 /* BassBoosterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7E22C833C3300E623B5 /* BassBoosterApp.swift */; };
@@ -47,6 +45,7 @@
 		5FDBE7FF2C83480500E623B5 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FDBE7FE2C83480500E623B5 /* View+Extension.swift */; };
 		5FE7DC5A2CB9B78400001F61 /* PlayListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7DC592CB9B78400001F61 /* PlayListCell.swift */; };
 		5FE7DC5C2CB9B9BC00001F61 /* MusicFileRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7DC5B2CB9B9BC00001F61 /* MusicFileRow.swift */; };
+		5FE7DC7D2CBC884000001F61 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7DC7C2CBC883F00001F61 /* Settings.swift */; };
 		5FF2549B2CB8859D0004E391 /* NewPlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF2549A2CB8859D0004E391 /* NewPlaylistView.swift */; };
 		5FF2549D2CB886B60004E391 /* DeleteSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF2549C2CB886B60004E391 /* DeleteSongView.swift */; };
 		5FF254A12CB93BA80004E391 /* RenameSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF254A02CB93BA80004E391 /* RenameSongView.swift */; };
@@ -113,8 +112,6 @@
 		5FD00C612C8D36B7008F2B4B /* TabBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarButton.swift; sourceTree = "<group>"; };
 		5FD00C632C8D3BC9008F2B4B /* EdgeInsets+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EdgeInsets+Extensions.swift"; sourceTree = "<group>"; };
 		5FD00C662C8E1A5E008F2B4B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		5FD00C6A2C8E1A7B008F2B4B /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
-		5FD00C6C2C8E1A85008F2B4B /* SettingsAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAssembly.swift; sourceTree = "<group>"; };
 		5FD59D932C84EC9200D3508B /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		5FD59D952C84EFB400D3508B /* CustomToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToggle.swift; sourceTree = "<group>"; };
 		5FDBE7DF2C833C3300E623B5 /* Bass Booster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bass Booster.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,6 +125,7 @@
 		5FDBE7FE2C83480500E623B5 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 		5FE7DC592CB9B78400001F61 /* PlayListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayListCell.swift; sourceTree = "<group>"; };
 		5FE7DC5B2CB9B9BC00001F61 /* MusicFileRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicFileRow.swift; sourceTree = "<group>"; };
+		5FE7DC7C2CBC883F00001F61 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		5FF2549A2CB8859D0004E391 /* NewPlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPlaylistView.swift; sourceTree = "<group>"; };
 		5FF2549C2CB886B60004E391 /* DeleteSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteSongView.swift; sourceTree = "<group>"; };
 		5FF254A02CB93BA80004E391 /* RenameSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameSongView.swift; sourceTree = "<group>"; };
@@ -267,9 +265,8 @@
 		5FD00C652C8E1A39008F2B4B /* SettingsScreen */ = {
 			isa = PBXGroup;
 			children = (
+				5FE7DC7C2CBC883F00001F61 /* Settings.swift */,
 				5FD00C662C8E1A5E008F2B4B /* SettingsView.swift */,
-				5FD00C6A2C8E1A7B008F2B4B /* SettingsViewModel.swift */,
-				5FD00C6C2C8E1A85008F2B4B /* SettingsAssembly.swift */,
 			);
 			path = SettingsScreen;
 			sourceTree = "<group>";
@@ -626,7 +623,7 @@
 				6D363B632C85FA050053761C /* FeaturesViewModel.swift in Sources */,
 				5FDBE7F62C83441000E623B5 /* Typography.swift in Sources */,
 				6D363B5E2C85F84F0053761C /* ModesAssembly.swift in Sources */,
-				5FD00C6D2C8E1A85008F2B4B /* SettingsAssembly.swift in Sources */,
+				5FE7DC7D2CBC884000001F61 /* Settings.swift in Sources */,
 				5FDBE7E32C833C3300E623B5 /* BassBoosterApp.swift in Sources */,
 				5FE7DC5C2CB9B9BC00001F61 /* MusicFileRow.swift in Sources */,
 				6D363B6E2C888D680053761C /* MusicViewModel.swift in Sources */,
@@ -661,7 +658,6 @@
 				5F4BF3B82C8D238C00F313E2 /* PurchaseManager.swift in Sources */,
 				6D363B742C88A55C0053761C /* PlaylistView.swift in Sources */,
 				6DEED4492CBC494800990C34 /* TypeSwitcher.swift in Sources */,
-				5FD00C6B2C8E1A7B008F2B4B /* SettingsViewModel.swift in Sources */,
 				5FD59D962C84EFB400D3508B /* CustomToggle.swift in Sources */,
 				6DEED43C2CBB31BB00990C34 /* PlayerSelectionButton.swift in Sources */,
 				5FD59D942C84EC9200D3508B /* MainTabView.swift in Sources */,

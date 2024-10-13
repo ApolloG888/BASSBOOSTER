@@ -7,6 +7,9 @@ import AVFoundation
 final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     @AppStorage("userPurchaseIsActive") var userPurchaseIsActive: Bool = false
+    @AppStorage("shouldShowPromotion") var shouldShowPromotion = true
+    
+    private let urlManager: URLManagerProtocol = URLManager()
     
     var audioPlayer: AVAudioPlayer?
     private var progressTimer: Timer?
@@ -402,6 +405,10 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     func repeatToggle() {
         isRepeatOn.toggle()
+    }
+    
+    func openMockURL() {
+        urlManager.open(urlString: "https://www.google.com")
     }
     
     deinit {

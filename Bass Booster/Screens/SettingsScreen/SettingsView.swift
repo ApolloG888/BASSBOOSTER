@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @StateObject var viewModel: SettingsViewModel
-    @State private var isSubscriptionLinkActive = false
+    @EnvironmentObject var viewModel: MusicViewModel
+    @State private var isSubscriptionLinkActive = false {
+        didSet {
+            viewModel.isShowSubscriptionOverlay = true
+        }
+    }
+    @State var allSettings = Settings.allCases
     
     var body: some View {
         NavigationStack {
@@ -24,9 +29,6 @@ struct SettingsView: View {
             .hideNavigationBar()
             .padding(.vertical)
             .appGradientBackground()
-//            .navigationDestination(isPresented: $isSubscriptionLinkActive) {
-//                SubscriptionAssembly().build()
-//            }
         }
     }
 }
@@ -50,8 +52,8 @@ extension SettingsView {
 
 extension SettingsView {
     var premiumRow: some View {
-        NavigationLink {
-//            SubscriptionAssembly().build()
+        Button {
+            viewModel.isShowSubscriptionOverlay = true
         } label: {
             Image(.premiumRow)
                 .resizable()
@@ -66,24 +68,26 @@ extension SettingsView {
 
 extension SettingsView {
     var settingsList: some View {
-        List(viewModel.allSettings, id: \.self) { setting in
+        List(allSettings, id: \.self) { setting in
             VStack(spacing: 16) {
                 HStack {
                     Image(setting.image)
                         .resizable()
                         .scaledToFit()
-                        .frame(size: Size.xl)
+                        .frame(width: 24, height: 24)
                     Text(setting.title)
-                        .font(.sfProText(size: 14))
+                        .font(.sfProText(size: 16))
                         .foregroundStyle(.subProductPriceColor)
                     Spacer()
-                    Image(.arrowRight)
+                    Image(systemName: "chevron.right")
                         .resizable()
                         .scaledToFit()
-                        .frame(size: Size.xl)
+                        .frame(width: 24, height: 24)
                 }
+                .padding(.vertical, 16)
             }
-            .padding(.vertical, 5)
+            .frame(maxWidth: .infinity, minHeight: 60)
+            .contentShape(Rectangle())
             .listRowBackground(Color.white.opacity(0.07))
             .onTapGesture {
                 handleTap(for: setting)
@@ -92,7 +96,7 @@ extension SettingsView {
         .scrollContentBackground(.hidden)
     }
 
-    func handleTap(for setting: SettingsViewModel.Settings) {
+    func handleTap(for setting: Settings) {
         switch setting {
         case .subscription:
             isSubscriptionLinkActive = true
@@ -100,8 +104,4 @@ extension SettingsView {
             viewModel.openMockURL()
         }
     }
-}
-
-#Preview {
-    SettingsView(viewModel: SettingsViewModel(urlManager: URLManager()))
 }
