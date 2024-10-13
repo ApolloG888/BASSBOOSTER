@@ -45,6 +45,10 @@ struct MusicView: View {
                         
                         Image(.more)
                             .imageScale(.large)
+                            .onTapGesture {
+                                guard let currentSong = viewModel.currentSong else { return }
+                                viewModel.showBottomSheet(for: currentSong)
+                            }
                     }
                     .padding(.horizontal)
                     .padding(.top, 80)

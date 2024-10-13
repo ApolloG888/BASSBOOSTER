@@ -237,6 +237,7 @@ extension MainTabView {
                 return
             }
             viewModel.requestRenameSong(selectedMusicFile)
+            viewModel.isExpandedSheet = false
         }))
         
         if viewModel.isInGeneralPlaylist {
@@ -266,6 +267,7 @@ extension MainTabView {
                 return
             }
             viewModel.requestDeleteSong(selectedMusicFile)
+            viewModel.isExpandedSheet = false
             viewModel.hideBottomSheet()
         }))
         return buttons
