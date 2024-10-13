@@ -24,9 +24,9 @@ struct SettingsView: View {
             .hideNavigationBar()
             .padding(.vertical)
             .appGradientBackground()
-            .navigationDestination(isPresented: $isSubscriptionLinkActive) {
-                SubscriptionAssembly().build()
-            }
+//            .navigationDestination(isPresented: $isSubscriptionLinkActive) {
+//                SubscriptionAssembly().build()
+//            }
         }
     }
 }
@@ -51,7 +51,7 @@ extension SettingsView {
 extension SettingsView {
     var premiumRow: some View {
         NavigationLink {
-            SubscriptionAssembly().build()
+//            SubscriptionAssembly().build()
         } label: {
             Image(.premiumRow)
                 .resizable()

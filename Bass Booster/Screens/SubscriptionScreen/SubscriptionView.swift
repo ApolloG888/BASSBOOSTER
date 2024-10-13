@@ -12,6 +12,7 @@ struct SubscriptionView: View {
     @State var state: SubScreenState = .preset
     @StateObject var viewModel: SubscriptionViewModel
     @Environment(\.presentationMode) var presentationMode
+    @Binding var isPresented: Bool
     
     var body: some View {
         VStack {
@@ -60,7 +61,7 @@ extension SubscriptionView {
         HStack {
             Spacer()
             Button {
-                presentationMode.wrappedValue.dismiss()
+                isPresented = false
             } label: {
                 Image(systemName: "xmark")
                     .resizable()
@@ -166,14 +167,15 @@ private extension SubscriptionView {
         viewModel.purchase { succeeded in
             if succeeded {
                 print("Done☑️")
-                presentationMode.wrappedValue.dismiss()
+                isPresented = false
             } else {
                 print("Fail❌")
+                isPresented = false
             }
         }
     }
 }
 
 #Preview {
-    SubscriptionView(viewModel: SubscriptionViewModel(purchaseService: PurchaseManager.instance, urlManager: URLManager()))
+    SubscriptionView(viewModel: SubscriptionViewModel(purchaseService: PurchaseManager.instance, urlManager: URLManager()), isPresented: .constant(false))
 }

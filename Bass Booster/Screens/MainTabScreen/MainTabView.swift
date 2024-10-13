@@ -29,6 +29,12 @@ struct MainTabView: View {
                     .environmentObject(viewModel)
             }
         }
+        .overlay {
+            if viewModel.isShowSubscriptionOverlay {
+                SubscriptionAssembly().build(isPresented: $viewModel.isShowSubscriptionOverlay)
+                    .transition(.opacity)
+            }
+        }
         .bottomSheet(
             bottomSheetPosition: $viewModel.bottomSheetPosition,
             switchablePositions: [.dynamic]) {
@@ -155,13 +161,15 @@ extension MainTabView {
 
 extension MainTabView {
     func presentDocumentPicker() {
-        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let rootViewController = scene.windows.first?.rootViewController {
-            let manager = DocumentPickerManager { urls in
-                viewModel.handlePickedFiles(urls: urls)
+        if viewModel.canAddSong() {
+            if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let rootViewController = scene.windows.first?.rootViewController {
+                let manager = DocumentPickerManager { urls in
+                    viewModel.handlePickedFiles(urls: urls)
+                }
+                manager.showDocumentPicker()
+                self.documentPickerManager = manager
             }
-            manager.showDocumentPicker()
-            self.documentPickerManager = manager
         }
     }
     

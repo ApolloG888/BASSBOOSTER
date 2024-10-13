@@ -6,6 +6,8 @@ import AVFoundation
 
 final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
+    @AppStorage("userPurchaseIsActive") var userPurchaseIsActive: Bool = false
+    
     var audioPlayer: AVAudioPlayer?
     private var progressTimer: Timer?
     
@@ -33,6 +35,8 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     @Published var shuffleMode: Bool = false
     @Published var isRepeatOn: Bool = false
+    
+    @Published var isShowSubscriptionOverlay: Bool = false
 
     private var dataManager = DataManager.shared
     private var cancellables = Set<AnyCancellable>()
@@ -66,30 +70,57 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             .store(in: &cancellables)
     }
     
+    func canAddSong() -> Bool {
+        if !userPurchaseIsActive && musicFiles.count >= 1 {
+            // Если подписки нет и уже добавлена одна песня
+            isShowSubscriptionOverlay = true  // Показываем экран подписки
+            return false  // Запрещаем добавлять больше
+        }
+        return true  // Разрешаем добавлять песни
+    }
+    
     // MARK: - Обработка Выбранных Файлов
     
     func handlePickedFiles(urls: [URL]) {
-        isLoading = true  // Устанавливаем состояние загрузки
+        if !userPurchaseIsActive && urls.count > 1 {
+            // Если подписки нет и выбрано больше одной песни, добавляем только одну
+            let limitedURLs = Array(urls.prefix(1))
+            processFiles(urls: limitedURLs)
+            
+            // Показываем экран с предложением подписки
+            isShowSubscriptionOverlay = true
+        } else {
+            // Обрабатываем все файлы
+            processFiles(urls: urls)
+        }
+    }
+    
+    // Новый метод обработки файлов (вынесен в отдельный метод)
+    private func processFiles(urls: [URL]) {
+        isLoading = true
         dataManager.handlePickedFiles(urls: urls) {
-            // Этот блок выполнится после завершения обработки файлов
             DispatchQueue.main.async {
                 self.isLoading = false
-                
-                if let myPlayerPlaylist = self.playlists.first(where: { $0.name == "My Player" }) {
-                    self.selectedPlaylist = myPlayerPlaylist
-                    self.fetchMusicFiles(for: myPlayerPlaylist)
-                    if let firstSong = self.musicFiles.first {
-                        self.currentSong = firstSong
-                        self.playMusic()
-                    }
-                } else {
-                    self.selectedPlaylist = nil
-                    self.fetchSavedMusicFiles()
-                    if let firstSong = self.musicFiles.first {
-                        self.currentSong = firstSong
-                        self.playMusic()
-                    }
-                }
+                self.updatePlaylistAndPlayFirstSong()
+            }
+        }
+    }
+    
+    // Обновляем метод обновления плейлиста и воспроизведения
+    private func updatePlaylistAndPlayFirstSong() {
+        if let myPlayerPlaylist = playlists.first(where: { $0.name == "My Player" }) {
+            selectedPlaylist = myPlayerPlaylist
+            fetchMusicFiles(for: myPlayerPlaylist)
+            if let firstSong = musicFiles.first {
+                currentSong = firstSong
+                playMusic()
+            }
+        } else {
+            selectedPlaylist = nil
+            fetchSavedMusicFiles()
+            if let firstSong = musicFiles.first {
+                currentSong = firstSong
+                playMusic()
             }
         }
     }
