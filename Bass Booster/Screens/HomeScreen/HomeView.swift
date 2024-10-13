@@ -169,15 +169,8 @@ extension HomeView {
                                 playlists: viewModel.playlists.filter { $0.name != "My Player" },
                                 onOptionSelect: { viewModel.showBottomSheet(for: $0) },
                                 onPlay: { selectedMusicFile in
-                                    if viewModel.currentSong == selectedMusicFile {
-                                        // Песня уже выбрана, просто раскрываем MusicView
-                                        viewModel.isExpandedSheet = true
-                                    } else {
-                                        // Новая песня выбрана
-                                        viewModel.currentSong = selectedMusicFile
-                                        viewModel.isExpandedSheet = true
-                                        viewModel.playMusic()
-                                    }
+                                    viewModel.currentSong = selectedMusicFile
+                                    viewModel.playMusic()
                                 }
                             )
                         }

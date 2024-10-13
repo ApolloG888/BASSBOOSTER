@@ -65,17 +65,26 @@ struct MusicView: View {
                     .padding(.horizontal)
                     .padding(.top, 80)
                     
-                    Text(viewModel.currentSong?.name ?? "Unknown")
+                    Spacer()
                     
-                 VStack(alignment: .leading, spacing: 10) {
-                    Text(viewModel.currentSong?.name ?? "Unknown")
-                        .font(.quicksand(size: 20))
-                        .foregroundStyle(.white)
-                    Text(viewModel.currentSong?.artist ?? "Unknown Artist")
-                        .font(.quicksand(size: 14))
-                        .foregroundStyle(.musicPlayerAuthor)
-                }
-
+                    if let albumArt = viewModel.currentSong?.albumArt, let image = UIImage(data: albumArt) {
+                        Image(uiImage: image)
+                            .resizable()
+                            .frame(width: 336, height: 336)
+                            .clipShape(RoundedRectangle(cornerRadius: 18))
+                    } else {
+                        Image(.musicNote)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 150, height: 150)
+                            .foregroundColor(.playlistGrey)
+                            .frame(width: 336, height: 336)
+                            .background(
+                                RoundedRectangle(cornerRadius: 19)
+                                    .fill(Color.customBlack)
+                            )
+                    }
+                    
                     Spacer()
                     
                     HStack {
