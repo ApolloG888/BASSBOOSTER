@@ -144,6 +144,12 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func confirmRenameSong(newArtist: String, newSongName: String) {
         if let song = selectedMusicFile {
             dataManager.renameSong(song, newArtist: newArtist, newName: newSongName)
+            
+            // Check if the renamed song is the currently playing song
+            if song.id == currentSong?.id {
+                currentSong = nil
+                pauseMusic()  // Stop the player
+            }
         }
         isShowRenameSongView = false
         selectedMusicFile = nil
@@ -184,6 +190,12 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func confirmDeleteSong() {
         if let song = songToDelete {
             deleteMusicFileEntity(song)
+            
+            // Check if the deleted song is the currently playing song
+            if song.id == currentSong?.id {
+                currentSong = nil
+                pauseMusic()  // Stop the player
+            }
         }
         isShowDeleteSongView = false
         songToDelete = nil
