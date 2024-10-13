@@ -31,10 +31,6 @@ struct HomeView: View {
                 viewModel.selectedPlaylist = nil
                 viewModel.fetchSavedMusicFiles()
             }
-            viewModel.loadLastPlayedSong()
-            if let firstSong = viewModel.currentSong {
-                viewModel.playMusic()
-            }
         }
     }
 }

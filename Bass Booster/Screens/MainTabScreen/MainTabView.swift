@@ -112,7 +112,9 @@ extension MainTabView {
     var downView: some View {
         VStack {
             Spacer()
-            customBottomSheet()
+            if viewModel.currentSong != nil {
+                customBottomSheet()
+            }
             Button {
                 presentDocumentPicker()
             } label: {
