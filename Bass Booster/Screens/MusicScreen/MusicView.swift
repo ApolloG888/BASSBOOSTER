@@ -144,9 +144,9 @@ struct MusicView: View {
     func PlayerView(_ mainSize: CGSize) -> some View {
         HStack(alignment: .center) {
             Button(action: {
-               // viewModel.shuffleToggle()
+                viewModel.shuffleToggle()
             }) {
-                Image(.shuffle)
+                Image(viewModel.shuffleMode ? .shuffleSelected : .shuffle)
                     .imageScale(.medium)
             }
             
@@ -186,9 +186,9 @@ struct MusicView: View {
             Spacer()
 
             Button(action: {
-               // viewModel.repeatToggle()
+                viewModel.repeatToggle()
             }) {
-                Image(.repeate)
+                Image(viewModel.isRepeatOn ? .repeateSelected : .repeate)
                     .imageScale(.medium)
             }
         }

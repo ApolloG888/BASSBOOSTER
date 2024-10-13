@@ -31,6 +31,9 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     @Published var playbackProgress: Double = 0.0
     
+    @Published var shuffleMode: Bool = false
+    @Published var isRepeatOn: Bool = false
+
     private var dataManager = DataManager.shared
     private var cancellables = Set<AnyCancellable>()
     
@@ -279,10 +282,15 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
 
     func nextSong() {
-        guard let currentSong = currentSong else { return }
-        guard let currentIndex = musicFiles.firstIndex(of: currentSong) else { return }
-        let nextIndex = (currentIndex + 1) % musicFiles.count
-        self.currentSong = musicFiles[nextIndex]
+        guard !musicFiles.isEmpty else { return }
+        
+        if shuffleMode {
+            currentSong = musicFiles.randomElement()
+        } else {
+            guard let currentIndex = musicFiles.firstIndex(of: currentSong!) else { return }
+            let nextIndex = (currentIndex + 1) % musicFiles.count
+            currentSong = musicFiles[nextIndex]
+        }
         playMusic()
     }
 
@@ -346,11 +354,23 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
     }
     
-    // MARK: - AVAudioPlayerDelegate
-    
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         stopProgressTimer()
-        nextSong()
+
+        if isRepeatOn {
+            playMusic()
+            isRepeatOn = false
+        } else {
+            nextSong()
+        }
+    }
+    
+    func shuffleToggle() {
+        shuffleMode.toggle()
+    }
+    
+    func repeatToggle() {
+        isRepeatOn.toggle()
     }
     
     deinit {
