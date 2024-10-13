@@ -118,11 +118,19 @@ struct ProgressIndicatorsView: View {
 }
 
 struct IndicatorView: View {
+    let type: SliderType = .bass
     let isOn: Bool
     let offsetValue: CGFloat
     var body: some View {
         RoundedRectangle(cornerRadius: 2)
-            .fill(isOn ? Color.blueIndicaor : Color.sliderIndicator)
+            .fill(isOn ? (type == .bass ? AnyShapeStyle(Color.blueIndicaor) : AnyShapeStyle(LinearGradient(
+                gradient: Gradient(colors: [
+                    Color.placeholderYellow,
+                    Color.placeholderPlayerYellow2
+                ]),
+                startPoint: .leading,
+                endPoint: .trailing
+            ))) : AnyShapeStyle(Color.sliderIndicator))
             .frame(width: 15, height: 3)
             .offset(x: offsetValue)
     }
