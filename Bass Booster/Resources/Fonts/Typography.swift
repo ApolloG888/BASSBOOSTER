@@ -27,6 +27,10 @@ enum HelveticaNeueFont: String {
     case medium500 = "HelveticaNeueCyr-Medium"
 }
 
+enum QuickSandFont: String {
+    case bold700 = "Quicksand-Bold"
+}
+
 extension Font {
     static func sfProText(type: SFProTextFont = .regular400, size: CGFloat) -> Font {
         return Font.custom(type.rawValue, size: size)
@@ -37,6 +41,10 @@ extension Font {
     }
     
     static func helvetica(type: HelveticaNeueFont = .regular400, size: CGFloat) -> Font {
+        return Font.custom(type.rawValue, size: size)
+    }
+    
+    static func quicksand(type: QuickSandFont = .bold700, size: CGFloat) -> Font {
         return Font.custom(type.rawValue, size: size)
     }
 }

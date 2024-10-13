@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+struct MusicImage: Identifiable {
+    let id = UUID()
+    let image: Image
+}
+
 struct MusicView: View {
     
     @Binding var expandSheet: Bool
@@ -19,7 +24,15 @@ struct MusicView: View {
     @State var state: SongState
     @State var songName: String
     @State var songAuthor: String
-    @State var music: [MusicFileEntity] = []
+    @State var music = [MusicFileEntity]() // пока что пустой просто для примера
+    @State var musicImages = [
+        MusicImage(image: Image(.mockMusic)),
+        MusicImage(image: Image(.mockMusic)),
+        MusicImage(image: Image(.mockMusic)),
+        MusicImage(image: Image(.mockMusic))
+    ]
+    
+    @State private var selectedIndex: Int = 0
     
     var body: some View {
         GeometryReader { geometry in
@@ -59,52 +72,36 @@ struct MusicView: View {
                     .padding(.horizontal)
                     .padding(.top, 80)
                     
-//                    ScrollView(.horizontal, showsIndicators: false) {
-//                        HStack(spacing: 20) {
-//                            ForEach(1..4) { album in
-//                                Image(.home)
-//                                    .resizable()
-//                                    .aspectRatio(contentMode: .fill)
-//                                    .frame(width: 200, height: 200)
-//                                    .cornerRadius(15)
-//                                    .overlay(
-//                                        RoundedRectangle(cornerRadius: 15)
-//                                            .stroke(Color.purple, lineWidth: 2) // Обводка фиолетового цвета
-//                                    )
-//                                    .shadow(radius: 5)
-//                            }
-//                        }
-//                        .padding(.horizontal, 20)
+//                    Carousel(items: musicImages ,duration: 2.0) { item in
+//                        item.image
 //                    }
-//                    
-                    
-                    // нечем проверить эту шляпу ебаную на картинки музыки
-                    
+
+                    Spacer()
                     
                     HStack {
                         CustomButton(state: .equalizer, action: {})
                         CustomButton(state: .booster, action: {})
                         CustomButton(state: .volume, action: {})
                     }
-                    .padding(.bottom, 32)
+                    .padding(.bottom, 24)
                     
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("\(songName)")
-                                .font(.sfProDisplay(type: .bold700, size: 20))
+                                .font(.quicksand(size: 20))
                                 .foregroundStyle(.white)
                             Text("\(songAuthor)")
-                                .font(.helvetica(type: .medium500, size: 14))
+                                .font(.quicksand(size: 14))
                                 .foregroundStyle(.musicPlayerAuthor)
                         }
-                        .padding(.bottom, 32)
+                        .padding(.bottom, 24)
                         Spacer()
                     }
                     
-                    CustomProgressBar(value: $musicProgress)
-                        .frame(height: 20)
-                        .shadow(radius: 6)
-
+                    FanSlider(progress: musicProgress, width: UIScreen.main.bounds.width - 32)
+                        .frame(height: 10)
+                        .padding(.bottom, 16)
+                    
                     PlayerView(size)
                         .frame(maxWidth: .infinity)
                         .padding(.bottom, safeArea.bottom + 20)

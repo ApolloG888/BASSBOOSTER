@@ -23,6 +23,7 @@ extension ShapeStyle where Self == Color {
     public static var plusButtonTabBarGradient1:Color { Color(hex: 0x16171B) }
     public static var plusButtonTabBarGradient2:Color { Color(hex: 0x353A40) }
     public static var placeholderYellow:Color { Color(hex: 0xFACD66) }
+    public static var placeholderPlayerYellow2:Color { Color(hex: 0xFF9255) }
     public static var playlistGrey:Color { Color(hex: 0x8B8C8D) }
     public static var settingCellBG:Color { Color(hex: 0x424750) }
     public static var musicInfoSubColor:Color { Color(hex: 0x797979) }
@@ -31,4 +32,6 @@ extension ShapeStyle where Self == Color {
     public static var bottomSheetColor :Color { Color(hex: 0x131314) }
     public static var musicPlayerSlider:Color { Color(hex: 0x202226) }
     public static var musicPlayerAuthor:Color { Color(hex: 0xABABAB) }
+    public static var firstGradientViewColor:Color { Color(hex: 0x141515) }
+    public static var secondGradientViewColor:Color { Color(hex: 0x2E3236) }
 }

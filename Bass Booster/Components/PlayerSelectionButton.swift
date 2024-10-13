@@ -48,7 +48,7 @@ struct CustomButton: View {
                     RoundedRectangle(cornerRadius: 15)
                         .fill(Color.musicInfoColor)
                         .frame(height: 54)
-                    VStack(spacing: 0) {
+                    VStack(spacing: 6) {
                         state.icon
                             .foregroundColor(.tabBarSelected)
                             .padding(.top, 8)
@@ -56,7 +56,7 @@ struct CustomButton: View {
                             
                         Text(state.title)
                             .foregroundColor(.white)
-                            .font(.headline)
+                            .font(.quicksand(size: 12))
                             .fontWeight(.semibold)
                             .padding(.bottom,4)
                     }
