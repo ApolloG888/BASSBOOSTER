@@ -95,14 +95,13 @@ struct MusicView: View {
                         Spacer()
                     }
                     
-                    // Integrate the updated FanSlider
                     FanSlider(progress: Binding(
                         get: { viewModel.playbackProgress },
                         set: { newValue in
                             viewModel.seek(to: newValue)
                         }
                     ))
-                    .frame(height: 30) // Ensure fixed height
+                    .frame(height: 30)
                     .padding(.bottom, 16)
                     
                     PlayerView(size)
