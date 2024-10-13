@@ -63,7 +63,8 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             .store(in: &cancellables)
     }
     
-    // Добавляем новый метод для обработки выбранных файлов
+    // MARK: - Обработка Выбранных Файлов
+    
     func handlePickedFiles(urls: [URL]) {
         isLoading = true  // Устанавливаем состояние загрузки
         dataManager.handlePickedFiles(urls: urls) {
@@ -74,9 +75,17 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
                 if let myPlayerPlaylist = self.playlists.first(where: { $0.name == "My Player" }) {
                     self.selectedPlaylist = myPlayerPlaylist
                     self.fetchMusicFiles(for: myPlayerPlaylist)
+                    if let firstSong = self.musicFiles.first {
+                        self.currentSong = firstSong
+                        self.playMusic()
+                    }
                 } else {
                     self.selectedPlaylist = nil
                     self.fetchSavedMusicFiles()
+                    if let firstSong = self.musicFiles.first {
+                        self.currentSong = firstSong
+                        self.playMusic()
+                    }
                 }
             }
         }
@@ -94,7 +103,8 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         dataManager.fetchMusicFiles(for: playlist)
     }
     
-    // Playlist Management
+    // MARK: - Управление Плейлистами
+    
     func addPlaylist(name: String) {
         let uniqueName = generateUniquePlaylistName(desiredName: name)
         dataManager.savePlaylist(name: uniqueName)
@@ -119,7 +129,8 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         isShowViewNewPlaylist = false
     }
     
-    // Song Management
+    // MARK: - Управление Песнями
+    
     func addSong(_ song: MusicFileEntity, to playlist: PlaylistEntity) {
         dataManager.addSong(song, to: playlist)
     }
@@ -201,32 +212,57 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         fetchMusicFiles(for: playlist)
     }
     
+    // MARK: - Воспроизведение Музыки
+    
     func playMusic() {
-        guard let song = currentSong, let urlString = song.url, let url = URL(string: urlString) else {
-            print("Invalid song URL")
+        guard let song = currentSong, let fileName = song.url else {
+            print("Неверная песня или URL файла")
             return
         }
+        
+        let documentsDirectory = dataManager.getDocumentsDirectory()
+        let fileURL = documentsDirectory.appendingPathComponent(fileName)
+        
+        print("Попытка воспроизведения файла по URL: \(fileURL)")
+        
+        if FileManager.default.fileExists(atPath: fileURL.path) {
+            print("Файл существует по пути: \(fileURL.path)")
+        } else {
+            print("Файл не найден по пути: \(fileURL.path)")
+            return
+        }
+        
         do {
             audioPlayer?.stop()
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
             audioPlayer?.delegate = self
+            audioPlayer?.prepareToPlay()
             audioPlayer?.play()
             isPlaying = true
+            startProgressTimer()
+            saveCurrentSong()
         } catch {
-            print("Error playing music: \(error)")
+            print("Ошибка при воспроизведении музыки: \(error)")
         }
     }
 
     func pauseMusic() {
         audioPlayer?.pause()
         isPlaying = false
+        stopProgressTimer()
     }
 
     func playPauseMusic() {
         if isPlaying {
             pauseMusic()
         } else {
-            playMusic()
+            if audioPlayer != nil {
+                audioPlayer?.play()
+                isPlaying = true
+                startProgressTimer()
+            } else {
+                playMusic()
+            }
         }
     }
 
@@ -246,8 +282,66 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         playMusic()
     }
 
-    // AVAudioPlayerDelegate method
+    // MARK: - Прогресс Воспроизведения
+    
+    private func startProgressTimer() {
+        stopProgressTimer()
+        progressTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+            self?.updatePlaybackProgress()
+        }
+    }
+
+    private func stopProgressTimer() {
+        progressTimer?.invalidate()
+        progressTimer = nil
+    }
+
+    private func updatePlaybackProgress() {
+        guard let audioPlayer = audioPlayer else {
+            playbackProgress = 0.0
+            return
+        }
+        let duration = audioPlayer.duration
+        if duration > 0 {
+            playbackProgress = audioPlayer.currentTime / duration
+        } else {
+            playbackProgress = 0.0
+        }
+    }
+
+    func seek(to progress: Double) {
+        guard let audioPlayer = audioPlayer else { return }
+        let newTime = progress * audioPlayer.duration
+        audioPlayer.currentTime = newTime
+        updatePlaybackProgress()
+    }
+    
+    // MARK: - Сохранение и Загрузка Текущей Песни
+    
+    func saveCurrentSong() {
+        if let songID = currentSong?.id {
+            UserDefaults.standard.set(songID.uuidString, forKey: "LastPlayedSongID")
+        }
+    }
+
+    func loadLastPlayedSong() {
+        if let songIDString = UserDefaults.standard.string(forKey: "LastPlayedSongID"),
+           let songID = UUID(uuidString: songIDString),
+           let song = musicFiles.first(where: { $0.id == songID }) {
+            currentSong = song
+        } else if let firstSong = musicFiles.first {
+            currentSong = firstSong
+        }
+    }
+    
+    // MARK: - AVAudioPlayerDelegate
+    
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        stopProgressTimer()
         nextSong()
+    }
+    
+    deinit {
+        stopProgressTimer()
     }
 }
