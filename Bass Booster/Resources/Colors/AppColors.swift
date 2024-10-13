@@ -34,4 +34,5 @@ extension ShapeStyle where Self == Color {
     public static var musicPlayerAuthor:Color { Color(hex: 0xABABAB) }
     public static var firstGradientViewColor:Color { Color(hex: 0x141515) }
     public static var secondGradientViewColor:Color { Color(hex: 0x2E3236) }
+    public static var playlistTF:Color { Color(hex: 0xFFFFFF) }
 }

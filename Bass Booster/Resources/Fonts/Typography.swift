@@ -31,6 +31,10 @@ enum QuickSandFont: String {
     case bold700 = "Quicksand-Bold"
 }
 
+enum InterFont: String {
+    case semibold600 = "Inter_18pt-SemiBold"
+}
+
 extension Font {
     static func sfProText(type: SFProTextFont = .regular400, size: CGFloat) -> Font {
         return Font.custom(type.rawValue, size: size)
@@ -45,6 +49,10 @@ extension Font {
     }
     
     static func quicksand(type: QuickSandFont = .bold700, size: CGFloat) -> Font {
+        return Font.custom(type.rawValue, size: size)
+    }
+    
+    static func inter(type: InterFont = .semibold600, size: CGFloat) -> Font {
         return Font.custom(type.rawValue, size: size)
     }
 }

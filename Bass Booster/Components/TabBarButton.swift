@@ -25,7 +25,7 @@ struct TabBarButton: View {
                     .frame(width: 24, height: 24)
                     .foregroundColor(isSelected ? .tabBarSelected : .gray)
                 Text(label)
-                    .font(.caption)
+                    .font(.sfProText(type: .regular400, size: 10))
                     .foregroundColor(isSelected ? .tabBarSelected : .gray)
             }
         }

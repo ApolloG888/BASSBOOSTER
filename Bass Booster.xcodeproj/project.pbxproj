@@ -85,6 +85,7 @@
 		6DEED4432CBBF27000990C34 /* CarouselView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DEED4422CBBF27000990C34 /* CarouselView.swift */; };
 		6DEED4472CBC2FB400990C34 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DEED4462CBC2FB400990C34 /* CircularProgressView.swift */; };
 		6DEED4492CBC494800990C34 /* TypeSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DEED4482CBC494800990C34 /* TypeSwitcher.swift */; };
+		6DEED44C2CBC5B1800990C34 /* Inter_18pt-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DEED44B2CBC5B1800990C34 /* Inter_18pt-SemiBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -165,6 +166,7 @@
 		6DEED4422CBBF27000990C34 /* CarouselView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarouselView.swift; sourceTree = "<group>"; };
 		6DEED4462CBC2FB400990C34 /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 		6DEED4482CBC494800990C34 /* TypeSwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeSwitcher.swift; sourceTree = "<group>"; };
+		6DEED44B2CBC5B1800990C34 /* Inter_18pt-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter_18pt-SemiBold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -363,6 +365,7 @@
 		5FDBE7F32C833F8800E623B5 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				6DEED44A2CBC5B0400990C34 /* Inter */,
 				6DEED43D2CBBD9F300990C34 /* QuickSand */,
 				6DB326A02CA8BADB003311F1 /* HelveticaNeue */,
 				5F54B38E2C83B7530012E1C0 /* SFProDisplay */,
@@ -512,6 +515,14 @@
 			path = QuickSand;
 			sourceTree = "<group>";
 		};
+		6DEED44A2CBC5B0400990C34 /* Inter */ = {
+			isa = PBXGroup;
+			children = (
+				6DEED44B2CBC5B1800990C34 /* Inter_18pt-SemiBold.ttf */,
+			);
+			path = Inter;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -592,6 +603,7 @@
 				5FDBE7EA2C833C3500E623B5 /* Preview Assets.xcassets in Resources */,
 				6DEED4322CBA85EE00990C34 /* Helvetica.ttf in Resources */,
 				5F54B3942C83B7760012E1C0 /* SF-Pro-Display-Regular.ttf in Resources */,
+				6DEED44C2CBC5B1800990C34 /* Inter_18pt-SemiBold.ttf in Resources */,
 				5FDBE7E72C833C3500E623B5 /* Assets.xcassets in Resources */,
 				5F54B39D2C83B8A60012E1C0 /* SFProText-Bold.ttf in Resources */,
 				5F54B39C2C83B8A60012E1C0 /* SFProText-Regular.ttf in Resources */,

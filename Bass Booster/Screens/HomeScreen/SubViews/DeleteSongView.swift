@@ -18,44 +18,54 @@ struct DeleteSongView: View {
             Color.black.opacity(0.4)
                 .edgesIgnoringSafeArea(.all)
 
-            VStack(spacing: 20) {
+            VStack(spacing: 12) {
                 Text("Delete Song")
-                    .font(.headline)
+                    .font(.quicksand(type: .bold700, size: 20))
+                    .foregroundStyle(.white)
                 
-                Text("Are you sure you want to delete \"\(songName)\"?")
-                    .font(.subheadline)
+                Text("Delete \(songName) ?")
+                    .font(.sfProDisplay(type: .regular400, size: 15))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
+                    .foregroundStyle(.gray)
+                    .padding(.bottom)
                 
-                HStack {
+                HStack(spacing: 20) {
                     Button(action: {
                         onCancel()
                     }) {
                         Text("Cancel")
-                            .foregroundColor(.red)
-                            .frame(maxWidth: .infinity)
+                            .font(.sfProDisplay(type: .medium500, size: 16))
+                            .fontWeight(.medium)
+                            .foregroundColor(.white)
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 25)
+                                    .stroke(Color.tabBarSelected, lineWidth: 1)
+                            )
                     }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(10)
-
+                    
                     Button(action: {
                         onConfirm()
                     }) {
                         Text("Delete")
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
+                            .font(.sfProDisplay(type: .medium500, size: 16))
+                            .fontWeight(.medium)
+                            .foregroundColor(.black)
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.tabBarSelected)
+                            .cornerRadius(25)
                     }
-                    .padding()
-                    .background(Color.red)
-                    .cornerRadius(10)
                 }
+                .padding(.horizontal)
             }
             .padding()
-            .background(Color(.systemBackground))
+            .background(Color(.black))
             .cornerRadius(20)
             .shadow(radius: 10)
-            .padding(.horizontal, 40)
+            .padding(.horizontal, 25)
         }
     }
 }

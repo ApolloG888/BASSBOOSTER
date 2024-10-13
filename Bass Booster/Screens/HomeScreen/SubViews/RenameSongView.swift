@@ -13,47 +13,71 @@ struct RenameSongView: View {
     @State var songName: String
     var onSave: (String, String) -> Void
     var onCancel: () -> Void
+    @State var authorTaped: Bool = false
+    @State var nameTaped: Bool = false
 
     var body: some View {
         ZStack {
             Color.black.opacity(0.4)
                 .edgesIgnoringSafeArea(.all)
 
-            VStack(spacing: 20) {
+            VStack(spacing: 12) {
                 Text("Rename a song")
-                    .font(.headline)
-                    .foregroundColor(.primary)
-
-                TextField("Author name", text: $authorName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .font(.quicksand(type: .bold700, size: 20))
+                    .foregroundColor(.white)
+                
+                Text("Enter a new name for the song")
+                    .font(.sfProDisplay(type: .regular400, size: 17))
+                    .multilineTextAlignment(.center)
                     .padding(.horizontal)
-
-                TextField("Song name", text: $songName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
-
-                HStack {
-                    Button("Cancel") {
+                    .foregroundStyle(.gray)
+                    .padding(.bottom, 12)
+                
+                CustomTextField(input: $authorName, text: "Author")
+                    .padding(.bottom)
+                
+                CustomTextField(input: $authorName, text: "Song name")
+                    .padding(.bottom)
+                
+                HStack(spacing: 20) {
+                    Button(action: {
                         onCancel()
+                    }) {
+                        Text("Cancel")
+                            .font(.sfProDisplay(type: .medium500, size: 16))
+                            .fontWeight(.medium)
+                            .foregroundColor(.white)
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 25)
+                                    .stroke(Color.tabBarSelected, lineWidth: 1)
+                            )
                     }
-                    .foregroundColor(.red)
-
-                    Spacer()
-
-                    Button("Save") {
+                    
+                    Button(action: {
                         if !songName.isEmpty && !authorName.isEmpty {
                             onSave(authorName, songName)
                         }
+                    }) {
+                        Text("Save")
+                            .font(.sfProDisplay(type: .medium500, size: 16))
+                            .fontWeight(.medium)
+                            .foregroundColor(.black)
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.tabBarSelected)
+                            .cornerRadius(25)
                     }
                     .disabled(songName.isEmpty || authorName.isEmpty)
                 }
                 .padding(.horizontal)
             }
             .padding()
-            .background(Color(.systemBackground))
+            .background(Color.customBlack)
             .cornerRadius(20)
             .shadow(radius: 10)
-            .padding(.horizontal, 40)
+            .padding(.horizontal, 25)
         }
     }
 }
