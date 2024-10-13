@@ -274,6 +274,8 @@ extension MainTabView {
     }
 }
 
+// MARK: - Playlist Selection Content
+
 extension MainTabView {
     @ViewBuilder
     func playlistSelectionContent() -> some View {
@@ -327,6 +329,8 @@ extension MainTabView {
     }
 }
 
+// MARK: - BottomSheet Button
+
 extension MainTabView {
     private func bottomSheetButton(
         imageName: String,
@@ -346,6 +350,8 @@ extension MainTabView {
         .padding(.vertical, 8)
     }
 }
+
+// MARK: - OverlayViews
 
 extension MainTabView {
     @ViewBuilder
