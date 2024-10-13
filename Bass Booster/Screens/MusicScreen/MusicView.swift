@@ -24,13 +24,6 @@ struct MusicView: View {
     @State private var offsetY: CGFloat = 0
     @State var musicProgress = 0.1
     @State var state: SongState
-    @State var music = [MusicFileEntity]() // пока что пустой просто для примера
-    @State var musicImages = [
-        MusicImage(image: Image(.mockMusic)),
-        MusicImage(image: Image(.mockMusic)),
-        MusicImage(image: Image(.mockMusic)),
-        MusicImage(image: Image(.mockMusic))
-    ]
     
     @State private var selectedIndex: Int = 0
     
@@ -108,14 +101,6 @@ struct MusicView: View {
                     FanSlider(progress: viewModel.playbackProgress, width: UIScreen.main.bounds.width - 40)
                         .frame(height: 10)
                         .padding(.bottom, 16)
-//                        .gesture(
-//                            DragGesture()
-//                                .onChanged { value in
-//                                    let width = UIScreen.main.bounds.width - 40
-//                                    let newProgress = min(max(0, value.location.x / width), 1)
-//                                    viewModel.seek(to: newProgress)
-//                                }
-//                        )
                     
                     PlayerView(size)
                         .frame(maxWidth: .infinity)
@@ -161,6 +146,8 @@ struct MusicView: View {
                 Image(.shuffle)
                     .imageScale(.medium)
             }
+            
+            Spacer()
 
             Button(action: {
                 viewModel.previousSong()
@@ -168,6 +155,8 @@ struct MusicView: View {
                 Image(.previous)
                     .imageScale(.medium)
             }
+            
+            Spacer()
 
             Button(action: {
                 viewModel.playPauseMusic()
@@ -181,6 +170,8 @@ struct MusicView: View {
                     .foregroundStyle(Color.black)
                     .shadow(color: Color.white.opacity(0.8), radius: 10, x: 0, y: 0)
             }
+            
+            Spacer()
 
             Button(action: {
                 viewModel.nextSong()
@@ -188,6 +179,8 @@ struct MusicView: View {
                 Image(.next)
                     .imageScale(.medium)
             }
+            
+            Spacer()
 
             Button(action: {
                // viewModel.repeatToggle()

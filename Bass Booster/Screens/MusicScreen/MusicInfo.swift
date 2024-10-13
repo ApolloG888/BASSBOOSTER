@@ -42,11 +42,24 @@ struct MusicInfo: View {
                     if !expandSheet {
                         GeometryReader {
                             let size = $0.size
-                            Image(.mockMusic)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: size.width, height: size.height)
+                            if let albumArt = viewModel.currentSong?.albumArt, let image = UIImage(data: albumArt) {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .frame(width: 44, height: 44)
+                                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                            } else {
+                                Image(.musicNote)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(.playlistGrey)
+                                    .frame(width: 44, height: 44)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .fill(Color.customBlack)
+                                    )
                             }
+                        }
                         .matchedGeometryEffect(id: "SONGCOVER", in: animation)
                     }
                 }
