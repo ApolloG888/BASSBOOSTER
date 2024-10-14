@@ -333,7 +333,6 @@ extension MainTabView {
             .frame(maxWidth: .infinity, alignment: .trailing)
             .padding(.trailing, 10)
             
-            
             Text("Presets")
                 .foregroundStyle(.white)
                 .font(.sfProDisplay(type: .regular400, size: 16))
@@ -371,22 +370,64 @@ extension MainTabView {
             .padding(.top)
             .frame(maxWidth: .infinity, alignment: .leading)
             
-            VStack(spacing: 20) {
-                ForEach(0..<viewModel.frequencyValues.count, id: \.self) { index in
-                    BidirectionalSlider(
-                        value: Binding(
-                            get: { viewModel.frequencyValues[index] },
-                            set: { newValue in
-                                viewModel.frequencyValues[index] = newValue
-                                viewModel.updateEqualizer(for: index, value: newValue)
-                            }
-                        ), forPresetUsage: true
-                    )
-                    .frame(width: 240)
-                    .frame(height: 10)
+            HStack(alignment: .center, spacing: 20) {
+                // Left scale for decibels (-12 to 12)
+                VStack {
+                    Text("12")
+                    Spacer()
+                    Text("0")
+                    Spacer()
+                    Text("-12")
                 }
+                .font(.sfProDisplay(type: .regular400, size: 12))
+                .foregroundColor(.white)
+                .frame(height: 200)
+                .offset(y: -10)
+                
+                Spacer()
+                
+                VStack(spacing: 10) {
+                    VStack(spacing: 20) {
+                        ForEach(0..<viewModel.frequencyValues.count, id: \.self) { index in
+                            BidirectionalSlider(
+                                value: Binding(
+                                    get: { viewModel.frequencyValues[index] },
+                                    set: { newValue in
+                                        viewModel.frequencyValues[index] = newValue
+                                        viewModel.updateEqualizer(for: index, value: newValue)
+                                    }
+                                ), forPresetUsage: true
+                            )
+                            .frame(width: 240)
+                            .frame(height: 10)
+                        }
+                    }
+                    .frame(width: 300, height: 240)
+                    .rotationEffect(.degrees(90))
+                    
+                    // Frequency labels below sliders
+                    VStack {
+                        HStack(spacing: 14) {
+                            Text("32")
+                            Text("64")
+                            Text("125")
+                            Text("250")
+                            Text("500")
+                            Text("1k")
+                            Text("2k")
+                            Text("4k")
+                            Text("8k")
+                            Text("16k")
+                        }
+                        .font(.sfProDisplay(type: .regular400, size: 12))
+                        .foregroundColor(.white)
+                        .offset(x: -11)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .frame(maxWidth: .infinity)
             }
-            .rotationEffect(.degrees(90))
+            .padding(.top)
         }
         .padding()
     }
