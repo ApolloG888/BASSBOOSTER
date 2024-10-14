@@ -59,7 +59,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var selectedPreset: Preset?
     @Published var customPresets: [Preset] = []
     
-    @Published var isExpandedSheet: Bool = true
+    @Published var isExpandedSheet: Bool = false
     @Published var currentSong: MusicFileEntity?
     @Published var isPlaying: Bool = false
     
@@ -333,6 +333,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             print("Неверная песня или URL файла")
             return
         }
+        resetPresets()
         
         let documentsDirectory = dataManager.getDocumentsDirectory()
         let fileURL = documentsDirectory.appendingPathComponent(fileName)
@@ -512,31 +513,31 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     private func setupAudioChain() {
         // Initialize bass boost and crystallizer (AudioKit components)
         bassBoost = ParametricEQ(playerNode)
-        bassBoost.centerFreq = AUValue(100.0)  // Convert Double to AUValue (Float)
-        bassBoost.q = AUValue(1.0)  // Convert Double to AUValue (Float)
-        bassBoost.gain = AUValue(bassBoostValue)  // Convert Double to AUValue (Float)
-        
+        bassBoost.centerFreq = AUValue(100.0)
+        bassBoost.q = AUValue(1.0)
+        bassBoost.gain = AUValue(bassBoostValue)
+
         crystallizer = Delay(bassBoost)
-        crystallizer.time = AUValue(0.1)  // Convert Double to AUValue (Float)
-        crystallizer.feedback = AUValue(crystallizerValue)  // Convert Double to AUValue (Float)
-        crystallizer.dryWetMix = AUValue(crystallizerValue)  // Convert Double to AUValue (Float)
-        
+        crystallizer.time = AUValue(0.1)
+        crystallizer.feedback = AUValue(crystallizerValue)
+        crystallizer.dryWetMix = AUValue(crystallizerValue)
+
         // Add equalizers for each frequency band
-        let frequencies: [Double] = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 12000]
+        let frequencies: [Double] = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
         
-        var previousNode: Node = crystallizer // Start after crystallizer in the chain
+        var previousNode: Node = crystallizer
         equalizers = frequencies.map { frequency in
             let eq = ParametricEQ(previousNode)
             eq.centerFreq = AUValue(frequency)
-            eq.q = AUValue(1.0)  // Set quality factor
-            eq.gain = AUValue(0.0)  // Initialize gain to 0.0
+            eq.q = AUValue(1.0)
+            eq.gain = AUValue(0.0)
             previousNode = eq
             return eq
         }
-        
+
         // The last equalizer in the chain becomes the output
         engine.output = equalizers.last ?? crystallizer
-        
+
         // Start the AudioKit engine
         do {
             try engine.start()
@@ -566,26 +567,93 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     func updateEqualizer(for index: Int, value: Double) {
         guard index < equalizers.count else { return }
-        equalizers[index].gain = AUValue(value)  // Update the gain of the correct equalizer
+        print("Updating equalizer \(index) with value \(value)") // Логирование
+        equalizers[index].gain = AUValue(value)
     }
     
     func applyPreset(_ preset: MusicPreset) {
+        let scalingFactor = 8.33
+        
         switch preset {
         case .rock:
-            frequencyValues = [40.0, 20.0, 0.0, -20.0, -40.0, 20.0, 40.0, -10.0, -20.0, 0.0]
+            frequencyValues = [
+                4.0 * scalingFactor,
+                2.0 * scalingFactor,
+                0.0,
+                -2.0 * scalingFactor,
+                -4.0 * scalingFactor,
+                2.0 * scalingFactor,
+                4.0 * scalingFactor,
+                -1.0 * scalingFactor,
+                -2.0 * scalingFactor,
+                0.0
+            ]
         case .rnb:
-            frequencyValues = [20.0, 10.0, 0.0, -10.0, -20.0, 20.0, 30.0, -15.0, 5.0, 0.0]
+            frequencyValues = [
+                2.0 * scalingFactor,
+                1.0 * scalingFactor,
+                0.0,
+                -1.0 * scalingFactor,
+                -2.0 * scalingFactor,
+                2.0 * scalingFactor,
+                3.0 * scalingFactor,
+                -1.5 * scalingFactor,
+                0.5 * scalingFactor,
+                0.0
+            ]
         case .pop:
-            frequencyValues = [50.0, 30.0, 0.0, -10.0, -30.0, 10.0, 30.0, -20.0, -30.0, 0.0]
+            frequencyValues = [
+                5.0 * scalingFactor,
+                3.0 * scalingFactor,
+                0.0,
+                -1.0 * scalingFactor,
+                -3.0 * scalingFactor,
+                1.0 * scalingFactor,
+                3.0 * scalingFactor,
+                -2.0 * scalingFactor,
+                -3.0 * scalingFactor,
+                0.0
+            ]
         case .classic:
-            frequencyValues = [30.0, 20.0, 10.0, 00.0, -20.0, 15.0, 20.0, -10.0, -15.0, 0.0]
+            frequencyValues = [
+                3.0 * scalingFactor,
+                2.0 * scalingFactor,
+                1.0 * scalingFactor,
+                0.0,
+                -2.0 * scalingFactor,
+                1.5 * scalingFactor,
+                2.0 * scalingFactor,
+                -1.0 * scalingFactor,
+                -1.5 * scalingFactor,
+                0.0
+            ]
         case .rap:
-            frequencyValues = [30.0, 40.0, 10.0, -20.0, -30.0, 20.0, 50.0, -10.0, -20.0, 10.0]
+            frequencyValues = [
+                6.0 * scalingFactor,
+                4.0 * scalingFactor,
+                1.0 * scalingFactor,
+                -2.0 * scalingFactor,
+                -3.0 * scalingFactor,
+                2.0 * scalingFactor,
+                5.0 * scalingFactor,
+                -1.0 * scalingFactor,
+                -2.0 * scalingFactor,
+                1.0 * scalingFactor
+            ]
         }
         
+        // Обновляем значения эквалайзера
         for index in 0..<frequencyValues.count {
             updateEqualizer(for: index, value: frequencyValues[index])
         }
+    }
+    
+    func resetPresets() {
+        frequencyValues = Array(repeating: 0.0, count: 10)
+        for index in 0..<frequencyValues.count {
+            updateEqualizer(for: index, value: frequencyValues[index])
+        }
+        selectedPreset = nil // Сброс выбранного пресета
     }
     
     deinit {

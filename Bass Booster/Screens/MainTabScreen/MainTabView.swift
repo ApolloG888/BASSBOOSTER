@@ -50,6 +50,7 @@ struct MainTabView: View {
             .onDismiss {
                 viewModel.isVolumeSheet = false
                 viewModel.isBoosterSheet = false
+                viewModel.isQualizerSheet = false
             }
     }
 }
@@ -323,10 +324,7 @@ extension MainTabView {
     var equlaizer: some View {
         VStack {
             Button {
-                viewModel.frequencyValues = Array(repeating: 0.0, count: 10)
-                for index in 0..<viewModel.frequencyValues.count {
-                    viewModel.updateEqualizer(for: index, value: 0.0)
-                }
+                viewModel.resetPresets()
             } label: {
                 Image(.resetPreset)
             }
