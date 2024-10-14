@@ -6,48 +6,43 @@ import MediaPlayer
 import AudioKit
 
 final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
-    
+
+    // MARK: - AppStorage Properties
     @AppStorage("userPurchaseIsActive") var userPurchaseIsActive: Bool = false
     @AppStorage("shouldShowPromotion") var shouldShowPromotion = true
     @AppStorage("isQuietSoundSelected") var isQuietSoundSelected: Bool = false
     @AppStorage("isSuppressionSelected") var isSuppressionSelected: Bool = false
     @AppStorage("selectedMode") var selectedMode: Modes = .normal
     @AppStorage("bassBoostValue") var bassBoostValue: Double = 0.0 {
-        didSet {
-            updateBassBoost()  // Update bass boost when the value changes
-        }
+        didSet { updateBassBoost() }
     }
     @AppStorage("crystallizerValue") var crystallizerValue: Double = 0.0 {
-        didSet {
-            updateCrystallizer()  // Update crystallizer when the value changes
-        }
+        didSet { updateCrystallizer() }
     }
     @AppStorage("panValue") var panValue: Double = 0.0 {
-        didSet {
-            audioPlayer?.pan = Float(panValue)
-        }
+        didSet { audioPlayer?.pan = Float(panValue) }
     }
-    
+
+    // MARK: - Private Properties
     private let urlManager: URLManagerProtocol = URLManager()
     private var audioSession = AVAudioSession.sharedInstance()
-    
-    var audioPlayer: AVAudioPlayer?
     private var progressTimer: Timer?
+    private var cancellables = Set<AnyCancellable>()
+    var audioPlayer: AVAudioPlayer?
     
     // AudioKit properties
     var engine = AudioEngine()
-    var playerNode = AudioPlayer()  // AudioKit player node
-    var bassBoost: ParametricEQ!  // Bass boost filter
-    var crystallizer: Delay!  // Crystallizer effect
-    
+    var playerNode = AudioPlayer()
+    var bassBoost: ParametricEQ!
+    var crystallizer: Delay!
+
+    // MARK: - Published Properties for UI Updates
     @Published var musicFiles: [MusicFileEntity] = []
     @Published var playlists: [PlaylistEntity] = []
     @Published var selectedPlaylist: PlaylistEntity?
-    
     @Published var isShowViewNewPlaylist: Bool = false
     @Published var isShowDeleteSongView: Bool = false
     @Published var songToDelete: MusicFileEntity?
-    
     @Published var isShowRenameSongView: Bool = false
     @Published var isPlaylistList: Bool = false
     @Published var isVolumeSheet: Bool = false
@@ -56,38 +51,29 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var sheetState: SliderType = .bass
     @Published var bottomSheetPosition: BottomSheetPosition = .hidden
     @Published var selectedMusicFile: MusicFileEntity?
-    
     @Published var isExpandedSheet: Bool = false
     @Published var currentSong: MusicFileEntity?
     @Published var isPlaying: Bool = false
-    
     @Published var searchText: String = ""
     @Published var isLoading: Bool = false
-    
     @Published var playbackProgress: Double = 0.0
-    
     @Published var shuffleMode: Bool = false
     @Published var isRepeatOn: Bool = false
-    
     @Published var isShowSubscriptionOverlay: Bool = false
-    
     @Published var currentVolume: Float = 0.5
     @Published var isShowingCreatePresetView: Bool = false
-    
-    @Published var frequencyValues: [Double] = Array(repeating: 0.0, count: 10) // For 32Hz, 64Hz, 125Hz, etc.
-    
+    @Published var frequencyValues: [Double] = Array(repeating: 0.0, count: 10)
     @Published var selectedCustomPreset: PresetEntity?
     @Published var selectedRegularPreset: MusicPreset?
-    
     @Published var customPresets: [PresetEntity] = []
-    
+
     var dataManager = DataManager.shared
-    private var cancellables = Set<AnyCancellable>()
-    
+
+    // MARK: - Computed Properties
     var isInGeneralPlaylist: Bool {
         return selectedPlaylist?.name == "My Player" || selectedPlaylist == nil
     }
-    
+
     var filteredMusicFiles: [MusicFileEntity] {
         if searchText.isEmpty {
             return musicFiles
@@ -99,16 +85,17 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             }
         }
     }
-    
+
     var equalizers: [ParametricEQ] = []
-    
+
+    // MARK: - Initialization
     override init() {
         super.init()
         setupVolumeMonitoring()
         setupAudioChain()
         currentVolume = audioSession.outputVolume
         
-        // Подписываемся на изменения данных
+        // Subscriptions for data updates
         dataManager.$savedFiles
             .receive(on: DispatchQueue.main)
             .assign(to: \.musicFiles, on: self)
@@ -124,232 +111,22 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             .assign(to: \.customPresets, on: self)
             .store(in: &cancellables)
     }
-    
-    
-    func canAddSong() -> Bool {
-        if !userPurchaseIsActive && musicFiles.count >= 1 {
-            // Если подписки нет и уже добавлена одна песня
-            isShowSubscriptionOverlay = true  // Показываем экран подписки
-            return false  // Запрещаем добавлять больше
-        }
-        return true  // Разрешаем добавлять песни
-    }
-    
-    // MARK: - Обработка Выбранных Файлов
-    
-    func handlePickedFiles(urls: [URL]) {
-        if !userPurchaseIsActive && urls.count > 1 {
-            // Если подписки нет и выбрано больше одной песни, добавляем только одну
-            let limitedURLs = Array(urls.prefix(1))
-            processFiles(urls: limitedURLs)
-            
-            // Показываем экран с предложением подписки
-            isShowSubscriptionOverlay = true
-        } else {
-            // Обрабатываем все файлы
-            processFiles(urls: urls)
-        }
-    }
-    
-    // Новый метод обработки файлов (вынесен в отдельный метод)
-    private func processFiles(urls: [URL]) {
-        isLoading = true
-        dataManager.handlePickedFiles(urls: urls) {
-            DispatchQueue.main.async {
-                self.isLoading = false
-                self.updatePlaylistAndPlayFirstSong()
-            }
-        }
-    }
-    
-    // Обновляем метод обновления плейлиста и воспроизведения
-    private func updatePlaylistAndPlayFirstSong() {
-        if let myPlayerPlaylist = playlists.first(where: { $0.name == "My Player" }) {
-            selectedPlaylist = myPlayerPlaylist
-            fetchMusicFiles(for: myPlayerPlaylist)
-            if let firstSong = musicFiles.first {
-                currentSong = firstSong
-                playMusic()
-            }
-        } else {
-            selectedPlaylist = nil
-            fetchSavedMusicFiles()
-            if let firstSong = musicFiles.first {
-                currentSong = firstSong
-                playMusic()
-            }
-        }
-    }
-    
-    func fetchSavedMusicFiles() {
-        dataManager.fetchMusicFiles()
-    }
-    
-    func fetchPlaylists() {
-        dataManager.fetchPlaylists()
-    }
-    
-    func fetchMusicFiles(for playlist: PlaylistEntity?) {
-        dataManager.fetchMusicFiles(for: playlist)
-    }
-    
-    // MARK: - Управление Плейлистами
-    
-    func addPlaylist(name: String) {
-        let uniqueName = generateUniquePlaylistName(desiredName: name)
-        dataManager.savePlaylist(name: uniqueName)
-    }
-    
-    private func generateUniquePlaylistName(desiredName: String) -> String {
-        var uniqueName = desiredName
-        var suffix = 1
-        while dataManager.savedPlaylists.contains(where: { $0.name?.lowercased() == uniqueName.lowercased() }) {
-            uniqueName = "\(desiredName)\(suffix)"
-            suffix += 1
-        }
-        return uniqueName
-    }
-    
-    func createNewPlaylist(name: String) {
-        addPlaylist(name: name)
-        isShowViewNewPlaylist = false
-    }
-    
-    func cancelNewPlaylist() {
-        isShowViewNewPlaylist = false
-    }
-    
-    // MARK: - Управление Песнями
-    
-    func addSong(_ song: MusicFileEntity, to playlist: PlaylistEntity) {
-        dataManager.addSong(song, to: playlist)
-    }
-    
-    func requestRenameSong(_ song: MusicFileEntity) {
-        selectedMusicFile = song
-        isShowRenameSongView = true
-        bottomSheetPosition = .hidden
-    }
-    
-    func confirmRenameSong(newArtist: String, newSongName: String) {
-        if let song = selectedMusicFile {
-            dataManager.renameSong(song, newArtist: newArtist, newName: newSongName)
-            
-            // Check if the renamed song is the currently playing song
-            if song.id == currentSong?.id {
-                currentSong = nil
-                pauseMusic()  // Stop the player
-            }
-        }
-        isShowRenameSongView = false
-        selectedMusicFile = nil
-    }
-    
-    func cancelRenameSong() {
-        isShowRenameSongView = false
-        selectedMusicFile = nil
-    }
-    
-    func deleteMusicFileEntity(_ musicFile: MusicFileEntity) {
-        // Сначала удаляем объект из массива musicFiles
-        if let index = musicFiles.firstIndex(of: musicFile) {
-            musicFiles.remove(at: index)
-        }
-        // Затем удаляем объект из Core Data
-        dataManager.deleteMusicFile(musicFile)
-    }
-    
-    func showBottomSheet(for musicFile: MusicFileEntity) {
-        selectedMusicFile = musicFile
-        isPlaylistList = false
-        bottomSheetPosition = .absolute(270)
-    }
-    
-    func showVolumeBottomSheet() {
-        isVolumeSheet = true
-        bottomSheetPosition = .relative(0.7)
-    }
-    
-    func showBoosterBottomSheet(for musicFile: MusicFileEntity) {
-        selectedMusicFile = musicFile
-        isBoosterSheet = true
-        bottomSheetPosition = .relative(0.7)
-    }
-    
-    func showQualizerBottomSheet(for musicFile: MusicFileEntity) {
-        selectedMusicFile = musicFile
-        isQualizerSheet = true
-        bottomSheetPosition = .relative(0.7)
-    }
-    
-    func addCustomPreset(name: String) {
-        print("Saving preset with name: \(name)")
-        
-        // Создаем один объект PresetEntity
-        let newPreset = PresetEntity(context: dataManager.container.viewContext)
-        newPreset.id = UUID()
-        newPreset.name = name
-        newPreset.frequencyValues = frequencyValues as NSArray // Убедитесь, что данные сохраняются корректно
 
-        // Сохраняем новый пресет через DataManager без создания второго объекта
-        dataManager.saveData(shouldFetchPresets: true)
+    // MARK: - URL Management
+    func openMockURL() {
+        urlManager.open(urlString: "https://www.google.com")
+    }
+    
+    // MARK: - Deinitialization
+    deinit {
+        stopProgressTimer()
+        audioSession.removeObserver(self, forKeyPath: "outputVolume")
+    }
+}
 
-        // Обновляем данные и UI
-        dataManager.fetchPresets()
-        selectedCustomPreset = newPreset
-        isShowingCreatePresetView = false
-    }
-    
-    func hideBottomSheet() {
-        bottomSheetPosition = .hidden
-        selectedMusicFile = nil
-        isPlaylistList = false
-    }
-    
-    func requestDeleteSong(_ song: MusicFileEntity) {
-        songToDelete = song
-        isShowDeleteSongView = true
-        bottomSheetPosition = .hidden
-    }
-    
-    func confirmDeleteSong() {
-        if let song = songToDelete {
-            deleteMusicFileEntity(song)
-            
-            // Check if the deleted song is the currently playing song
-            if song.id == currentSong?.id {
-                currentSong = nil
-                pauseMusic()  // Stop the player
-            }
-        }
-        isShowDeleteSongView = false
-        songToDelete = nil
-    }
-    
-    func cancelDeleteSong() {
-        isShowDeleteSongView = false
-        songToDelete = nil
-    }
-    
-    func requestAddToPlaylist(_ song: MusicFileEntity) {
-        selectedMusicFile = song
-        isPlaylistList = true
-        bottomSheetPosition = .relative(0.85)
-    }
-    
-    func addSongToSelectedPlaylist(_ playlist: PlaylistEntity) {
-        if let song = selectedMusicFile {
-            addSong(song, to: playlist)
-        }
-        hideBottomSheet()
-    }
-    
-    func removeSongFromPlaylist(_ song: MusicFileEntity, from playlist: PlaylistEntity) {
-        dataManager.removeSongFromPlaylist(song, from: playlist)
-        fetchMusicFiles(for: playlist)
-    }
-    
-    // MARK: - Воспроизведение Музыки
+// MARK: - Music Playback
+
+extension MusicViewModel {
     
     func playMusic() {
         guard let song = currentSong, let fileName = song.url else {
@@ -426,8 +203,6 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         playMusic()
     }
     
-    // MARK: - Прогресс Воспроизведения
-    
     private func startProgressTimer() {
         stopProgressTimer()
         progressTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
@@ -460,8 +235,6 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         updatePlaybackProgress()
     }
     
-    // MARK: - Сохранение и Загрузка Текущей Песни
-    
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         stopProgressTimer()
         
@@ -480,13 +253,12 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func repeatToggle() {
         isRepeatOn.toggle()
     }
-    
-    func openMockURL() {
-        urlManager.open(urlString: "https://www.google.com")
-    }
-    
+}
+
+// MARK: - Volume Control
+
+extension MusicViewModel {
     private func setupVolumeMonitoring() {
-        // Ensure MPVolumeView is added to the hierarchy
         let volumeView = MPVolumeView(frame: .zero)
         volumeView.isHidden = true
         UIApplication.shared.windows.first?.addSubview(volumeView)
@@ -496,11 +268,16 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         audioSession.addObserver(self, forKeyPath: "outputVolume", options: [.new, .initial], context: nil)
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSKeyValueChangeKey : Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
         if keyPath == "outputVolume" {
             if let newVolume = change?[.newKey] as? Float {
                 DispatchQueue.main.async {
-                    self.currentVolume = newVolume // Update the volume in the UI
+                    self.currentVolume = newVolume
                 }
             }
         }
@@ -511,11 +288,15 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         if let volumeSlider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider {
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
                 volumeSlider.value = value
-                volumeSlider.sendActions(for: .valueChanged)  // Ensure volume change takes effect
+                volumeSlider.sendActions(for: .valueChanged)
             }
         }
     }
-    
+}
+
+// MARK: - Equalizer and Audio Effects
+
+extension MusicViewModel {
     private func setupAudioChain() {
         bassBoost = ParametricEQ(playerNode)
         bassBoost.centerFreq = AUValue(100.0)
@@ -562,18 +343,16 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         guard index < equalizers.count else { return }
         equalizers[index].gain = AUValue(value)
         
-        // Если выбран кастомный пресет, обновляем значения частот
         if let preset = selectedCustomPreset {
             frequencyValues[index] = value
             
-            // Обновляем пресет в Core Data
-            dataManager.saveCustomPreset(preset: preset, frequencyValues: frequencyValues)  // Передаем текущие значения частот
+            dataManager.saveCustomPreset(preset: preset, frequencyValues: frequencyValues)
         }
     }
     
     func applyCustomPreset(_ preset: PresetEntity) {
-        selectedRegularPreset = nil // Deselect regular preset
-        selectedCustomPreset = preset // Set custom preset
+        selectedRegularPreset = nil
+        selectedCustomPreset = preset
 
         if let values = preset.frequencyValues as? [Double] {
             frequencyValues = values
@@ -584,8 +363,8 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
 
     func applyRegularPreset(_ preset: MusicPreset) {
-        selectedCustomPreset = nil // Deselect custom preset
-        selectedRegularPreset = preset // Set regular preset
+        selectedCustomPreset = nil
+        selectedRegularPreset = preset
 
         let scalingFactor = 8.33
         switch preset {
@@ -607,27 +386,235 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     func resetPreset() {
-        // Сбрасываем частотные значения на 0
         frequencyValues = Array(repeating: 0.0, count: 10)
         
-        // Сбрасываем выбор пресетов
         selectedCustomPreset = nil
         selectedRegularPreset = nil
         
-        // Обновляем эквалайзер для каждой частоты
         for index in 0..<frequencyValues.count {
             updateEqualizer(for: index, value: frequencyValues[index])
         }
+    }
+}
+
+// MARK: - File Handling and Playlist Management
+extension MusicViewModel {
+    func canAddSong() -> Bool {
+        if !userPurchaseIsActive && musicFiles.count >= 1 {
+            isShowSubscriptionOverlay = true
+            return false
+        }
+        return true
+    }
+    
+    // MARK: - Обработка Выбранных Файлов
+    
+    func handlePickedFiles(urls: [URL]) {
+        if !userPurchaseIsActive && urls.count > 1 {
+            let limitedURLs = Array(urls.prefix(1))
+            processFiles(urls: limitedURLs)
+            isShowSubscriptionOverlay = true
+        } else {
+            processFiles(urls: urls)
+        }
+    }
+
+    private func processFiles(urls: [URL]) {
+        isLoading = true
+        dataManager.handlePickedFiles(urls: urls) {
+            DispatchQueue.main.async {
+                self.isLoading = false
+                self.updatePlaylistAndPlayFirstSong()
+            }
+        }
+    }
+    
+    private func updatePlaylistAndPlayFirstSong() {
+        if let myPlayerPlaylist = playlists.first(where: { $0.name == "My Player" }) {
+            selectedPlaylist = myPlayerPlaylist
+            fetchMusicFiles(for: myPlayerPlaylist)
+            if let firstSong = musicFiles.first {
+                currentSong = firstSong
+                playMusic()
+            }
+        } else {
+            selectedPlaylist = nil
+            fetchSavedMusicFiles()
+            if let firstSong = musicFiles.first {
+                currentSong = firstSong
+                playMusic()
+            }
+        }
+    }
+    
+    func fetchSavedMusicFiles() {
+        dataManager.fetchMusicFiles()
+    }
+    
+    func fetchPlaylists() {
+        dataManager.fetchPlaylists()
+    }
+    
+    func fetchMusicFiles(for playlist: PlaylistEntity?) {
+        dataManager.fetchMusicFiles(for: playlist)
+    }
+    
+    func addPlaylist(name: String) {
+        let uniqueName = generateUniquePlaylistName(desiredName: name)
+        dataManager.savePlaylist(name: uniqueName)
+    }
+    
+    private func generateUniquePlaylistName(desiredName: String) -> String {
+        var uniqueName = desiredName
+        var suffix = 1
+        while dataManager.savedPlaylists.contains(where: { $0.name?.lowercased() == uniqueName.lowercased() }) {
+            uniqueName = "\(desiredName)\(suffix)"
+            suffix += 1
+        }
+        return uniqueName
+    }
+    
+    func createNewPlaylist(name: String) {
+        addPlaylist(name: name)
+        isShowViewNewPlaylist = false
+    }
+    
+    func cancelNewPlaylist() {
+        isShowViewNewPlaylist = false
+    }
+    
+    func addSong(_ song: MusicFileEntity, to playlist: PlaylistEntity) {
+        dataManager.addSong(song, to: playlist)
+    }
+    
+    func removeSongFromPlaylist(_ song: MusicFileEntity, from playlist: PlaylistEntity) {
+        dataManager.removeSongFromPlaylist(song, from: playlist)
+        fetchMusicFiles(for: playlist)
+    }
+}
+
+// MARK: - Preset Management
+extension MusicViewModel {
+    func addCustomPreset(name: String) {
+        print("Saving preset with name: \(name)")
         
-        // Обновляем UI, если необходимо
+        let newPreset = PresetEntity(context: dataManager.container.viewContext)
+        newPreset.id = UUID()
+        newPreset.name = name
+        newPreset.frequencyValues = frequencyValues as NSArray
+
+        dataManager.saveData(shouldFetchPresets: true)
+
+        dataManager.fetchPresets()
+        selectedCustomPreset = newPreset
+        isShowingCreatePresetView = false
     }
     
     func fetchPresets() {
-        dataManager.fetchPresets() // This will load the saved presets from Core Data into the view model
+        dataManager.fetchPresets()
+    }
+}
+
+// MARK: - BottomSheet and UI Control
+extension MusicViewModel {
+    func showBottomSheet(for musicFile: MusicFileEntity) {
+        selectedMusicFile = musicFile
+        isPlaylistList = false
+        bottomSheetPosition = .absolute(270)
     }
     
-    deinit {
-        stopProgressTimer()
-        audioSession.removeObserver(self, forKeyPath: "outputVolume")
+    func showVolumeBottomSheet() {
+        isVolumeSheet = true
+        bottomSheetPosition = .relative(0.7)
+    }
+    
+    func showBoosterBottomSheet(for musicFile: MusicFileEntity) {
+        selectedMusicFile = musicFile
+        isBoosterSheet = true
+        bottomSheetPosition = .relative(0.7)
+    }
+    
+    func showQualizerBottomSheet(for musicFile: MusicFileEntity) {
+        selectedMusicFile = musicFile
+        isQualizerSheet = true
+        bottomSheetPosition = .relative(0.7)
+    }
+    
+    func hideBottomSheet() {
+        bottomSheetPosition = .hidden
+        selectedMusicFile = nil
+        isPlaylistList = false
+    }
+    
+    func requestDeleteSong(_ song: MusicFileEntity) {
+        songToDelete = song
+        isShowDeleteSongView = true
+        bottomSheetPosition = .hidden
+    }
+    
+    func confirmDeleteSong() {
+        if let song = songToDelete {
+            deleteMusicFileEntity(song)
+            
+            if song.id == currentSong?.id {
+                currentSong = nil
+                pauseMusic()
+            }
+        }
+        isShowDeleteSongView = false
+        songToDelete = nil
+    }
+    
+    func cancelDeleteSong() {
+        isShowDeleteSongView = false
+        songToDelete = nil
+    }
+    
+    func requestAddToPlaylist(_ song: MusicFileEntity) {
+        selectedMusicFile = song
+        isPlaylistList = true
+        bottomSheetPosition = .relative(0.85)
+    }
+    
+    func addSongToSelectedPlaylist(_ playlist: PlaylistEntity) {
+        if let song = selectedMusicFile {
+            addSong(song, to: playlist)
+        }
+        hideBottomSheet()
+    }
+}
+
+// MARK: - Song Renaming and Deleting
+extension MusicViewModel {
+    
+    func requestRenameSong(_ song: MusicFileEntity) {
+        selectedMusicFile = song
+        isShowRenameSongView = true
+        bottomSheetPosition = .hidden
+    }
+    
+    func confirmRenameSong(newArtist: String, newSongName: String) {
+        if let song = selectedMusicFile {
+            dataManager.renameSong(song, newArtist: newArtist, newName: newSongName)
+            
+            if song.id == currentSong?.id {
+                currentSong = nil
+                pauseMusic()  // Stop the player
+            }
+        }
+        isShowRenameSongView = false
+        selectedMusicFile = nil
+    }
+    
+    func cancelRenameSong() {
+        isShowRenameSongView = false
+        selectedMusicFile = nil
+    }
+    
+    func deleteMusicFileEntity(_ musicFile: MusicFileEntity) {
+        if let index = musicFiles.firstIndex(of: musicFile) {
+            musicFiles.remove(at: index)
+        }
+        dataManager.deleteMusicFile(musicFile)
     }
 }
