@@ -24,7 +24,7 @@ struct MusicView: View {
                             .opacity(animateContent ? 1 : 0)
                     }
                     .overlay(alignment: .top) {
-                        MusicInfo(expandSheet: $expandSheet, state: .play, animation: animation)
+                        MusicInfo(expandSheet: $expandSheet, animation: animation)
                             .allowsHitTesting(false)
                             .opacity(animateContent ? 0 : 1)
                     }

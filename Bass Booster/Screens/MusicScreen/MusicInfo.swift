@@ -7,32 +7,9 @@
 
 import SwiftUI
 
-enum SongState {
-    case play
-    case pause
-    
-    var image: Image {
-        switch self {
-        case .play:
-            Image(.play)
-        case .pause:
-            Image(.pausee)
-        }
-    }
-    
-    mutating func toggle() {
-        if self == .pause {
-            self = .play
-        } else {
-            self = .pause
-        }
-    }
-}
-
 struct MusicInfo: View {
     @EnvironmentObject var viewModel: MusicViewModel
     @Binding var expandSheet: Bool
-    @State var state: SongState
     var animation: Namespace.ID
     
     var body: some View {

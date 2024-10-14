@@ -185,7 +185,6 @@ extension MainTabView {
                     .overlay {
                         MusicInfo(
                             expandSheet: $viewModel.isExpandedSheet,
-                            state: .pause,
                             animation: animation
                         )
                         .environmentObject(viewModel)
