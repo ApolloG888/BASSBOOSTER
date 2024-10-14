@@ -208,31 +208,9 @@ extension MainTabView {
     @ViewBuilder
     func bottomSheetContent() -> some View {
         if viewModel.isVolumeSheet {
-            VStack {
-                CircularProgressBar(type: .constant(.volume))
-                    .padding(.top, 72)
-                
-                VStack {
-                    Text("Pan")
-                        .foregroundStyle(.white)
-                        .font(.quicksand(type: .bold700, size: 20))
-                    
-                    BidirectionalSlider(value: 34)
-                }
-                .padding(.top, 80)
-            }
-            .padding(.top, 30)
-            .frame(maxWidth: .infinity)
-            .frame(maxHeight: .infinity)
+            volumeView
         } else if viewModel.isBoosterSheet {
-            VStack {
-                CircularProgressBar(type: $viewModel.sheetState)
-                
-                CustomToggleSwitch(selectedType: $viewModel.sheetState)
-                    .padding(.top, 80)
-            }
-            .frame(maxWidth: .infinity)
-            .frame(maxHeight: .infinity)
+            boosterView
         } else if viewModel.isQualizerSheet {
             ZStack {
                 VStack {
@@ -298,25 +276,25 @@ extension MainTabView {
                         
                         VStack {
                             HStack(spacing: 0) {
-                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
                                     .rotationEffect(.degrees(90))
-                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
                                     .rotationEffect(.degrees(270))
-                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
                                     .rotationEffect(.degrees(90))
-                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
                                     .rotationEffect(.degrees(270))
-                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
                                     .rotationEffect(.degrees(90))
-                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
                                     .rotationEffect(.degrees(270))
-                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
                                     .rotationEffect(.degrees(90))
-                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
                                     .rotationEffect(.degrees(270))
-                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
                                     .rotationEffect(.degrees(90))
-                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
                                     .rotationEffect(.degrees(270))
                             }
                             .padding(.top, 40)
@@ -381,6 +359,83 @@ extension MainTabView {
         } else if viewModel.isPlaylistList {
             playlistSelectionContent()
         }
+    }
+}
+
+extension MainTabView {
+    var volumeView: some View {
+        VStack {
+            CircularProgressBar(
+                type: .constant(.volume),
+                progress: Binding<CGFloat>(
+                    get: {
+                        // Convert the system volume to the progress bar value
+                        CGFloat(viewModel.currentVolume * 100)
+                    },
+                    set: { newVolume in
+                        let volume = Float(newVolume / 100) // Convert to a value between 0 and 1
+                        viewModel.updateDeviceVolume(to: volume) // Update system volume
+                        viewModel.currentVolume = volume // Update the viewModel
+                    }
+                )
+            )
+            .padding(.top, 72)
+            
+            VStack {
+                Text("Pan")
+                    .foregroundStyle(.white)
+                    .font(.quicksand(type: .bold700, size: 20))
+                
+                BidirectionalSlider(value: Binding<Double>(
+                    get: { viewModel.panValue },
+                    set: { newPanValue in
+                        viewModel.panValue = newPanValue
+                        viewModel.audioPlayer?.pan = Float(newPanValue)
+                    }
+                ))
+                .onChange(of: viewModel.panValue) { oldValue, newPanValue in
+                    viewModel.audioPlayer?.pan = Float(newPanValue)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.top, 80)
+        }
+        .padding(.top, 30)
+        .frame(maxWidth: .infinity)
+        .frame(maxHeight: .infinity)
+    }
+}
+
+extension MainTabView {
+    var boosterView: some View {
+        VStack {
+            if viewModel.sheetState == .bass {
+                CircularProgressBar(
+                    type: .constant(.bass),
+                    progress: Binding(
+                        get: { CGFloat(viewModel.bassBoostValue * 100) },
+                        set: { newValue in
+                            viewModel.bassBoostValue = Double(Float(newValue / 100))
+                        }
+                    )
+                )
+            } else {
+                CircularProgressBar(
+                    type: .constant(.crystalizer),
+                    progress: Binding(
+                        get: { CGFloat(viewModel.crystallizerValue * 100) },
+                        set: { newValue in
+                            viewModel.crystallizerValue = Double(Float(newValue / 100))
+                        }
+                    )
+                )
+            }
+            
+            CustomToggleSwitch(selectedType: $viewModel.sheetState)
+                .padding(.top, 80)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(maxHeight: .infinity)
     }
 }
 

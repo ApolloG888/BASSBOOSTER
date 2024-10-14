@@ -84,7 +84,7 @@ struct MusicView: View {
                                 viewModel.showBoosterBottomSheet(for: MusicFileEntity())
                             })
                             CustomButton(state: .volume, action: {
-                                viewModel.showVolumeBottomSheet(for: MusicFileEntity())
+                                viewModel.showVolumeBottomSheet()
                             })
                         }
                         .padding(.bottom)

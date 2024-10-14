@@ -2,6 +2,8 @@ import SwiftUI
 import Combine
 import BottomSheet
 import AVFoundation
+import MediaPlayer
+import AudioKit
 
 final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
@@ -10,11 +12,33 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @AppStorage("isQuietSoundSelected") var isQuietSoundSelected: Bool = false
     @AppStorage("isSuppressionSelected") var isSuppressionSelected: Bool = false
     @AppStorage("selectedMode") var selectedMode: Modes = .normal
+    @AppStorage("bassBoostValue") var bassBoostValue: Double = 0.0 {
+        didSet {
+            updateBassBoost()  // Update bass boost when the value changes
+        }
+    }
+    @AppStorage("crystallizerValue") var crystallizerValue: Double = 0.0 {
+        didSet {
+            updateCrystallizer()  // Update crystallizer when the value changes
+        }
+    }
+    @AppStorage("panValue") var panValue: Double = 0.0 {
+        didSet {
+            audioPlayer?.pan = Float(panValue)
+        }
+    }
     
     private let urlManager: URLManagerProtocol = URLManager()
+    private var audioSession = AVAudioSession.sharedInstance()
     
     var audioPlayer: AVAudioPlayer?
     private var progressTimer: Timer?
+    
+    // AudioKit properties
+    var engine = AudioEngine()
+    var playerNode = AudioPlayer()  // AudioKit player node
+    var bassBoost: ParametricEQ!  // Bass boost filter
+    var crystallizer: Delay!  // Crystallizer effect
     
     @Published var musicFiles: [MusicFileEntity] = []
     @Published var playlists: [PlaylistEntity] = []
@@ -35,7 +59,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var selectedPreset: Preset?
     @Published var customPresets: [Preset] = []
     
-    @Published var isExpandedSheet: Bool = true
+    @Published var isExpandedSheet: Bool = false
     @Published var currentSong: MusicFileEntity?
     @Published var isPlaying: Bool = false
     
@@ -48,6 +72,8 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var isRepeatOn: Bool = false
     
     @Published var isShowSubscriptionOverlay: Bool = false
+    
+    @Published var currentVolume: Float = 0.5
     @Published var isShowingCreatePresetView: Bool = false
 
     private var dataManager = DataManager.shared
@@ -71,6 +97,9 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     override init() {
         super.init()
+        setupVolumeMonitoring()
+        setupAudioChain()
+        currentVolume = audioSession.outputVolume
         dataManager.$savedFiles
             .receive(on: DispatchQueue.main)
             .assign(to: \.musicFiles, on: self)
@@ -81,6 +110,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             .assign(to: \.playlists, on: self)
             .store(in: &cancellables)
     }
+
     
     func canAddSong() -> Bool {
         if !userPurchaseIsActive && musicFiles.count >= 1 {
@@ -221,8 +251,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         bottomSheetPosition = .absolute(270)
     }
     
-    func showVolumeBottomSheet(for musicFile: MusicFileEntity) {
-        selectedMusicFile = musicFile
+    func showVolumeBottomSheet() {
         isVolumeSheet = true
         bottomSheetPosition = .relative(0.7)
     }
@@ -318,6 +347,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
             audioPlayer?.delegate = self
             audioPlayer?.prepareToPlay()
+            audioPlayer?.pan = Float(panValue)
             audioPlayer?.play()
             isPlaying = true
             startProgressTimer()
@@ -338,6 +368,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             pauseMusic()
         } else {
             if audioPlayer != nil {
+                audioPlayer?.pan = Float(panValue)
                 audioPlayer?.play()
                 isPlaying = true
                 startProgressTimer()
@@ -443,7 +474,80 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         urlManager.open(urlString: "https://www.google.com")
     }
     
+    private func setupVolumeMonitoring() {
+        // Ensure MPVolumeView is added to the hierarchy
+        let volumeView = MPVolumeView(frame: .zero)
+        volumeView.isHidden = true
+        UIApplication.shared.windows.first?.addSubview(volumeView)
+        
+        // Observe output volume
+        currentVolume = audioSession.outputVolume
+        audioSession.addObserver(self, forKeyPath: "outputVolume", options: [.new, .initial], context: nil)
+    }
+
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "outputVolume" {
+            if let newVolume = change?[.newKey] as? Float {
+                DispatchQueue.main.async {
+                    self.currentVolume = newVolume // Update the volume in the UI
+                }
+            }
+        }
+    }
+
+    func updateDeviceVolume(to value: Float) {
+        let volumeView = MPVolumeView(frame: .zero)
+        if let volumeSlider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
+                volumeSlider.value = value
+                volumeSlider.sendActions(for: .valueChanged)  // Ensure volume change takes effect
+            }
+        }
+    }
+    
+    private func setupAudioChain() {
+        // Initialize bass boost and crystallizer (AudioKit components)
+        bassBoost = ParametricEQ(playerNode)
+        bassBoost.centerFreq = AUValue(100.0)  // Convert Double to AUValue (Float)
+        bassBoost.q = AUValue(1.0)  // Convert Double to AUValue (Float)
+        bassBoost.gain = AUValue(bassBoostValue)  // Convert Double to AUValue (Float)
+        
+        crystallizer = Delay(bassBoost)
+        crystallizer.time = AUValue(0.1)  // Convert Double to AUValue (Float)
+        crystallizer.feedback = AUValue(crystallizerValue)  // Convert Double to AUValue (Float)
+        crystallizer.dryWetMix = AUValue(crystallizerValue)  // Convert Double to AUValue (Float)
+        
+        engine.output = crystallizer
+        
+        // Start the AudioKit engine
+        do {
+            try engine.start()
+        } catch {
+            print("AudioKit Engine failed to start: \(error)")
+        }
+    }
+    
+    func updateBassBoost() {
+        // Ensure bassBoost is initialized before updating its gain
+        guard let bassBoost = bassBoost else {
+            print("Bass boost filter is not initialized.")
+            return
+        }
+        bassBoost.gain = AUValue(bassBoostValue)  // Convert Double to AUValue (Float)
+    }
+
+    func updateCrystallizer() {
+        // Ensure crystallizer is initialized before updating its properties
+        guard let crystallizer = crystallizer else {
+            print("Crystallizer effect is not initialized.")
+            return
+        }
+        crystallizer.feedback = AUValue(crystallizerValue)  // Convert Double to AUValue (Float)
+        crystallizer.dryWetMix = AUValue(crystallizerValue)
+    }
+    
     deinit {
         stopProgressTimer()
+        audioSession.removeObserver(self, forKeyPath: "outputVolume")
     }
 }
