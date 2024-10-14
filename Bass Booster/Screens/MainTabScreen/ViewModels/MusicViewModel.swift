@@ -32,7 +32,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var bottomSheetPosition: BottomSheetPosition = .hidden
     @Published var selectedMusicFile: MusicFileEntity?
     
-    @Published var isExpandedSheet: Bool = true
+    @Published var isExpandedSheet: Bool = false
     @Published var currentSong: MusicFileEntity?
     @Published var isPlaying: Bool = false
     

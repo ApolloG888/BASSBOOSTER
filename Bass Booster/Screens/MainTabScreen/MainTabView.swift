@@ -47,6 +47,10 @@ struct MainTabView: View {
                 Color.bottomSheetColor
                     .cornerRadius(15)
             )
+            .onDismiss {
+                viewModel.isVolumeSheet = false
+                viewModel.isBoosterSheet = false
+            }
     }
 }
 
