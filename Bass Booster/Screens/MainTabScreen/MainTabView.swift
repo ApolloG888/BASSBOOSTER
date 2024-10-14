@@ -371,7 +371,6 @@ extension MainTabView {
                                      isSelected: viewModel.selectedPreset?.id == customPreset.id)
                             .onTapGesture {
                                 viewModel.selectedPreset = customPreset
-                                // Присваиваем текущее значение слайдеров выбранному пресету
                                 viewModel.applyCustomPreset(customPreset)
                             }
                     }

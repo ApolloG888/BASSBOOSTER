@@ -285,16 +285,18 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     func addCustomPreset(name: String) {
         print("Saving preset with name: \(name)")
+        
+        // Создаем один объект PresetEntity
         let newPreset = PresetEntity(context: dataManager.container.viewContext)
         newPreset.id = UUID()
         newPreset.name = name
         newPreset.frequencyValues = frequencyValues as NSArray // Убедитесь, что данные сохраняются корректно
 
-        // Сохранение пресета в Core Data
-        dataManager.saveCustomPreset(name: name, frequencyValues: frequencyValues)
+        // Сохраняем новый пресет через DataManager без создания второго объекта
+        dataManager.saveData(shouldFetchPresets: true)
 
-        // Повторная загрузка пресетов после сохранения
-        dataManager.fetchPresets() // Обновляем данные в UI
+        // Обновляем данные и UI
+        dataManager.fetchPresets()
         selectedCustomPreset = newPreset
         isShowingCreatePresetView = false
     }
@@ -378,7 +380,6 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             audioPlayer?.play()
             isPlaying = true
             startProgressTimer()
-            saveCurrentSong()
         } catch {
             print("Ошибка при воспроизведении музыки: \(error)")
         }
@@ -461,22 +462,6 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     // MARK: - Сохранение и Загрузка Текущей Песни
-    
-    func saveCurrentSong() {
-        if let songID = currentSong?.id {
-            UserDefaults.standard.set(songID.uuidString, forKey: "LastPlayedSongID")
-        }
-    }
-    
-    func loadLastPlayedSong() {
-        if let songIDString = UserDefaults.standard.string(forKey: "LastPlayedSongID"),
-           let songID = UUID(uuidString: songIDString),
-           let song = musicFiles.first(where: { $0.id == songID }) {
-            currentSong = song
-        } else if let firstSong = musicFiles.first {
-            currentSong = firstSong
-        }
-    }
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         stopProgressTimer()
