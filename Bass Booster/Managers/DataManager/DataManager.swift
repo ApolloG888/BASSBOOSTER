@@ -173,10 +173,11 @@ final class DataManager: ObservableObject {
         }
     }
     
-    func saveCustomPreset(preset: PresetEntity) {
-        // Здесь нет необходимости создавать новый объект, так как он уже создан
+    func saveCustomPreset(preset: PresetEntity, frequencyValues: [Double]) {
+        // Обновляем частоты и сохраняем пресет
+        preset.frequencyValues = frequencyValues as NSArray
         saveData(shouldFetchPresets: true)
-        print("Custom Preset Saved: \(preset.name ?? "Unknown")") // Логирование для проверки
+        print("Custom Preset Updated: \(preset.name ?? "Unknown")") // Логирование для проверки
     }
     
     // MARK: - Переименование Песни

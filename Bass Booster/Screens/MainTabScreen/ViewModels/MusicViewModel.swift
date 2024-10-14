@@ -562,6 +562,14 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func updateEqualizer(for index: Int, value: Double) {
         guard index < equalizers.count else { return }
         equalizers[index].gain = AUValue(value)
+        
+        // Если выбран кастомный пресет, обновляем значения частот
+        if let preset = selectedCustomPreset {
+            frequencyValues[index] = value
+            
+            // Обновляем пресет в Core Data
+            dataManager.saveCustomPreset(preset: preset, frequencyValues: frequencyValues)  // Передаем текущие значения частот
+        }
     }
     
     func applyCustomPreset(_ preset: PresetEntity) {
