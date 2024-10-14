@@ -78,7 +78,6 @@
 		6DEED4312CBA85EE00990C34 /* HelveticaNeueCyr-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DEED42F2CBA85EE00990C34 /* HelveticaNeueCyr-Medium.ttf */; };
 		6DEED4322CBA85EE00990C34 /* Helvetica.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DEED4302CBA85EE00990C34 /* Helvetica.ttf */; };
 		6DEED4342CBAECCD00990C34 /* CustomProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DEED4332CBAECCD00990C34 /* CustomProgressBar.swift */; };
-		6DEED43A2CBB04E300990C34 /* Sliders in Frameworks */ = {isa = PBXBuildFile; productRef = 6DEED4392CBB04E300990C34 /* Sliders */; };
 		6DEED43C2CBB31BB00990C34 /* PlayerSelectionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DEED43B2CBB31BB00990C34 /* PlayerSelectionButton.swift */; };
 		6DEED43F2CBBDA0300990C34 /* Quicksand-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6DEED43E2CBBDA0300990C34 /* Quicksand-Bold.ttf */; };
 		6DEED4472CBC2FB400990C34 /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DEED4462CBC2FB400990C34 /* CircularProgressView.swift */; };
@@ -171,7 +170,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6DEED43A2CBB04E300990C34 /* Sliders in Frameworks */,
 				5FADBEBE2C8D00E500ACBC98 /* ApphudSDK in Frameworks */,
 				5FE7DC842CBCB07C00001F61 /* AudioKit in Frameworks */,
 				5F727F5E2CB7DFCC00865DD4 /* BottomSheet in Frameworks */,
@@ -538,7 +536,6 @@
 			packageProductDependencies = (
 				5FADBEBD2C8D00E500ACBC98 /* ApphudSDK */,
 				5F727F5D2CB7DFCC00865DD4 /* BottomSheet */,
-				6DEED4392CBB04E300990C34 /* Sliders */,
 				5FE7DC832CBCB07C00001F61 /* AudioKit */,
 			);
 			productName = "Bass Booster";
@@ -572,8 +569,6 @@
 			packageReferences = (
 				5FADBEBC2C8D00E500ACBC98 /* XCRemoteSwiftPackageReference "ApphudSDK" */,
 				5F727F5C2CB7DFCC00865DD4 /* XCRemoteSwiftPackageReference "BottomSheet" */,
-				6DEED4352CBAF8D800990C34 /* XCRemoteSwiftPackageReference "RRRangeSliderSwiftUI" */,
-				6DEED4382CBB04E300990C34 /* XCRemoteSwiftPackageReference "swiftui-sliders" */,
 				5FE7DC822CBCB07C00001F61 /* XCRemoteSwiftPackageReference "AudioKit" */,
 			);
 			productRefGroup = 5FDBE7E02C833C3300E623B5 /* Products */;
@@ -917,22 +912,6 @@
 				minimumVersion = 5.6.4;
 			};
 		};
-		6DEED4352CBAF8D800990C34 /* XCRemoteSwiftPackageReference "RRRangeSliderSwiftUI" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Rahul-Mayani/RRRangeSliderSwiftUI";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		6DEED4382CBB04E300990C34 /* XCRemoteSwiftPackageReference "swiftui-sliders" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:spacenation/swiftui-sliders.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -950,11 +929,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5FE7DC822CBCB07C00001F61 /* XCRemoteSwiftPackageReference "AudioKit" */;
 			productName = AudioKit;
-		};
-		6DEED4392CBB04E300990C34 /* Sliders */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 6DEED4382CBB04E300990C34 /* XCRemoteSwiftPackageReference "swiftui-sliders" */;
-			productName = Sliders;
 		};
 /* End XCSwiftPackageProductDependency section */
 
