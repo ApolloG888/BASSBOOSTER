@@ -15,7 +15,7 @@ struct MusicView: View {
         GeometryReader { geometry in
             let size = geometry.size
             let safeArea = geometry.safeAreaInsets
-            
+          
             ZStack {
                 RoundedRectangle(cornerRadius: animateContent ? deviceCornerRadius : 0, style: .continuous)
                     .fill(Color.black)
@@ -74,13 +74,23 @@ struct MusicView: View {
                     }
                     
                     Spacer()
-                    
-                    HStack {
-                        CustomButton(state: .equalizer, action: {})
-                        CustomButton(state: .booster, action: {})
-                        CustomButton(state: .volume, action: {})
-                    }
-                    .padding(.bottom, 24)
+                   
+                    //if let currentSong = viewModel.currentSong {
+                        HStack {
+                            CustomButton(state: .equalizer, action: {
+                                viewModel.showBottomSheet(for: viewModel.currentSong ?? MusicFileEntity())
+                            })
+                            CustomButton(state: .booster, action: {
+                                viewModel.showBoosterBottomSheet(for: viewModel.currentSong ??
+                                                          MusicFileEntity())
+                            })
+                            CustomButton(state: .volume, action: {
+                                viewModel.showVolumeBottomSheet(for: viewModel.currentSong ??
+                                                          MusicFileEntity())
+                            })
+                        }
+                        .padding(.bottom)
+                    //}
                     
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {
@@ -91,7 +101,7 @@ struct MusicView: View {
                                 .font(.quicksand(size: 14))
                                 .foregroundStyle(.musicPlayerAuthor)
                         }
-                        .padding(.bottom, 24)
+                        .padding(.bottom)
                         Spacer()
                     }
                     
@@ -102,7 +112,6 @@ struct MusicView: View {
                         }
                     ))
                     .frame(height: 30)
-                    .padding(.bottom, 16)
                     
                     PlayerView(size)
                         .frame(maxWidth: .infinity)

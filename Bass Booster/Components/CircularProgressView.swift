@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-enum SliderType {
-    case bass
-    case crystalizer
+enum SliderType: String {
+    case bass = "Bass"
+    case crystalizer = "Crystalizer"
+    case volume = "Volume"
 }
 
 struct CircularProgressConfig {
@@ -18,13 +19,13 @@ struct CircularProgressConfig {
     let totalValue: CGFloat
 }
 
-struct ACControlView: View {
-    @State var type: SliderType = .bass
+struct CircularProgressBar: View {
+    @Binding var type: SliderType
     let radius: CGFloat = 110
     let knobRadius: CGFloat = 20
     let strokeWidth: CGFloat = 40
     
-    @Binding var progress: CGFloat
+    @State var progress: CGFloat = 0.0
     @State var angleValue: CGFloat = 0.0
     let config = CircularProgressConfig(minimumValue: 0, maximumValue: 100, totalValue: 100)
     
@@ -52,7 +53,7 @@ struct ACControlView: View {
                         .rotationEffect(.degrees(90))
 
                     
-                    KnobView(radius: knobRadius)
+                    KnobView(type: $type, radius: knobRadius)
                         .offset(y: -radius)
                         .rotationEffect(.degrees(Double(angleValue)))
                         .shadow(color: Color.black.opacity(0.2), radius: 3, x: -4)
@@ -63,17 +64,18 @@ struct ACControlView: View {
                         )
                         .rotationEffect(.degrees(180))
                     
-                    ProgressIndicatorsView(progress: $progress, totalValue: config.totalValue)
+                    ProgressIndicatorsView(progress: $progress, type: $type, totalValue: config.totalValue)
                         .rotationEffect(.degrees(90))
                     
                     VStack {
-                        Text("\(String.init(format: "%.0f", progress))℃")
-                            .font(.system(size: 36, weight: .black))
+                        Text("\(String.init(format: "%.0f", progress))%")
+                            .font(.sfProDisplay(type: .regular400, size: 32))
                             .foregroundColor(.textPrimary)
+                            .padding(.bottom, 6)
                         
-                        Text(progress > 25 ? "Heating..." : "Cooling...")
-                            .font(.system(size: 18, weight: .regular))
-                            .foregroundColor(.textPrimary)
+                        Text(type.rawValue)
+                            .font(.sfProDisplay(type: .medium500, size: 14))
+                            .foregroundColor(.gray)
                     }
                 }
             }
@@ -103,13 +105,14 @@ struct ACControlView: View {
 
 struct ProgressIndicatorsView: View {
     @Binding var progress: CGFloat
+    @Binding var type: SliderType
     let totalValue: CGFloat
     let indicatorCount = 8
     var body: some View {
         ZStack {
             ForEach(Array(stride(from: 0, to: indicatorCount, by: 1)), id: \.self) { i in
                 IndicatorView(
-                    isOn: progress >= CGFloat(i) * totalValue/CGFloat(indicatorCount),
+                    type: type, isOn: progress >= CGFloat(i) * totalValue/CGFloat(indicatorCount),
                     offsetValue: 160)
                 .rotationEffect(.degrees(Double(i * 360/indicatorCount)))
             }
@@ -118,19 +121,19 @@ struct ProgressIndicatorsView: View {
 }
 
 struct IndicatorView: View {
-    let type: SliderType = .bass
+    var type: SliderType
     let isOn: Bool
     let offsetValue: CGFloat
     var body: some View {
         RoundedRectangle(cornerRadius: 2)
-            .fill(isOn ? (type == .bass ? AnyShapeStyle(Color.blueIndicaor) : AnyShapeStyle(LinearGradient(
+            .fill(isOn ? (type == .bass || type == .volume ? AnyShapeStyle(LinearGradient(
                 gradient: Gradient(colors: [
                     Color.placeholderYellow,
                     Color.placeholderPlayerYellow2
                 ]),
                 startPoint: .leading,
                 endPoint: .trailing
-            ))) : AnyShapeStyle(Color.sliderIndicator))
+            )) : AnyShapeStyle(Color.blueIndicaor)) : AnyShapeStyle(Color.sliderIndicator))
             .frame(width: 15, height: 3)
             .offset(x: offsetValue)
     }
@@ -154,9 +157,9 @@ struct ProgressBackgroundView: View {
     }
 }
 
-#Preview {
-    ACControlView(progress: .constant(67))
-}
+//#Preview {
+//    CircularProgressBar()
+//}
 
 extension Color {
     static let buttonTintColor          = Color.init(red: 127/255, green: 132/255, blue: 137/255)

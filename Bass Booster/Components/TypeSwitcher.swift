@@ -7,12 +7,8 @@
 
 import SwiftUI
 
-enum EffectType {
-    case bassBoost, crystalizer
-}
-
 struct CustomToggleSwitch: View {
-    @Binding var selectedType: EffectType
+    @Binding var selectedType: SliderType
     
     var body: some View {
         ZStack {
@@ -23,16 +19,16 @@ struct CustomToggleSwitch: View {
             HStack(spacing: 0) {
                 Button(action: {
                     withAnimation {
-                        selectedType = .bassBoost
+                        selectedType = .bass
                     }
                 }) {
                     Text("Bass boost")
                         .font(.sfProDisplay(type: .regular400, size: 14))
-                        .foregroundColor(selectedType == .bassBoost ? .black : .white)
+                        .foregroundColor(selectedType == .bass ? .black : .white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 10)
                         .background(
-                            selectedType == .bassBoost ? Color.musicProgressBar : Color.clear
+                            selectedType == .bass ? Color.musicProgressBar : Color.clear
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 20))
                 }
@@ -59,9 +55,9 @@ struct CustomToggleSwitch: View {
         .padding(.horizontal, 30)
     }
 }
-
-struct CustomToggleSwitch_Previews: PreviewProvider {
-    static var previews: some View {
-        CustomToggleSwitch(selectedType: .constant(.bassBoost))
-    }
-}
+//
+//struct CustomToggleSwitch_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CustomToggleSwitch(selectedType: .bass)
+//    }
+//}

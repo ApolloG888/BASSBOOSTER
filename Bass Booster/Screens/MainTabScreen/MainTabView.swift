@@ -26,7 +26,7 @@ struct MainTabView: View {
                     expandSheet: $viewModel.isExpandedSheet,
                     animation: animation
                 )
-                    .environmentObject(viewModel)
+                .environmentObject(viewModel)
             }
         }
         .overlay {
@@ -203,7 +203,33 @@ extension MainTabView {
 extension MainTabView {
     @ViewBuilder
     func bottomSheetContent() -> some View {
-        if !viewModel.isPlaylistList {
+        if viewModel.isVolumeSheet {
+            VStack {
+                CircularProgressBar(type: .constant(.volume))
+                    .padding(.top, 72)
+                
+                VStack {
+                    Text("Pan")
+                        .foregroundStyle(.white)
+                        .font(.quicksand(type: .bold700, size: 20))
+                    
+                    BidirectionalSlider(value: 34)
+                }
+                .padding(.top, 80)
+            }
+            .padding(.top, 30)
+            .frame(maxWidth: .infinity)
+            .frame(maxHeight: .infinity)
+        } else if viewModel.isBoosterSheet {
+            VStack {
+                CircularProgressBar(type: $viewModel.sheetState)
+                    
+                CustomToggleSwitch(selectedType: $viewModel.sheetState)
+                    .padding(.top, 80)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(maxHeight: .infinity)
+        } else if !viewModel.isPlaylistList {
             VStack(alignment: .leading) {
                 let buttons = getBottomSheetButtons()
                 let lastIndex = buttons.indices.last
@@ -226,7 +252,7 @@ extension MainTabView {
             .foregroundColor(.subProductPriceColor)
             .padding()
             .padding(.top, 20)
-        } else {
+        } else if viewModel.isPlaylistList {
             playlistSelectionContent()
         }
     }

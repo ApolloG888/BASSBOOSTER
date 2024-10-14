@@ -26,10 +26,13 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     @Published var isShowRenameSongView: Bool = false
     @Published var isPlaylistList: Bool = false
+    @Published var isVolumeSheet: Bool = false
+    @Published var isBoosterSheet: Bool = false
+    @Published var sheetState: SliderType = .bass
     @Published var bottomSheetPosition: BottomSheetPosition = .hidden
     @Published var selectedMusicFile: MusicFileEntity?
     
-    @Published var isExpandedSheet: Bool = false
+    @Published var isExpandedSheet: Bool = true
     @Published var currentSong: MusicFileEntity?
     @Published var isPlaying: Bool = false
     
@@ -212,6 +215,18 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         selectedMusicFile = musicFile
         isPlaylistList = false
         bottomSheetPosition = .absolute(270)
+    }
+    
+    func showVolumeBottomSheet(for musicFile: MusicFileEntity) {
+        selectedMusicFile = musicFile
+        isVolumeSheet = true
+        bottomSheetPosition = .relative(0.7)
+    }
+    
+    func showBoosterBottomSheet(for musicFile: MusicFileEntity) {
+        selectedMusicFile = musicFile
+        isBoosterSheet = true
+        bottomSheetPosition = .relative(0.7)
     }
     
     func hideBottomSheet() {

@@ -30,7 +30,7 @@ struct FanSlider: View {
                     .frame(width: CGFloat(currentProgress()) * width, height: 6)
                 
                 // Knob
-                KnobView(radius: sliderConfig.knobRadius)
+                KnobView(type: .constant(.bass), radius: sliderConfig.knobRadius)
                     .offset(x: CGFloat(currentProgress()) * width - sliderConfig.knobRadius)
                     .gesture(DragGesture(minimumDistance: 0)
                                 .onChanged({ value in
@@ -66,6 +66,7 @@ struct FanSliderConfig {
 }
 
 struct KnobView: View {
+    @Binding var type: SliderType
     let radius: CGFloat
     var body: some View {
         ZStack {
@@ -83,16 +84,16 @@ struct KnobView: View {
                 .frame(width: radius * 2, height: radius * 2)
             
             Circle()
-                .fill(Color.musicProgressBar)
+                .fill(type == .bass || type == .volume ? Color.musicProgressBar : Color.blueIndicaor)
                 .frame(width: 4, height: 4)
         }
     }
 }
 
-struct FanSlider_Previews: PreviewProvider {
-    static var previews: some View {
-        FanSlider(progress: .constant(0.5))
-            .frame(width: 300, height: 30)
-            .padding()
-    }
-}
+//struct FanSlider_Previews: PreviewProvider {
+//    static var previews: some View {
+//        FanSlider(progress: .constant(0.5))
+//            .frame(width: 300, height: 30)
+//            .padding()
+//    }
+//}
