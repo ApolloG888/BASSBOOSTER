@@ -360,18 +360,21 @@ extension MainTabView {
                 .padding(.top)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            HStack(spacing: 12) {
-                AddButton(isSelected: viewModel.customPresets.isEmpty) {
-                    viewModel.isShowingCreatePresetView = true
-                    viewModel.bottomSheetPosition = .hidden
-                }
-                ForEach(viewModel.customPresets, id: \.self) { customPreset in
-                    PresetButton(presetName: customPreset.name ?? "Unknown", // Use the preset name
-                                 isSelected: viewModel.selectedPreset?.id == customPreset.id)
-                        .onTapGesture {
-                            viewModel.selectedPreset = customPreset
-                            // Set the selected custom preset
-                        }
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    AddButton(isSelected: viewModel.customPresets.isEmpty) {
+                        viewModel.isShowingCreatePresetView = true
+                        viewModel.bottomSheetPosition = .hidden
+                    }
+                    ForEach(viewModel.customPresets, id: \.self) { customPreset in
+                        PresetButton(presetName: customPreset.name ?? "Unknown", // Используем имя пресета
+                                     isSelected: viewModel.selectedPreset?.id == customPreset.id)
+                            .onTapGesture {
+                                viewModel.selectedPreset = customPreset
+                                // Присваиваем текущее значение слайдеров выбранному пресету
+                                viewModel.applyCustomPreset(customPreset)
+                            }
+                    }
                 }
             }
             .padding(.top)
@@ -647,11 +650,7 @@ extension MainTabView {
         CreatePresetView(
             isPresented: $viewModel.isShowingCreatePresetView,
             onSave: { newPresetName in
-                let newPreset = PresetEntity(context: viewModel.dataManager.container.viewContext)
-                newPreset.id = UUID()
-                newPreset.name = newPresetName
-                viewModel.customPresets.append(newPreset)
-                viewModel.isShowingCreatePresetView = false
+                viewModel.addCustomPreset(name: newPresetName)
             },
             onCancel: {
                 viewModel.isShowingCreatePresetView = false

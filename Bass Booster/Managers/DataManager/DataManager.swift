@@ -173,23 +173,14 @@ final class DataManager: ObservableObject {
         }
     }
     
-    func savePreset(name: String, frequencyValues: [Double]) {
-        let newPreset = PresetEntity(context: container.viewContext)
-        newPreset.id = UUID()
-        newPreset.name = name
-        newPreset.frequencyValues = frequencyValues as NSArray  // Преобразуем в NSArray для сохранения
-        
-        saveData(shouldFetchPresets: true)
-        print("Пресет сохранен: \(name)")
-    }
-    
     func saveCustomPreset(name: String, frequencyValues: [Double]) {
         let newPreset = PresetEntity(context: container.viewContext)
         newPreset.id = UUID()
         newPreset.name = name
-        newPreset.frequencyValues = frequencyValues as NSObject  // Преобразуем в NSData для хранения
-        
+        newPreset.frequencyValues = frequencyValues as NSArray // Преобразуем массив частот в сериализуемый объект
+
         saveData(shouldFetchPresets: true)
+        print("Custom Preset Saved: \(name)") // Логирование для проверки
     }
     
     // MARK: - Переименование Песни

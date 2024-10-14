@@ -108,6 +108,8 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         setupVolumeMonitoring()
         setupAudioChain()
         currentVolume = audioSession.outputVolume
+        
+        // Подписываемся на изменения данных
         dataManager.$savedFiles
             .receive(on: DispatchQueue.main)
             .assign(to: \.musicFiles, on: self)
@@ -282,17 +284,19 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     func addCustomPreset(name: String) {
-        // Create a new `PresetEntity` object to store in Core Data
+        print("Saving preset with name: \(name)")
         let newPreset = PresetEntity(context: dataManager.container.viewContext)
-        newPreset.id = UUID()  // Assign a new UUID for the preset
+        newPreset.id = UUID()
         newPreset.name = name
-        newPreset.frequencyValues = frequencyValues as NSObject  // Store the current frequency values
+        newPreset.frequencyValues = frequencyValues as NSArray // Убедитесь, что данные сохраняются корректно
 
-        // Save the preset using Core Data
+        // Сохранение пресета в Core Data
         dataManager.saveCustomPreset(name: name, frequencyValues: frequencyValues)
 
-        // Automatically update the UI
-        selectedCustomPreset = newPreset  // Set the new preset as the selected one
+        // Повторная загрузка пресетов после сохранения
+        dataManager.fetchPresets() // Обновляем данные в UI
+        selectedCustomPreset = newPreset
+        isShowingCreatePresetView = false
     }
     
     func hideBottomSheet() {
@@ -576,9 +580,9 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     func applyCustomPreset(_ preset: PresetEntity) {
-        selectedRegularPreset = nil
-        selectedCustomPreset = preset
-        
+        selectedRegularPreset = nil // Сбрасываем выбранный обычный пресет
+        selectedCustomPreset = preset // Устанавливаем выбранный кастомный пресет
+
         if let values = preset.frequencyValues as? [Double] {
             frequencyValues = values
             for index in 0..<frequencyValues.count {
@@ -587,40 +591,29 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
     }
     
-    func saveNewCustomPreset(name: String) {
-        let newPreset = PresetEntity(context: dataManager.container.viewContext)
-        newPreset.id = UUID()
-        newPreset.name = name
-        newPreset.frequencyValues = frequencyValues as NSObject
-        
-        dataManager.saveCustomPreset(name: name, frequencyValues: frequencyValues)
-        selectedCustomPreset = newPreset  // Set the new custom preset as selected
-    }
-    
     func applyRegularPreset(_ preset: MusicPreset) {
-            // Ensure custom preset is deselected
-            selectedCustomPreset = nil
-            selectedRegularPreset = preset
-            
-            let scalingFactor = 8.33
-            switch preset {
-            case .rock:
-                frequencyValues = [4.0, 2.0, 0.0, -2.0, -4.0, 2.0, 4.0, -1.0, -2.0, 0.0].map { $0 * scalingFactor }
-            case .rnb:
-                frequencyValues = [2.0, 1.0, 0.0, -1.0, -2.0, 2.0, 3.0, -1.5, 0.5, 0.0].map { $0 * scalingFactor }
-            case .pop:
-                frequencyValues = [5.0, 3.0, 0.0, -1.0, -3.0, 1.0, 3.0, -2.0, -3.0, 0.0].map { $0 * scalingFactor }
-            case .classic:
-                frequencyValues = [3.0, 2.0, 1.0, 0.0, -2.0, 1.5, 2.0, -1.0, -1.5, 0.0].map { $0 * scalingFactor }
-            case .rap:
-                frequencyValues = [6.0, 4.0, 1.0, -2.0, -3.0, 2.0, 5.0, -1.0, -2.0, 1.0].map { $0 * scalingFactor }
-            }
-            
-            // Update equalizer values
-            for index in 0..<frequencyValues.count {
-                updateEqualizer(for: index, value: frequencyValues[index])
-            }
+        selectedCustomPreset = nil // Сбрасываем выбранный кастомный пресет
+        selectedRegularPreset = preset // Устанавливаем выбранный обычный пресет
+
+        let scalingFactor = 8.33
+        switch preset {
+        case .rock:
+            frequencyValues = [4.0, 2.0, 0.0, -2.0, -4.0, 2.0, 4.0, -1.0, -2.0, 0.0].map { $0 * scalingFactor }
+        case .rnb:
+            frequencyValues = [2.0, 1.0, 0.0, -1.0, -2.0, 2.0, 3.0, -1.5, 0.5, 0.0].map { $0 * scalingFactor }
+        case .pop:
+            frequencyValues = [5.0, 3.0, 0.0, -1.0, -3.0, 1.0, 3.0, -2.0, -3.0, 0.0].map { $0 * scalingFactor }
+        case .classic:
+            frequencyValues = [3.0, 2.0, 1.0, 0.0, -2.0, 1.5, 2.0, -1.0, -1.5, 0.0].map { $0 * scalingFactor }
+        case .rap:
+            frequencyValues = [6.0, 4.0, 1.0, -2.0, -3.0, 2.0, 5.0, -1.0, -2.0, 1.0].map { $0 * scalingFactor }
         }
+
+        // Обновляем эквалайзер
+        for index in 0..<frequencyValues.count {
+            updateEqualizer(for: index, value: frequencyValues[index])
+        }
+    }
     
     func resetPreset() {
         frequencyValues = Array(repeating: 0.0, count: 10)
@@ -631,6 +624,10 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         for index in 0..<frequencyValues.count {
             updateEqualizer(for: index, value: frequencyValues[index])
         }
+    }
+    
+    func fetchPresets() {
+        dataManager.fetchPresets() // This will load the saved presets from Core Data into the view model
     }
     
     deinit {
