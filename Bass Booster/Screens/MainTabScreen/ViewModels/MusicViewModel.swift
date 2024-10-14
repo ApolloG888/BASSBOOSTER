@@ -585,6 +585,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     func applyRegularPreset(_ preset: MusicPreset) {
+        selectedPreset = nil
         selectedCustomPreset = nil // Сбрасываем выбранный кастомный пресет
         selectedRegularPreset = preset // Устанавливаем выбранный обычный пресет
 
@@ -609,14 +610,20 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     func resetPreset() {
+        // Сбрасываем частотные значения на 0
         frequencyValues = Array(repeating: 0.0, count: 10)
+        
+        // Сбрасываем выбор пресетов
         selectedCustomPreset = nil
         selectedRegularPreset = nil
+        selectedPreset = nil  // Добавляем сброс кастомного пресета
         
-        // Reset equalizer values
+        // Обновляем эквалайзер для каждой частоты
         for index in 0..<frequencyValues.count {
             updateEqualizer(for: index, value: frequencyValues[index])
         }
+        
+        // Обновляем UI, если необходимо
     }
     
     func fetchPresets() {

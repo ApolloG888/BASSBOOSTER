@@ -345,9 +345,9 @@ extension MainTabView {
             HStack(spacing: 12) {
                 ForEach(MusicPreset.allCases, id: \.self) { preset in
                     PresetButton(presetName: preset.rawValue,
-                                 isSelected: viewModel.selectedRegularPreset == preset)
+                                 isSelected: viewModel.selectedRegularPreset == preset) // Direct comparison
                     .onTapGesture {
-                        viewModel.applyRegularPreset(preset)
+                        viewModel.applyRegularPreset(preset)  // Apply regular preset
                     }
                 }
             }
