@@ -1,10 +1,3 @@
-//
-//  NewPlaylistView.swift
-//  Bass Booster
-//
-//  Created by Protsak Dmytro on 10.10.2024.
-//
-
 import SwiftUI
 
 struct NewPlaylistView: View {

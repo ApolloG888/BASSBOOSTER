@@ -1,10 +1,3 @@
-//
-//  Color+Extension.swift
-//  Bass Booster
-//
-//  Created by Дмитрий Процак on 31.08.2024.
-//
-
 import SwiftUI
 
 extension Color {

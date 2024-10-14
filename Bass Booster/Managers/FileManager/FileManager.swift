@@ -1,10 +1,3 @@
-//
-//  FileManager.swift
-//  Bass Booster
-//
-//  Created by Protsak Dmytro on 28.09.2024.
-//
-
 import UIKit
 import UniformTypeIdentifiers
 

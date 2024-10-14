@@ -1,10 +1,3 @@
-//
-//  MusicInfo.swift
-//  Music App
-//
-//  Created by Gurjot Singh on 28/10/23.
-//
-
 import SwiftUI
 
 struct MusicInfo: View {

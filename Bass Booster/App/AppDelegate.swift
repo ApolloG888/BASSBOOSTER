@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  Bass Booster
-//
-//  Created by Дмитрий Процак on 01.09.2024.
-//
-
 import SwiftUI
 import ApphudSDK
 import AppTrackingTransparency

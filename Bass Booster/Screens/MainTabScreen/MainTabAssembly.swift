@@ -1,10 +1,3 @@
-//
-//  MainAssembly.swift
-//  Bass Booster
-//
-//  Created by Дмитрий Процак on 08.09.2024.
-//
-
 import Foundation
 import SwiftUI
 

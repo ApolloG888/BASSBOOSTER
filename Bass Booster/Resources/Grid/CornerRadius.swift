@@ -1,11 +1,3 @@
-//
-//  CornerRadius.swift
-//  Bass Booster
-//
-//  Created by Дмитрий Процак on 31.08.2024.
-//
-
-
 import Foundation
 
 public enum CornerRadius {

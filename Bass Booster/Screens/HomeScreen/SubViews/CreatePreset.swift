@@ -1,10 +1,3 @@
-//
-//  CreatePreset.swift
-//  Bass Booster
-//
-//  Created by Mac Book Air M1 on 14.10.2024.
-//
-
 import SwiftUI
 
 struct CreatePresetView: View {

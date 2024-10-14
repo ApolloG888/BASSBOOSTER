@@ -1,10 +1,3 @@
-//
-//  TypeSwitcher.swift
-//  Bass Booster
-//
-//  Created by Mac Book Air M1 on 13.10.2024.
-//
-
 import SwiftUI
 
 struct CustomToggleSwitch: View {

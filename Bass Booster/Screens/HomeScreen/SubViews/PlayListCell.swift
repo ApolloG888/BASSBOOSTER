@@ -1,10 +1,3 @@
-//
-//  PlayListCell.swift
-//  Bass Booster
-//
-//  Created by Protsak Dmytro on 11.10.2024.
-//
-
 import SwiftUI
 
 struct PlaylistCell: View {

@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Cybertruck
-//
-//  Created by Anik on 19/8/20.
-//
-
 import SwiftUI
 
 enum SliderType: String {

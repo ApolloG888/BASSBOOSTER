@@ -59,7 +59,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var selectedPreset: Preset?
     @Published var customPresets: [Preset] = []
     
-    @Published var isExpandedSheet: Bool = false
+    @Published var isExpandedSheet: Bool = true
     @Published var currentSong: MusicFileEntity?
     @Published var isPlaying: Bool = false
     

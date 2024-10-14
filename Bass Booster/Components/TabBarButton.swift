@@ -1,10 +1,3 @@
-//
-//  TabBarButton.swift
-//  Bass Booster
-//
-//  Created by Дмитрий Процак on 08.09.2024.
-//
-
 import SwiftUI
 
 struct TabBarButton: View {

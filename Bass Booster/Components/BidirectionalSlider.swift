@@ -1,12 +1,3 @@
-//
-//  BidirectionalSlider.swift
-//  Bass Booster
-//
-//  Created by Mac Book Air M1 on 14.10.2024.
-//
-
-import SwiftUI
-
 import SwiftUI
 
 struct BidirectionalSlider: View {
