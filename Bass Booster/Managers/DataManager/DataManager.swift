@@ -4,21 +4,26 @@ import Combine
 import AVFoundation
 
 final class DataManager: ObservableObject {
+    
+    // MARK: - Singleton
     static let shared = DataManager()
-    
+
+    // MARK: - Core Data Properties
     let container: NSPersistentContainer
-    
+
+    // MARK: - Published Properties
     @Published var savedFiles: [MusicFileEntity] = []
     @Published var savedPlaylists: [PlaylistEntity] = []
     @Published var savedPresets: [PresetEntity] = []
-    
+
     private var cancellables = Set<AnyCancellable>()
-    
+
+    // MARK: - Initialization
     private init() {
         container = NSPersistentContainer(name: "BassBoosterData")
         container.loadPersistentStores { description, error in
             if let error = error {
-                fatalError("Ошибка загрузки Core Data: \(error)")
+                fatalError("Error loading Core Data: \(error)")
             }
             self.container.viewContext.automaticallyMergesChangesFromParent = true
             self.container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
@@ -33,8 +38,10 @@ final class DataManager: ObservableObject {
             self.fetchPresets()
         }
     }
-    
-    // MARK: - Получение Музыкальных Файлов
+}
+
+// MARK: - Music File Handling
+extension DataManager {
     
     func fetchMusicFiles() {
         let request: NSFetchRequest<MusicFileEntity> = MusicFileEntity.fetchRequest()
@@ -45,45 +52,22 @@ final class DataManager: ObservableObject {
                 self.savedFiles = files
             }
         } catch {
-            print("Ошибка получения данных: \(error)")
+            print("Error fetching music files: \(error)")
         }
     }
     
     func fetchMusicFiles(for playlist: PlaylistEntity?) {
-        if let playlist = playlist {
-            if let songs = playlist.songs?.allObjects as? [MusicFileEntity] {
-                DispatchQueue.main.async {
-                    self.savedFiles = songs
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.savedFiles = []
-                }
+        if let playlist = playlist, let songs = playlist.songs?.allObjects as? [MusicFileEntity] {
+            DispatchQueue.main.async {
+                self.savedFiles = songs
             }
         } else {
             fetchMusicFiles()
         }
     }
     
-    func fetchPresets() {
-        let request: NSFetchRequest<PresetEntity> = PresetEntity.fetchRequest()
-        
-        do {
-            let presets = try container.viewContext.fetch(request)
-            DispatchQueue.main.async {
-                self.savedPresets = presets
-            }
-        } catch {
-            print("Ошибка загрузки пресетов: \(error)")
-        }
-    }
-    
-    // MARK: - Обработка Выбранных Файлов
-    
     func handlePickedFiles(urls: [URL], completion: @escaping () -> Void) {
         let backgroundContext = container.newBackgroundContext()
-        backgroundContext.automaticallyMergesChangesFromParent = true
-        backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         backgroundContext.perform {
             for url in urls {
                 let fileName = url.lastPathComponent
@@ -91,22 +75,22 @@ final class DataManager: ObservableObject {
                 do {
                     if !FileManager.default.fileExists(atPath: destinationURL.path) {
                         try FileManager.default.copyItem(at: url, to: destinationURL)
-                        print("Скопирован файл в: \(destinationURL.path)")
+                        print("File copied to: \(destinationURL.path)")
                     } else {
-                        print("Файл уже существует по пути: \(destinationURL.path)")
+                        print("File already exists at: \(destinationURL.path)")
                     }
                     let asset = AVAsset(url: destinationURL)
                     let metadata = self.extractMetadata(from: asset)
                     self.saveMusicFile(name: metadata.songTitle, artist: metadata.artist, albumArt: metadata.albumArt, url: destinationURL, context: backgroundContext)
                 } catch {
-                    print("Ошибка копирования файла: \(error)")
+                    print("Error copying file: \(error)")
                 }
             }
             do {
                 try backgroundContext.save()
-                print("Фоновый контекст успешно сохранён.")
+                print("Background context successfully saved.")
             } catch {
-                print("Ошибка сохранения данных в фоне: \(error)")
+                print("Error saving background context: \(error)")
             }
             DispatchQueue.main.async {
                 self.fetchMusicFiles()
@@ -114,31 +98,8 @@ final class DataManager: ObservableObject {
             }
         }
     }
-
-    // MARK: - Извлечение Метаданных
-    
-    func extractMetadata(from asset: AVAsset) -> (songTitle: String, artist: String, albumArt: Data?) {
-        var songTitle = "Unknown"
-        var artist = "Unknown"
-        var albumArt: Data?
-        
-        for format in asset.commonMetadata {
-            if format.commonKey?.rawValue == "title" {
-                songTitle = format.stringValue ?? "Unknown"
-            } else if format.commonKey?.rawValue == "artist" {
-                artist = format.stringValue ?? "Unknown"
-            } else if format.commonKey?.rawValue == "artwork", let data = format.dataValue {
-                albumArt = data
-            }
-        }
-        
-        return (songTitle, artist, albumArt)
-    }
-    
-    // MARK: - Сохранение Музыкального Файла
     
     func saveMusicFile(name: String, artist: String, albumArt: Data?, url: URL, context: NSManagedObjectContext) {
-        // Проверка на существование файла по пути
         let fetchRequest: NSFetchRequest<MusicFileEntity> = MusicFileEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "url == %@", url.lastPathComponent)
         
@@ -150,74 +111,48 @@ final class DataManager: ObservableObject {
                 newFile.name = name
                 newFile.artist = artist
                 newFile.albumArt = albumArt
-                newFile.url = url.lastPathComponent  // Сохраняем только имя файла
+                newFile.url = url.lastPathComponent
                 
-                // Получение плейлиста "My Player" в фоновом контексте
                 let playlistFetch: NSFetchRequest<PlaylistEntity> = PlaylistEntity.fetchRequest()
                 playlistFetch.predicate = NSPredicate(format: "name == %@", "My Player")
-                playlistFetch.fetchLimit = 1
-                let playlists = try context.fetch(playlistFetch)
-                if let generalPlaylist = playlists.first {
+                if let generalPlaylist = try context.fetch(playlistFetch).first {
                     newFile.addToPlaylist(generalPlaylist)
-                    print("Добавлено в плейлист 'My Player'.")
-                } else {
-                    print("Плейлист 'My Player' не найден в фоновом контексте.")
+                    print("Added to playlist 'My Player'.")
                 }
                 
-                print("Сохранён музыкальный файл: \(name)")
-            } else {
-                print("Музыкальный файл уже существует: \(name)")
+                print("Saved music file: \(name)")
             }
         } catch {
-            print("Ошибка при проверке существующих музыкальных файлов: \(error)")
+            print("Error checking existing music files: \(error)")
         }
     }
-    
-    func saveCustomPreset(preset: PresetEntity, frequencyValues: [Double]) {
-        // Обновляем частоты и сохраняем пресет
-        preset.frequencyValues = frequencyValues as NSArray
-        saveData(shouldFetchPresets: true)
-        print("Custom Preset Updated: \(preset.name ?? "Unknown")") // Логирование для проверки
-    }
-    
-    // MARK: - Переименование Песни
-    
-    func renameSong(_ song: MusicFileEntity, newArtist: String, newName: String) {
-        let validArtist = newArtist.isEmpty ? (song.artist ?? "Unknown") : newArtist
-        let validName = newName.isEmpty ? (song.name ?? "Unknown") : newName
-        
-        if song.artist != validArtist || song.name != validName {
-            song.artist = validArtist
-            song.name = validName
-            saveData(shouldFetchPlaylists: false)
-            print("Песня переименована на: \(validName) от \(validArtist)")
-        } else {
-            print("Изменений в песне не обнаружено.")
-        }
-    }
-    
-    // MARK: - Удаление Музыкального Файла
-    
+
     func deleteMusicFile(_ musicFile: MusicFileEntity) {
         container.viewContext.delete(musicFile)
         saveData(shouldFetchPlaylists: false)
-        print("Удалена песня: \(musicFile.name ?? "Unknown")")
+        print("Deleted song: \(musicFile.name ?? "Unknown")")
     }
     
-    // MARK: - Удаление Песни из Плейлиста
-    
-    func removeSongFromPlaylist(_ song: MusicFileEntity, from playlist: PlaylistEntity) {
-        guard let songs = playlist.songs as? Set<MusicFileEntity>, songs.contains(song) else {
-            print("Песня не найдена в плейлисте \(playlist.name ?? "Unknown")")
-            return
+    func extractMetadata(from asset: AVAsset) -> (songTitle: String, artist: String, albumArt: Data?) {
+        var songTitle = "Unknown"
+        var artist = "Unknown"
+        var albumArt: Data?
+
+        for format in asset.commonMetadata {
+            if format.commonKey?.rawValue == "title" {
+                songTitle = format.stringValue ?? "Unknown"
+            } else if format.commonKey?.rawValue == "artist" {
+                artist = format.stringValue ?? "Unknown"
+            } else if format.commonKey?.rawValue == "artwork", let data = format.dataValue {
+                albumArt = data
+            }
         }
-        
-        playlist.removeFromSongs(song)
-        saveData(shouldFetchPlaylists: false)
-        print("Песня удалена из плейлиста: \(playlist.name ?? "Unknown")")
+        return (songTitle, artist, albumArt)
     }
-    
-    // MARK: - Получение Плейлистов
+}
+
+// MARK: - Playlist Management
+extension DataManager {
     
     func fetchPlaylists(completion: (() -> Void)? = nil) {
         let request: NSFetchRequest<PlaylistEntity> = PlaylistEntity.fetchRequest()
@@ -229,46 +164,73 @@ final class DataManager: ObservableObject {
                 completion?()
             }
         } catch {
-            print("Ошибка получения плейлистов: \(error)")
+            print("Error fetching playlists: \(error)")
             completion?()
         }
     }
-    
-    // MARK: - Сохранение Плейлиста
     
     func savePlaylist(name: String) {
         let newPlaylist = PlaylistEntity(context: container.viewContext)
         newPlaylist.id = UUID()
         newPlaylist.name = name
-        
         saveData(shouldFetchPlaylists: true)
-        print("Создан плейлист: \(name)")
+        print("Created playlist: \(name)")
     }
-    
-    // MARK: - Добавление Песни в Плейлист
     
     func addSong(_ song: MusicFileEntity, to playlist: PlaylistEntity) {
         if let songs = playlist.songs as? Set<MusicFileEntity>, !songs.contains(song) {
             playlist.addToSongs(song)
             saveData(shouldFetchPlaylists: false)
-            print("Добавлена песня в плейлист: \(playlist.name ?? "Unknown")")
-        } else {
-            print("Песня уже находится в плейлисте \(playlist.name ?? "Unknown")")
+            print("Added song to playlist: \(playlist.name ?? "Unknown")")
         }
     }
     
-    // MARK: - Сохранение Данных
+    func removeSongFromPlaylist(_ song: MusicFileEntity, from playlist: PlaylistEntity) {
+        guard let songs = playlist.songs as? Set<MusicFileEntity>, songs.contains(song) else {
+            print("Song not found in playlist \(playlist.name ?? "Unknown")")
+            return
+        }
+        playlist.removeFromSongs(song)
+        saveData(shouldFetchPlaylists: false)
+        print("Removed song from playlist: \(playlist.name ?? "Unknown")")
+    }
+}
+
+// MARK: - Preset Management
+extension DataManager {
+    
+    func fetchPresets() {
+        let request: NSFetchRequest<PresetEntity> = PresetEntity.fetchRequest()
+        do {
+            let presets = try container.viewContext.fetch(request)
+            DispatchQueue.main.async {
+                self.savedPresets = presets
+            }
+        } catch {
+            print("Error fetching presets: \(error)")
+        }
+    }
+    
+    func saveCustomPreset(preset: PresetEntity, frequencyValues: [Double]) {
+        preset.frequencyValues = frequencyValues as NSArray
+        saveData(shouldFetchPresets: true)
+        print("Custom Preset Updated: \(preset.name ?? "Unknown")")
+    }
+}
+
+// MARK: - Data Saving
+extension DataManager {
     
     func saveData(shouldFetchPlaylists: Bool = false) {
         if container.viewContext.hasChanges {
             do {
                 try container.viewContext.save()
-                print("Данные успешно сохранены.")
+                print("Data successfully saved.")
                 if shouldFetchPlaylists {
                     fetchPlaylists()
                 }
             } catch {
-                print("Ошибка сохранения данных: \(error)")
+                print("Error saving data: \(error)")
             }
         }
     }
@@ -277,17 +239,37 @@ final class DataManager: ObservableObject {
         if container.viewContext.hasChanges {
             do {
                 try container.viewContext.save()
-                print("Данные успешно сохранены.")
+                print("Data successfully saved.")
                 if shouldFetchPresets {
                     fetchPresets()
                 }
             } catch {
-                print("Ошибка сохранения данных: \(error)")
+                print("Error saving data: \(error)")
             }
         }
     }
+}
+
+// MARK: - Song Renaming
+extension DataManager {
     
-    // MARK: - Вспомогательные Функции
+    func renameSong(_ song: MusicFileEntity, newArtist: String, newName: String) {
+        let validArtist = newArtist.isEmpty ? (song.artist ?? "Unknown") : newArtist
+        let validName = newName.isEmpty ? (song.name ?? "Unknown") : newName
+        
+        if song.artist != validArtist || song.name != validName {
+            song.artist = validArtist
+            song.name = validName
+            saveData(shouldFetchPlaylists: false)
+            print("Song renamed to: \(validName) by \(validArtist)")
+        } else {
+            print("No changes detected for the song.")
+        }
+    }
+}
+
+// MARK: - Helpers
+extension DataManager {
     
     private func isMusicFileExists(withName name: String) -> Bool {
         savedFiles.contains { $0.name == name }

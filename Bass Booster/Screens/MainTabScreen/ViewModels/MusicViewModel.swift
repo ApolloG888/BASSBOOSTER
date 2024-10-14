@@ -400,23 +400,23 @@ extension MusicViewModel {
 // MARK: - File Handling and Playlist Management
 extension MusicViewModel {
     func canAddSong() -> Bool {
-        if !userPurchaseIsActive && musicFiles.count >= 1 {
-            isShowSubscriptionOverlay = true
-            return false
-        }
+//        if !userPurchaseIsActive && musicFiles.count >= 1 {
+//            isShowSubscriptionOverlay = true
+//            return false
+//        }
         return true
     }
     
     // MARK: - Обработка Выбранных Файлов
     
     func handlePickedFiles(urls: [URL]) {
-        if !userPurchaseIsActive && urls.count > 1 {
-            let limitedURLs = Array(urls.prefix(1))
-            processFiles(urls: limitedURLs)
-            isShowSubscriptionOverlay = true
-        } else {
+//        if !userPurchaseIsActive && urls.count > 1 {
+//            let limitedURLs = Array(urls.prefix(1))
+//            processFiles(urls: limitedURLs)
+//            isShowSubscriptionOverlay = true
+//        } else {
             processFiles(urls: urls)
-        }
+//        }
     }
 
     private func processFiles(urls: [URL]) {
