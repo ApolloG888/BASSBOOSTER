@@ -25,7 +25,7 @@ struct CircularProgressBar: View {
     let knobRadius: CGFloat = 20
     let strokeWidth: CGFloat = 40
     
-    @State var progress: CGFloat = 0.0
+    @Binding var progress: CGFloat
     @State var angleValue: CGFloat = 0.0
     let config = CircularProgressConfig(minimumValue: 0, maximumValue: 100, totalValue: 100)
     

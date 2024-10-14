@@ -2,6 +2,7 @@ import SwiftUI
 import Combine
 import BottomSheet
 import AVFoundation
+import MediaPlayer
 
 final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
@@ -10,8 +11,14 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @AppStorage("isQuietSoundSelected") var isQuietSoundSelected: Bool = false
     @AppStorage("isSuppressionSelected") var isSuppressionSelected: Bool = false
     @AppStorage("selectedMode") var selectedMode: Modes = .normal
+    @AppStorage("panValue") var panValue: Double = 0.0 {
+        didSet {
+            audioPlayer?.pan = Float(panValue)
+        }
+    }
     
     private let urlManager: URLManagerProtocol = URLManager()
+    private var audioSession = AVAudioSession.sharedInstance()
     
     var audioPlayer: AVAudioPlayer?
     private var progressTimer: Timer?
@@ -45,6 +52,8 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var isRepeatOn: Bool = false
     
     @Published var isShowSubscriptionOverlay: Bool = false
+    
+    @Published var currentVolume: Float = 0.5
 
     private var dataManager = DataManager.shared
     private var cancellables = Set<AnyCancellable>()
@@ -67,6 +76,8 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     override init() {
         super.init()
+        setupVolumeMonitoring()
+        currentVolume = audioSession.outputVolume
         dataManager.$savedFiles
             .receive(on: DispatchQueue.main)
             .assign(to: \.musicFiles, on: self)
@@ -77,6 +88,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             .assign(to: \.playlists, on: self)
             .store(in: &cancellables)
     }
+
     
     func canAddSong() -> Bool {
         if !userPurchaseIsActive && musicFiles.count >= 1 {
@@ -303,6 +315,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
             audioPlayer?.delegate = self
             audioPlayer?.prepareToPlay()
+            audioPlayer?.pan = Float(panValue)
             audioPlayer?.play()
             isPlaying = true
             startProgressTimer()
@@ -323,6 +336,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             pauseMusic()
         } else {
             if audioPlayer != nil {
+                audioPlayer?.pan = Float(panValue)
                 audioPlayer?.play()
                 isPlaying = true
                 startProgressTimer()
@@ -428,7 +442,39 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         urlManager.open(urlString: "https://www.google.com")
     }
     
+    private func setupVolumeMonitoring() {
+        // Ensure MPVolumeView is added to the hierarchy
+        let volumeView = MPVolumeView(frame: .zero)
+        volumeView.isHidden = true
+        UIApplication.shared.windows.first?.addSubview(volumeView)
+        
+        // Observe output volume
+        currentVolume = audioSession.outputVolume
+        audioSession.addObserver(self, forKeyPath: "outputVolume", options: [.new, .initial], context: nil)
+    }
+
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "outputVolume" {
+            if let newVolume = change?[.newKey] as? Float {
+                DispatchQueue.main.async {
+                    self.currentVolume = newVolume // Update the volume in the UI
+                }
+            }
+        }
+    }
+
+    func updateDeviceVolume(to value: Float) {
+        let volumeView = MPVolumeView(frame: .zero)
+        if let volumeSlider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) {
+                volumeSlider.value = value
+                volumeSlider.sendActions(for: .valueChanged)  // Ensure volume change takes effect
+            }
+        }
+    }
+    
     deinit {
         stopProgressTimer()
+        audioSession.removeObserver(self, forKeyPath: "outputVolume")
     }
 }

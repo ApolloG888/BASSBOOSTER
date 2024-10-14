@@ -11,7 +11,7 @@ import SwiftUI
 
 struct BidirectionalSlider: View {
     
-    @State var value: Double
+    @Binding var value: Double
     
     private let minValue: Double = -50
     private let maxValue: Double = 50
@@ -95,5 +95,5 @@ struct BidirectionalSlider: View {
 }
 
 #Preview {
-    BidirectionalSlider(value: 0)
+    BidirectionalSlider(value: .constant(22))
 }

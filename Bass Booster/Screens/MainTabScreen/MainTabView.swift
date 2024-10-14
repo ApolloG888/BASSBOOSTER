@@ -209,16 +209,39 @@ extension MainTabView {
     func bottomSheetContent() -> some View {
         if viewModel.isVolumeSheet {
             VStack {
-                CircularProgressBar(type: .constant(.volume))
-                    .padding(.top, 72)
+                CircularProgressBar(
+                    type: .constant(.volume),
+                    progress: Binding<CGFloat>(
+                        get: {
+                            // Convert the system volume to the progress bar value
+                            CGFloat(viewModel.currentVolume * 100)
+                        },
+                        set: { newVolume in
+                            let volume = Float(newVolume / 100) // Convert to a value between 0 and 1
+                            viewModel.updateDeviceVolume(to: volume) // Update system volume
+                            viewModel.currentVolume = volume // Update the viewModel
+                        }
+                    )
+                )
+                .padding(.top, 72)
                 
                 VStack {
                     Text("Pan")
                         .foregroundStyle(.white)
                         .font(.quicksand(type: .bold700, size: 20))
                     
-                    BidirectionalSlider(value: 34)
+                    BidirectionalSlider(value: Binding<Double>(
+                        get: { viewModel.panValue },
+                        set: { newPanValue in
+                            viewModel.panValue = newPanValue
+                            viewModel.audioPlayer?.pan = Float(newPanValue)
+                        }
+                    ))
+                    .onChange(of: viewModel.panValue) { oldValue, newPanValue in
+                        viewModel.audioPlayer?.pan = Float(newPanValue)
+                    }
                 }
+                .padding(.horizontal)
                 .padding(.top, 80)
             }
             .padding(.top, 30)
@@ -226,7 +249,7 @@ extension MainTabView {
             .frame(maxHeight: .infinity)
         } else if viewModel.isBoosterSheet {
             VStack {
-                CircularProgressBar(type: $viewModel.sheetState)
+//                CircularProgressBar(type: $viewModel.sheetState, progress: CGFloat(viewModel.currentVolume))
                     
                 CustomToggleSwitch(selectedType: $viewModel.sheetState)
                     .padding(.top, 80)
