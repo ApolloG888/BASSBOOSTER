@@ -212,81 +212,7 @@ extension MainTabView {
         } else if viewModel.isBoosterSheet {
             boosterView
         } else if viewModel.isQualizerSheet {
-            VStack {
-                Button {
-                    viewModel.frequencyValues = Array(repeating: 0.0, count: 10) // Reset all to zero
-                    for index in 0..<viewModel.frequencyValues.count {
-                        viewModel.updateEqualizer(for: index, value: 0.0)
-                    }
-                } label: {
-                    Image(.resetPreset)
-                }
-                .padding(.trailing, 10)
-                
-                
-                Text("Presets")
-                    .foregroundStyle(.white)
-                    .font(.sfProDisplay(type: .regular400, size: 16))
-                
-                HStack(spacing: 12) {
-                    ForEach(MusicPreset.allCases, id: \.self) { preset in
-                        PresetButton(preset: Preset(id: ObjectIdentifier(Preset.self), name: preset.rawValue),
-                                     isSelected: viewModel.selectedPreset?.name == preset.rawValue)
-                        .onTapGesture {
-                            viewModel.selectedPreset = Preset(id: ObjectIdentifier(Preset.self), name: preset.rawValue)
-                        }
-                    }
-                    Spacer()
-                }
-                
-                // Custom Presets
-                Text("Custom Presets")
-                    .font(.sfProDisplay(type: .regular400, size: 16))
-                    .foregroundStyle(.white)
-                    .padding(.top)
-                
-                HStack(spacing: 12) {
-                    AddButton(isSelected: viewModel.customPresets.isEmpty) {
-                        viewModel.isShowingCreatePresetView = true
-                    }
-                    ForEach(viewModel.customPresets) { customPreset in
-                        PresetButton(preset: customPreset, isSelected: viewModel.selectedPreset?.id == customPreset.id)
-                            .onTapGesture {
-                                viewModel.selectedPreset = customPreset
-                            }
-                    }
-                    Spacer()
-                }
-                .padding(.top)
-                
-                Spacer()
-        
-                
-                VStack {
-                    Spacer()
-                    HStack(spacing: 5) {
-                        ForEach(0..<viewModel.frequencyValues.count, id: \.self) { index in
-                            BidirectionalSlider(
-                                value: Binding(
-                                    get: { viewModel.frequencyValues[index] },
-                                    set: { newValue in
-                                        viewModel.frequencyValues[index] = newValue
-                                        viewModel.updateEqualizer(for: index, value: newValue)
-                                    }
-                                ), forPresetUsage: true
-                            )
-                            .frame(height: 50)
-                        }
-                        
-                    }
-                    .padding(.top, 40)
-                    
-                    Spacer()
-                }
-                .padding(.vertical, 40)
-                .background(Color.red)
-            }
-            .padding(.horizontal)
+            equlaizer
         } else if !viewModel.isPlaylistList {
             VStack(alignment: .leading) {
                 let buttons = getBottomSheetButtons()
@@ -390,6 +316,79 @@ extension MainTabView {
         }
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
+    }
+}
+
+extension MainTabView {
+    var equlaizer: some View {
+        VStack {
+            Button {
+                viewModel.frequencyValues = Array(repeating: 0.0, count: 10)
+                for index in 0..<viewModel.frequencyValues.count {
+                    viewModel.updateEqualizer(for: index, value: 0.0)
+                }
+            } label: {
+                Image(.resetPreset)
+            }
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .padding(.trailing, 10)
+            
+            
+            Text("Presets")
+                .foregroundStyle(.white)
+                .font(.sfProDisplay(type: .regular400, size: 16))
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            HStack(spacing: 12) {
+                ForEach(MusicPreset.allCases, id: \.self) { preset in
+                    PresetButton(preset: Preset(id: ObjectIdentifier(Preset.self), name: preset.rawValue),
+                                 isSelected: viewModel.selectedPreset?.name == preset.rawValue)
+                    .onTapGesture {
+                        viewModel.selectedPreset = Preset(id: ObjectIdentifier(Preset.self), name: preset.rawValue)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            // Custom Presets
+            Text("Custom Presets")
+                .font(.sfProDisplay(type: .regular400, size: 16))
+                .foregroundStyle(.white)
+                .padding(.top)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            HStack(spacing: 12) {
+                AddButton(isSelected: viewModel.customPresets.isEmpty) {
+                    viewModel.isShowingCreatePresetView = true
+                }
+                ForEach(viewModel.customPresets) { customPreset in
+                    PresetButton(preset: customPreset, isSelected: viewModel.selectedPreset?.id == customPreset.id)
+                        .onTapGesture {
+                            viewModel.selectedPreset = customPreset
+                        }
+                }
+            }
+            .padding(.top)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            VStack(spacing: 20) {
+                ForEach(0..<viewModel.frequencyValues.count, id: \.self) { index in
+                    BidirectionalSlider(
+                        value: Binding(
+                            get: { viewModel.frequencyValues[index] },
+                            set: { newValue in
+                                viewModel.frequencyValues[index] = newValue
+                                viewModel.updateEqualizer(for: index, value: newValue)
+                            }
+                        ), forPresetUsage: true
+                    )
+                    .frame(width: 240)
+                    .frame(height: 10)
+                }
+            }
+            .rotationEffect(.degrees(90))
+        }
+        .padding()
     }
 }
 

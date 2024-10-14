@@ -269,7 +269,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func showQualizerBottomSheet(for musicFile: MusicFileEntity) {
         selectedMusicFile = musicFile
         isQualizerSheet = true
-        bottomSheetPosition = .absolute(500)
+        bottomSheetPosition = .relative(0.7)
     }
     
     func addCustomPreset(name: String) {

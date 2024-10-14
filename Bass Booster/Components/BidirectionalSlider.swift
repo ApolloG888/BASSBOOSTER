@@ -82,7 +82,6 @@ struct BidirectionalSlider: View {
             }
 
         }
-        .frame(height: 100)
         .padding()
         
     }
@@ -95,5 +94,5 @@ struct BidirectionalSlider: View {
 }
 
 #Preview {
-    BidirectionalSlider(value: .constant(22))
+    MainTabView()
 }
