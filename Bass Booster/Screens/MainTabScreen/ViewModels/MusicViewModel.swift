@@ -59,7 +59,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var selectedPreset: Preset?
     @Published var customPresets: [Preset] = []
     
-    @Published var isExpandedSheet: Bool = false
+    @Published var isExpandedSheet: Bool = true
     @Published var currentSong: MusicFileEntity?
     @Published var isPlaying: Bool = false
     
@@ -75,6 +75,8 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     @Published var currentVolume: Float = 0.5
     @Published var isShowingCreatePresetView: Bool = false
+    
+    @Published var frequencyValues: [Double] = Array(repeating: 0.0, count: 10) // For 32Hz, 64Hz, 125Hz, etc.
 
     private var dataManager = DataManager.shared
     private var cancellables = Set<AnyCancellable>()
@@ -94,6 +96,8 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             }
         }
     }
+    
+    var equalizers: [ParametricEQ] = []
     
     override init() {
         super.init()
@@ -265,7 +269,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     func showQualizerBottomSheet(for musicFile: MusicFileEntity) {
         selectedMusicFile = musicFile
         isQualizerSheet = true
-        bottomSheetPosition = .relative(0.7)
+        bottomSheetPosition = .absolute(500)
     }
     
     func addCustomPreset(name: String) {
@@ -517,7 +521,21 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         crystallizer.feedback = AUValue(crystallizerValue)  // Convert Double to AUValue (Float)
         crystallizer.dryWetMix = AUValue(crystallizerValue)  // Convert Double to AUValue (Float)
         
-        engine.output = crystallizer
+        // Add equalizers for each frequency band
+        let frequencies: [Double] = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 12000]
+        
+        var previousNode: Node = crystallizer // Start after crystallizer in the chain
+        equalizers = frequencies.map { frequency in
+            let eq = ParametricEQ(previousNode)
+            eq.centerFreq = AUValue(frequency)
+            eq.q = AUValue(1.0)  // Set quality factor
+            eq.gain = AUValue(0.0)  // Initialize gain to 0.0
+            previousNode = eq
+            return eq
+        }
+        
+        // The last equalizer in the chain becomes the output
+        engine.output = equalizers.last ?? crystallizer
         
         // Start the AudioKit engine
         do {
@@ -544,6 +562,11 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
         crystallizer.feedback = AUValue(crystallizerValue)  // Convert Double to AUValue (Float)
         crystallizer.dryWetMix = AUValue(crystallizerValue)
+    }
+    
+    func updateEqualizer(for index: Int, value: Double) {
+        guard index < equalizers.count else { return }
+        equalizers[index].gain = AUValue(value)  // Update the gain of the correct equalizer
     }
     
     deinit {

@@ -212,127 +212,81 @@ extension MainTabView {
         } else if viewModel.isBoosterSheet {
             boosterView
         } else if viewModel.isQualizerSheet {
-            ZStack {
-                VStack {
-                    HStack {
-                        Spacer()
-                        Button {
-                            // reset хуй знает как пока
-                        } label: {
-                            Image(.resetPreset)
+            VStack {
+                Button {
+                    viewModel.frequencyValues = Array(repeating: 0.0, count: 10) // Reset all to zero
+                    for index in 0..<viewModel.frequencyValues.count {
+                        viewModel.updateEqualizer(for: index, value: 0.0)
+                    }
+                } label: {
+                    Image(.resetPreset)
+                }
+                .padding(.trailing, 10)
+                
+                
+                Text("Presets")
+                    .foregroundStyle(.white)
+                    .font(.sfProDisplay(type: .regular400, size: 16))
+                
+                HStack(spacing: 12) {
+                    ForEach(MusicPreset.allCases, id: \.self) { preset in
+                        PresetButton(preset: Preset(id: ObjectIdentifier(Preset.self), name: preset.rawValue),
+                                     isSelected: viewModel.selectedPreset?.name == preset.rawValue)
+                        .onTapGesture {
+                            viewModel.selectedPreset = Preset(id: ObjectIdentifier(Preset.self), name: preset.rawValue)
                         }
                     }
-                    .padding(.trailing, 10)
-                    
-                    HStack {
-                        Text("Presets")
-                            .foregroundStyle(.white)
-                            .font(.sfProDisplay(type: .regular400, size: 16))
-                        Spacer()
+                    Spacer()
+                }
+                
+                // Custom Presets
+                Text("Custom Presets")
+                    .font(.sfProDisplay(type: .regular400, size: 16))
+                    .foregroundStyle(.white)
+                    .padding(.top)
+                
+                HStack(spacing: 12) {
+                    AddButton(isSelected: viewModel.customPresets.isEmpty) {
+                        viewModel.isShowingCreatePresetView = true
                     }
-                    
-                    HStack(spacing: 12) {
-                        ForEach(MusicPreset.allCases, id: \.self) { preset in
-                            PresetButton(preset: Preset(id: ObjectIdentifier(Preset.self), name: preset.rawValue),
-                                         isSelected: viewModel.selectedPreset?.name == preset.rawValue)
+                    ForEach(viewModel.customPresets) { customPreset in
+                        PresetButton(preset: customPreset, isSelected: viewModel.selectedPreset?.id == customPreset.id)
                             .onTapGesture {
-                                viewModel.selectedPreset = Preset(id: ObjectIdentifier(Preset.self), name: preset.rawValue)
+                                viewModel.selectedPreset = customPreset
                             }
-                        }
-                        Spacer()
                     }
-                    
-                    // Custom Presets
-                    HStack {
-                        Text("Custom Presets")
-                            .font(.sfProDisplay(type: .regular400, size: 16))
-                            .foregroundStyle(.white)
-                        Spacer()
-                    }
-                    .padding(.top)
-                    
-                    HStack(spacing: 12) {
-                        AddButton(isSelected: viewModel.customPresets.isEmpty) {
-                            viewModel.isShowingCreatePresetView = true
+                    Spacer()
+                }
+                .padding(.top)
+                
+                Spacer()
+        
+                
+                VStack {
+                    Spacer()
+                    HStack(spacing: 5) {
+                        ForEach(0..<viewModel.frequencyValues.count, id: \.self) { index in
+                            BidirectionalSlider(
+                                value: Binding(
+                                    get: { viewModel.frequencyValues[index] },
+                                    set: { newValue in
+                                        viewModel.frequencyValues[index] = newValue
+                                        viewModel.updateEqualizer(for: index, value: newValue)
+                                    }
+                                ), forPresetUsage: true
+                            )
+                            .frame(height: 50)
                         }
-                        ForEach(viewModel.customPresets) { customPreset in
-                            PresetButton(preset: customPreset, isSelected: viewModel.selectedPreset?.id == customPreset.id)
-                                .onTapGesture {
-                                    viewModel.selectedPreset = customPreset
-                                }
-                        }
-                        Spacer()
-                    }
-                    .padding(.top)
-                    
-                    HStack {
-                        VStack(spacing: 64) {
-                            Text("12")
-                            Text("0")
-                            Text("-12")
-                        }
-                        .font(.sfProDisplay(type: .bold700, size: 12))
-                        .foregroundStyle(.gray)
                         
-                        VStack {
-                            HStack(spacing: 0) {
-                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
-                                    .rotationEffect(.degrees(90))
-                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
-                                    .rotationEffect(.degrees(270))
-                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
-                                    .rotationEffect(.degrees(90))
-                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
-                                    .rotationEffect(.degrees(270))
-                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
-                                    .rotationEffect(.degrees(90))
-                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
-                                    .rotationEffect(.degrees(270))
-                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
-                                    .rotationEffect(.degrees(90))
-                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
-                                    .rotationEffect(.degrees(270))
-                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
-                                    .rotationEffect(.degrees(90))
-                                BidirectionalSlider(value: .constant(0), forPresetUsage: true)
-                                    .rotationEffect(.degrees(270))
-                            }
-                            .padding(.top, 40)
-                            .padding(.horizontal)
-                            
-                            HStack(spacing: 16) {
-                                Text("32")
-                                Text("64")
-                                Text("125")
-                                Text("250")
-                                Text("500")
-                                Text("1k")
-                                Text("2k")
-                                Text("4k")
-                                Text("8k")
-                                Text("12k")
-                            }
-                            .font(.sfProDisplay(type: .bold700, size: 12))
-                            .foregroundStyle(.gray)
-                        }
                     }
+                    .padding(.top, 40)
                     
                     Spacer()
                 }
-                .padding(.horizontal)
-                
-                if viewModel.isShowingCreatePresetView {
-                    CreatePresetView(isPresented: $viewModel.isShowingCreatePresetView, onSave: { newPresetName in
-                        let newPreset = Preset(id: ObjectIdentifier(Preset.self), name: newPresetName)
-                        viewModel.customPresets.append(newPreset)
-                        viewModel.isShowingCreatePresetView = false
-                    }, onCancel: {
-                        viewModel.isShowingCreatePresetView = false
-                    })
-                }
+                .padding(.vertical, 40)
+                .background(Color.red)
             }
-            .frame(maxWidth: .infinity)
-            .frame(maxHeight: .infinity)
+            .padding(.horizontal)
         } else if !viewModel.isPlaylistList {
             VStack(alignment: .leading) {
                 let buttons = getBottomSheetButtons()
@@ -641,6 +595,17 @@ extension MainTabView {
         )
         .zIndex(1)
     }
+    
+    
+    //    if viewModel.isShowingCreatePresetView {
+    //        CreatePresetView(isPresented: $viewModel.isShowingCreatePresetView, onSave: { newPresetName in
+    //            let newPreset = Preset(id: ObjectIdentifier(Preset.self), name: newPresetName)
+    //            viewModel.customPresets.append(newPreset)
+    //            viewModel.isShowingCreatePresetView = false
+    //        }, onCancel: {
+    //            viewModel.isShowingCreatePresetView = false
+    //        })
+    //    }
 }
 
 #Preview {
