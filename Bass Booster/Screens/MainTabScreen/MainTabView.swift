@@ -344,6 +344,7 @@ extension MainTabView {
                                  isSelected: viewModel.selectedPreset?.name == preset.rawValue)
                     .onTapGesture {
                         viewModel.selectedPreset = Preset(id: ObjectIdentifier(Preset.self), name: preset.rawValue)
+                        viewModel.applyPreset(preset)
                     }
                 }
             }

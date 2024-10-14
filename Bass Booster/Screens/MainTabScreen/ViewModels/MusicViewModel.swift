@@ -569,6 +569,25 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         equalizers[index].gain = AUValue(value)  // Update the gain of the correct equalizer
     }
     
+    func applyPreset(_ preset: MusicPreset) {
+        switch preset {
+        case .rock:
+            frequencyValues = [40.0, 20.0, 0.0, -20.0, -40.0, 20.0, 40.0, -10.0, -20.0, 0.0]
+        case .rnb:
+            frequencyValues = [20.0, 10.0, 0.0, -10.0, -20.0, 20.0, 30.0, -15.0, 5.0, 0.0]
+        case .pop:
+            frequencyValues = [50.0, 30.0, 0.0, -10.0, -30.0, 10.0, 30.0, -20.0, -30.0, 0.0]
+        case .classic:
+            frequencyValues = [30.0, 20.0, 10.0, 00.0, -20.0, 15.0, 20.0, -10.0, -15.0, 0.0]
+        case .rap:
+            frequencyValues = [30.0, 40.0, 10.0, -20.0, -30.0, 20.0, 50.0, -10.0, -20.0, 10.0]
+        }
+        
+        for index in 0..<frequencyValues.count {
+            updateEqualizer(for: index, value: frequencyValues[index])
+        }
+    }
+    
     deinit {
         stopProgressTimer()
         audioSession.removeObserver(self, forKeyPath: "outputVolume")
