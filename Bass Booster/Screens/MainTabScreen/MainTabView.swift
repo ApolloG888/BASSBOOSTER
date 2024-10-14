@@ -210,14 +210,7 @@ extension MainTabView {
         if viewModel.isVolumeSheet {
             volumeView
         } else if viewModel.isBoosterSheet {
-            VStack {
-//                CircularProgressBar(type: $viewModel.sheetState, progress: CGFloat(viewModel.currentVolume))
-                    
-                CustomToggleSwitch(selectedType: $viewModel.sheetState)
-                    .padding(.top, 80)
-            }
-            .frame(maxWidth: .infinity)
-            .frame(maxHeight: .infinity)
+            boosterView
         } else if !viewModel.isPlaylistList {
             VStack(alignment: .leading) {
                 let buttons = getBottomSheetButtons()
@@ -286,6 +279,39 @@ extension MainTabView {
             .padding(.top, 80)
         }
         .padding(.top, 30)
+        .frame(maxWidth: .infinity)
+        .frame(maxHeight: .infinity)
+    }
+}
+
+extension MainTabView {
+    var boosterView: some View {
+        VStack {
+            if viewModel.sheetState == .bass {
+                CircularProgressBar(
+                    type: .constant(.bass),
+                    progress: Binding(
+                        get: { CGFloat(viewModel.bassBoostValue * 100) },
+                        set: { newValue in
+                            viewModel.bassBoostValue = Double(Float(newValue / 100))
+                        }
+                    )
+                )
+            } else {
+                CircularProgressBar(
+                    type: .constant(.crystalizer),
+                    progress: Binding(
+                        get: { CGFloat(viewModel.crystallizerValue * 100) },
+                        set: { newValue in
+                            viewModel.crystallizerValue = Double(Float(newValue / 100))
+                        }
+                    )
+                )
+            }
+            
+            CustomToggleSwitch(selectedType: $viewModel.sheetState)
+                .padding(.top, 80)
+        }
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
     }

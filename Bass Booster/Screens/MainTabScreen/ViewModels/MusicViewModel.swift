@@ -3,6 +3,7 @@ import Combine
 import BottomSheet
 import AVFoundation
 import MediaPlayer
+import AudioKit
 
 final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
@@ -11,6 +12,16 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @AppStorage("isQuietSoundSelected") var isQuietSoundSelected: Bool = false
     @AppStorage("isSuppressionSelected") var isSuppressionSelected: Bool = false
     @AppStorage("selectedMode") var selectedMode: Modes = .normal
+    @AppStorage("bassBoostValue") var bassBoostValue: Double = 0.0 {
+        didSet {
+            updateBassBoost()  // Update bass boost when the value changes
+        }
+    }
+    @AppStorage("crystallizerValue") var crystallizerValue: Double = 0.0 {
+        didSet {
+            updateCrystallizer()  // Update crystallizer when the value changes
+        }
+    }
     @AppStorage("panValue") var panValue: Double = 0.0 {
         didSet {
             audioPlayer?.pan = Float(panValue)
@@ -22,6 +33,12 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     var audioPlayer: AVAudioPlayer?
     private var progressTimer: Timer?
+    
+    // AudioKit properties
+    var engine = AudioEngine()
+    var playerNode = AudioPlayer()  // AudioKit player node
+    var bassBoost: ParametricEQ!  // Bass boost filter
+    var crystallizer: Delay!  // Crystallizer effect
     
     @Published var musicFiles: [MusicFileEntity] = []
     @Published var playlists: [PlaylistEntity] = []
@@ -77,6 +94,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     override init() {
         super.init()
         setupVolumeMonitoring()
+        setupAudioChain()
         currentVolume = audioSession.outputVolume
         dataManager.$savedFiles
             .receive(on: DispatchQueue.main)
@@ -470,6 +488,47 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
                 volumeSlider.sendActions(for: .valueChanged)  // Ensure volume change takes effect
             }
         }
+    }
+    
+    private func setupAudioChain() {
+        // Initialize bass boost and crystallizer (AudioKit components)
+        bassBoost = ParametricEQ(playerNode)
+        bassBoost.centerFreq = AUValue(100.0)  // Convert Double to AUValue (Float)
+        bassBoost.q = AUValue(1.0)  // Convert Double to AUValue (Float)
+        bassBoost.gain = AUValue(bassBoostValue)  // Convert Double to AUValue (Float)
+        
+        crystallizer = Delay(bassBoost)
+        crystallizer.time = AUValue(0.1)  // Convert Double to AUValue (Float)
+        crystallizer.feedback = AUValue(crystallizerValue)  // Convert Double to AUValue (Float)
+        crystallizer.dryWetMix = AUValue(crystallizerValue)  // Convert Double to AUValue (Float)
+        
+        engine.output = crystallizer
+        
+        // Start the AudioKit engine
+        do {
+            try engine.start()
+        } catch {
+            print("AudioKit Engine failed to start: \(error)")
+        }
+    }
+    
+    func updateBassBoost() {
+        // Ensure bassBoost is initialized before updating its gain
+        guard let bassBoost = bassBoost else {
+            print("Bass boost filter is not initialized.")
+            return
+        }
+        bassBoost.gain = AUValue(bassBoostValue)  // Convert Double to AUValue (Float)
+    }
+
+    func updateCrystallizer() {
+        // Ensure crystallizer is initialized before updating its properties
+        guard let crystallizer = crystallizer else {
+            print("Crystallizer effect is not initialized.")
+            return
+        }
+        crystallizer.feedback = AUValue(crystallizerValue)  // Convert Double to AUValue (Float)
+        crystallizer.dryWetMix = AUValue(crystallizerValue)
     }
     
     deinit {

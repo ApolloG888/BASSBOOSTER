@@ -1,0 +1,51 @@
+{
+  "originHash" : "be85ea17157e51d3aa028653da513fb01a2bcefec3c36f22e1ce228c64a68121",
+  "pins" : [
+    {
+      "identity" : "apphudsdk",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:apphud/ApphudSDK.git",
+      "state" : {
+        "revision" : "8b0a05fabec1a202b4ea716391c40caf5bd3fb1a",
+        "version" : "3.4.0"
+      }
+    },
+    {
+      "identity" : "audiokit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AudioKit/AudioKit",
+      "state" : {
+        "revision" : "2ebd422855e4645d3169f83d1765d1c8196b4f46",
+        "version" : "5.6.4"
+      }
+    },
+    {
+      "identity" : "bottomsheet",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:lucaszischka/BottomSheet.git",
+      "state" : {
+        "revision" : "720ddbd1371fef2a09cc1ab65fc503df37767f9c",
+        "version" : "3.1.1"
+      }
+    },
+    {
+      "identity" : "rrrangesliderswiftui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Rahul-Mayani/RRRangeSliderSwiftUI",
+      "state" : {
+        "revision" : "6626257dff85168a95b0b5f0b8807cf442ccdaa6",
+        "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "swiftui-sliders",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:spacenation/swiftui-sliders.git",
+      "state" : {
+        "revision" : "d5a7d856655d5c91f891c2b69d982c30fd5c7bdf",
+        "version" : "2.1.0"
+      }
+    }
+  ],
+  "version" : 3
+}
