@@ -28,11 +28,14 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var isPlaylistList: Bool = false
     @Published var isVolumeSheet: Bool = false
     @Published var isBoosterSheet: Bool = false
+    @Published var isQualizerSheet: Bool = false
     @Published var sheetState: SliderType = .bass
     @Published var bottomSheetPosition: BottomSheetPosition = .hidden
     @Published var selectedMusicFile: MusicFileEntity?
+    @Published var selectedPreset: Preset?
+    @Published var customPresets: [Preset] = []
     
-    @Published var isExpandedSheet: Bool = false
+    @Published var isExpandedSheet: Bool = true
     @Published var currentSong: MusicFileEntity?
     @Published var isPlaying: Bool = false
     
@@ -45,6 +48,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var isRepeatOn: Bool = false
     
     @Published var isShowSubscriptionOverlay: Bool = false
+    @Published var isShowingCreatePresetView: Bool = false
 
     private var dataManager = DataManager.shared
     private var cancellables = Set<AnyCancellable>()
@@ -227,6 +231,17 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         selectedMusicFile = musicFile
         isBoosterSheet = true
         bottomSheetPosition = .relative(0.7)
+    }
+    
+    func showQualizerBottomSheet(for musicFile: MusicFileEntity) {
+        selectedMusicFile = musicFile
+        isQualizerSheet = true
+        bottomSheetPosition = .relative(0.7)
+    }
+    
+    func addCustomPreset(name: String) {
+        let newPreset = Preset(id: ObjectIdentifier(Preset.self), name: name)
+        customPresets.append(newPreset)
     }
     
     func hideBottomSheet() {

@@ -75,20 +75,20 @@ struct MusicView: View {
                     
                     Spacer()
                    
-                    if let currentSong = viewModel.currentSong {
+                    //if let currentSong = viewModel.currentSong {
                         HStack {
                             CustomButton(state: .equalizer, action: {
-                                viewModel.showBottomSheet(for: currentSong)
+                                viewModel.showQualizerBottomSheet(for: MusicFileEntity())
                             })
                             CustomButton(state: .booster, action: {
-                                viewModel.showBoosterBottomSheet(for: currentSong)
+                                viewModel.showBoosterBottomSheet(for: MusicFileEntity())
                             })
                             CustomButton(state: .volume, action: {
-                                viewModel.showVolumeBottomSheet(for: currentSong)
+                                viewModel.showVolumeBottomSheet(for: MusicFileEntity())
                             })
                         }
                         .padding(.bottom)
-                    }
+                    //}
                     
                     HStack {
                         VStack(alignment: .leading, spacing: 10) {

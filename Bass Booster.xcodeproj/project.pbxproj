@@ -51,6 +51,8 @@
 		5FF2549B2CB8859D0004E391 /* NewPlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF2549A2CB8859D0004E391 /* NewPlaylistView.swift */; };
 		5FF2549D2CB886B60004E391 /* DeleteSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF2549C2CB886B60004E391 /* DeleteSongView.swift */; };
 		5FF254A12CB93BA80004E391 /* RenameSongView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF254A02CB93BA80004E391 /* RenameSongView.swift */; };
+		6D064CD12CBCA12900571FFA /* Preset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D064CD02CBCA12900571FFA /* Preset.swift */; };
+		6D064CD32CBCADA700571FFA /* CreatePreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D064CD22CBCADA700571FFA /* CreatePreset.swift */; };
 		6D0E33522C8481720087493E /* ProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E33512C8481720087493E /* ProductView.swift */; };
 		6D363B592C85F26A0053761C /* ModesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B582C85F2690053761C /* ModesView.swift */; };
 		6D363B612C85F9F90053761C /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D363B602C85F9F90053761C /* FeaturesView.swift */; };
@@ -129,6 +131,8 @@
 		5FF2549A2CB8859D0004E391 /* NewPlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPlaylistView.swift; sourceTree = "<group>"; };
 		5FF2549C2CB886B60004E391 /* DeleteSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteSongView.swift; sourceTree = "<group>"; };
 		5FF254A02CB93BA80004E391 /* RenameSongView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenameSongView.swift; sourceTree = "<group>"; };
+		6D064CD02CBCA12900571FFA /* Preset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preset.swift; sourceTree = "<group>"; };
+		6D064CD22CBCADA700571FFA /* CreatePreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePreset.swift; sourceTree = "<group>"; };
 		6D0E33512C8481720087493E /* ProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductView.swift; sourceTree = "<group>"; };
 		6D363B582C85F2690053761C /* ModesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModesView.swift; sourceTree = "<group>"; };
 		6D363B602C85F9F90053761C /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
@@ -414,6 +418,7 @@
 				5FF254A02CB93BA80004E391 /* RenameSongView.swift */,
 				5FE7DC592CB9B78400001F61 /* PlayListCell.swift */,
 				5FE7DC5B2CB9B9BC00001F61 /* MusicFileRow.swift */,
+				6D064CD22CBCADA700571FFA /* CreatePreset.swift */,
 			);
 			path = SubViews;
 			sourceTree = "<group>";
@@ -462,6 +467,7 @@
 				6DEED4462CBC2FB400990C34 /* CircularProgressView.swift */,
 				6DEED4482CBC494800990C34 /* TypeSwitcher.swift */,
 				6DEED44E2CBC76FB00990C34 /* BidirectionalSlider.swift */,
+				6D064CD02CBCA12900571FFA /* Preset.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -633,6 +639,7 @@
 				6DA0B4572C838EEB0035751E /* OptionsView.swift in Sources */,
 				5F2DA4C92CA8C245009EA6D0 /* BassBoosterData.xcdatamodeld in Sources */,
 				6D4600E82C945EBD003F92BC /* MusicView.swift in Sources */,
+				6D064CD32CBCADA700571FFA /* CreatePreset.swift in Sources */,
 				5FD00C672C8E1A5E008F2B4B /* SettingsView.swift in Sources */,
 				5FF2549D2CB886B60004E391 /* DeleteSongView.swift in Sources */,
 				5FDBE7FF2C83480500E623B5 /* View+Extension.swift in Sources */,
@@ -645,6 +652,7 @@
 				6DA0B46A2C84585E0035751E /* OnboardingViewModel.swift in Sources */,
 				5F3D3A7C2CA8ABDF00CD9D5A /* FileManager.swift in Sources */,
 				6D0E33522C8481720087493E /* ProductView.swift in Sources */,
+				6D064CD12CBCA12900571FFA /* Preset.swift in Sources */,
 				6DA0B4732C845F750035751E /* SubscriptionAssembly.swift in Sources */,
 				6DA0B4752C84765A0035751E /* SubscriptionScreenState.swift in Sources */,
 				5F4BF3B82C8D238C00F313E2 /* PurchaseManager.swift in Sources */,

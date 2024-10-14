@@ -62,9 +62,9 @@ extension MainTabView {
             HomeView().environmentObject(viewModel)
                 .tabItem {
                     TabBarButton(
-                        icon: selectedIndex == 0 ? "homeSelected" : "Home",
+                        icon: selectedIndex == 0 ? "homeSelected" : "home",
                         isSelected: selectedIndex == 0,
-                        label: selectedIndex == 0 ? "" : "Home"
+                        label: selectedIndex == 0 ? "" : "home"
                     ) {
                         selectedIndex = 0
                     }
@@ -227,9 +227,131 @@ extension MainTabView {
         } else if viewModel.isBoosterSheet {
             VStack {
                 CircularProgressBar(type: $viewModel.sheetState)
-                    
+                
                 CustomToggleSwitch(selectedType: $viewModel.sheetState)
                     .padding(.top, 80)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(maxHeight: .infinity)
+        } else if viewModel.isQualizerSheet {
+            ZStack {
+                VStack {
+                    HStack {
+                        Spacer()
+                        Button {
+                            // reset хуй знает как пока
+                        } label: {
+                            Image(.resetPreset)
+                        }
+                    }
+                    .padding(.trailing, 10)
+                    
+                    HStack {
+                        Text("Presets")
+                            .foregroundStyle(.white)
+                            .font(.sfProDisplay(type: .regular400, size: 16))
+                        Spacer()
+                    }
+                    
+                    HStack(spacing: 12) {
+                        ForEach(MusicPreset.allCases, id: \.self) { preset in
+                            PresetButton(preset: Preset(id: ObjectIdentifier(Preset.self), name: preset.rawValue),
+                                         isSelected: viewModel.selectedPreset?.name == preset.rawValue)
+                            .onTapGesture {
+                                viewModel.selectedPreset = Preset(id: ObjectIdentifier(Preset.self), name: preset.rawValue)
+                            }
+                        }
+                        Spacer()
+                    }
+                    
+                    // Custom Presets
+                    HStack {
+                        Text("Custom Presets")
+                            .font(.sfProDisplay(type: .regular400, size: 16))
+                            .foregroundStyle(.white)
+                        Spacer()
+                    }
+                    .padding(.top)
+                    
+                    HStack(spacing: 12) {
+                        AddButton(isSelected: viewModel.customPresets.isEmpty) {
+                            viewModel.isShowingCreatePresetView = true
+                        }
+                        ForEach(viewModel.customPresets) { customPreset in
+                            PresetButton(preset: customPreset, isSelected: viewModel.selectedPreset?.id == customPreset.id)
+                                .onTapGesture {
+                                    viewModel.selectedPreset = customPreset
+                                }
+                        }
+                        Spacer()
+                    }
+                    .padding(.top)
+                    
+                    HStack {
+                        VStack(spacing: 64) {
+                            Text("12")
+                            Text("0")
+                            Text("-12")
+                        }
+                        .font(.sfProDisplay(type: .bold700, size: 12))
+                        .foregroundStyle(.gray)
+                        
+                        VStack {
+                            HStack(spacing: 0) {
+                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                    .rotationEffect(.degrees(90))
+                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                    .rotationEffect(.degrees(270))
+                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                    .rotationEffect(.degrees(90))
+                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                    .rotationEffect(.degrees(270))
+                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                    .rotationEffect(.degrees(90))
+                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                    .rotationEffect(.degrees(270))
+                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                    .rotationEffect(.degrees(90))
+                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                    .rotationEffect(.degrees(270))
+                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                    .rotationEffect(.degrees(90))
+                                BidirectionalSlider(value: 0, forPresetUsage: true)
+                                    .rotationEffect(.degrees(270))
+                            }
+                            .padding(.top, 40)
+                            .padding(.horizontal)
+                            
+                            HStack(spacing: 16) {
+                                Text("32")
+                                Text("64")
+                                Text("125")
+                                Text("250")
+                                Text("500")
+                                Text("1k")
+                                Text("2k")
+                                Text("4k")
+                                Text("8k")
+                                Text("12k")
+                            }
+                            .font(.sfProDisplay(type: .bold700, size: 12))
+                            .foregroundStyle(.gray)
+                        }
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.horizontal)
+                
+                if viewModel.isShowingCreatePresetView {
+                    CreatePresetView(isPresented: $viewModel.isShowingCreatePresetView, onSave: { newPresetName in
+                        let newPreset = Preset(id: ObjectIdentifier(Preset.self), name: newPresetName)
+                        viewModel.customPresets.append(newPreset)
+                        viewModel.isShowingCreatePresetView = false
+                    }, onCancel: {
+                        viewModel.isShowingCreatePresetView = false
+                    })
+                }
             }
             .frame(maxWidth: .infinity)
             .frame(maxHeight: .infinity)
