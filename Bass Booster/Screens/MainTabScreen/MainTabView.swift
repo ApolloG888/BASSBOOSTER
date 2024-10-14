@@ -367,12 +367,11 @@ extension MainTabView {
                         viewModel.bottomSheetPosition = .hidden
                     }
                     ForEach(viewModel.customPresets, id: \.self) { customPreset in
-                        PresetButton(presetName: customPreset.name ?? "Unknown", // Используем имя пресета
-                                     isSelected: viewModel.selectedPreset?.id == customPreset.id)
-                            .onTapGesture {
-                                viewModel.selectedPreset = customPreset
-                                viewModel.applyCustomPreset(customPreset)
-                            }
+                        PresetButton(presetName: customPreset.name ?? "Unknown",
+                                     isSelected: viewModel.selectedCustomPreset?.id == customPreset.id) // Compare with custom presets
+                        .onTapGesture {
+                            viewModel.applyCustomPreset(customPreset) // Apply custom preset
+                        }
                     }
                 }
             }

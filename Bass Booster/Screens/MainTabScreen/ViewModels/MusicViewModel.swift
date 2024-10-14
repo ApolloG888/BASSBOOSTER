@@ -56,7 +56,6 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var sheetState: SliderType = .bass
     @Published var bottomSheetPosition: BottomSheetPosition = .hidden
     @Published var selectedMusicFile: MusicFileEntity?
-    @Published var selectedPreset: PresetEntity?
     
     @Published var isExpandedSheet: Bool = false
     @Published var currentSong: MusicFileEntity?
@@ -573,8 +572,8 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     func applyCustomPreset(_ preset: PresetEntity) {
-        selectedRegularPreset = nil // Сбрасываем выбранный обычный пресет
-        selectedCustomPreset = preset // Устанавливаем выбранный кастомный пресет
+        selectedRegularPreset = nil // Deselect regular preset
+        selectedCustomPreset = preset // Set custom preset
 
         if let values = preset.frequencyValues as? [Double] {
             frequencyValues = values
@@ -583,11 +582,10 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             }
         }
     }
-    
+
     func applyRegularPreset(_ preset: MusicPreset) {
-        selectedPreset = nil
-        selectedCustomPreset = nil // Сбрасываем выбранный кастомный пресет
-        selectedRegularPreset = preset // Устанавливаем выбранный обычный пресет
+        selectedCustomPreset = nil // Deselect custom preset
+        selectedRegularPreset = preset // Set regular preset
 
         let scalingFactor = 8.33
         switch preset {
@@ -603,7 +601,6 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             frequencyValues = [6.0, 4.0, 1.0, -2.0, -3.0, 2.0, 5.0, -1.0, -2.0, 1.0].map { $0 * scalingFactor }
         }
 
-        // Обновляем эквалайзер
         for index in 0..<frequencyValues.count {
             updateEqualizer(for: index, value: frequencyValues[index])
         }
@@ -616,7 +613,6 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         // Сбрасываем выбор пресетов
         selectedCustomPreset = nil
         selectedRegularPreset = nil
-        selectedPreset = nil  // Добавляем сброс кастомного пресета
         
         // Обновляем эквалайзер для каждой частоты
         for index in 0..<frequencyValues.count {
