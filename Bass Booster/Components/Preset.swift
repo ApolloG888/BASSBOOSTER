@@ -8,17 +8,12 @@ enum MusicPreset: String, CaseIterable {
     case rap = "Rap"
 }
 
-struct Preset: Identifiable {
-    var id: ObjectIdentifier
-    var name: String
-}
-
 struct PresetButton: View {
-    let preset: Preset
+    let presetName: String
     let isSelected: Bool
     
     var body: some View {
-        Text(preset.name)
+        Text(presetName)
             .font(.quicksand(size: 14))
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
@@ -31,7 +26,6 @@ struct PresetButton: View {
             .foregroundColor(.white)
     }
 }
-
 
 struct AddButton: View {
     @State var isSelected: Bool

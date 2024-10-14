@@ -22,11 +22,17 @@ struct MainTabView: View {
         .background(Color.customBlack)
         .overlay {
             if viewModel.isExpandedSheet {
-                MusicView(
-                    expandSheet: $viewModel.isExpandedSheet,
-                    animation: animation
-                )
-                .environmentObject(viewModel)
+                ZStack {
+                    MusicView(
+                        expandSheet: $viewModel.isExpandedSheet,
+                        animation: animation
+                    )
+                    .environmentObject(viewModel)
+                    
+                    if viewModel.isShowingCreatePresetView {
+                        createPresetView()
+                    }
+                }
             }
         }
         .overlay {
@@ -324,7 +330,7 @@ extension MainTabView {
     var equlaizer: some View {
         VStack {
             Button {
-                viewModel.resetPresets()
+                viewModel.resetPreset()
             } label: {
                 Image(.resetPreset)
             }
@@ -338,11 +344,10 @@ extension MainTabView {
             
             HStack(spacing: 12) {
                 ForEach(MusicPreset.allCases, id: \.self) { preset in
-                    PresetButton(preset: Preset(id: ObjectIdentifier(Preset.self), name: preset.rawValue),
-                                 isSelected: viewModel.selectedPreset?.name == preset.rawValue)
+                    PresetButton(presetName: preset.rawValue,
+                                 isSelected: viewModel.selectedRegularPreset == preset)
                     .onTapGesture {
-                        viewModel.selectedPreset = Preset(id: ObjectIdentifier(Preset.self), name: preset.rawValue)
-                        viewModel.applyPreset(preset)
+                        viewModel.applyRegularPreset(preset)
                     }
                 }
             }
@@ -358,11 +363,14 @@ extension MainTabView {
             HStack(spacing: 12) {
                 AddButton(isSelected: viewModel.customPresets.isEmpty) {
                     viewModel.isShowingCreatePresetView = true
+                    viewModel.bottomSheetPosition = .hidden
                 }
-                ForEach(viewModel.customPresets) { customPreset in
-                    PresetButton(preset: customPreset, isSelected: viewModel.selectedPreset?.id == customPreset.id)
+                ForEach(viewModel.customPresets, id: \.self) { customPreset in
+                    PresetButton(presetName: customPreset.name ?? "Unknown", // Use the preset name
+                                 isSelected: viewModel.selectedPreset?.id == customPreset.id)
                         .onTapGesture {
                             viewModel.selectedPreset = customPreset
+                            // Set the selected custom preset
                         }
                 }
             }
@@ -635,16 +643,22 @@ extension MainTabView {
         .zIndex(1)
     }
     
-    
-    //    if viewModel.isShowingCreatePresetView {
-    //        CreatePresetView(isPresented: $viewModel.isShowingCreatePresetView, onSave: { newPresetName in
-    //            let newPreset = Preset(id: ObjectIdentifier(Preset.self), name: newPresetName)
-    //            viewModel.customPresets.append(newPreset)
-    //            viewModel.isShowingCreatePresetView = false
-    //        }, onCancel: {
-    //            viewModel.isShowingCreatePresetView = false
-    //        })
-    //    }
+    func createPresetView() -> some View {
+        CreatePresetView(
+            isPresented: $viewModel.isShowingCreatePresetView,
+            onSave: { newPresetName in
+                let newPreset = PresetEntity(context: viewModel.dataManager.container.viewContext)
+                newPreset.id = UUID()
+                newPreset.name = newPresetName
+                viewModel.customPresets.append(newPreset)
+                viewModel.isShowingCreatePresetView = false
+            },
+            onCancel: {
+                viewModel.isShowingCreatePresetView = false
+            }
+        )
+        .zIndex(1)
+    }
 }
 
 #Preview {

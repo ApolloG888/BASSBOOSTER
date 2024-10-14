@@ -10,6 +10,7 @@ final class DataManager: ObservableObject {
     
     @Published var savedFiles: [MusicFileEntity] = []
     @Published var savedPlaylists: [PlaylistEntity] = []
+    @Published var savedPresets: [PresetEntity] = []
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -29,6 +30,7 @@ final class DataManager: ObservableObject {
                     }
                 }
             }
+            self.fetchPresets()
         }
     }
     
@@ -60,6 +62,19 @@ final class DataManager: ObservableObject {
             }
         } else {
             fetchMusicFiles()
+        }
+    }
+    
+    func fetchPresets() {
+        let request: NSFetchRequest<PresetEntity> = PresetEntity.fetchRequest()
+        
+        do {
+            let presets = try container.viewContext.fetch(request)
+            DispatchQueue.main.async {
+                self.savedPresets = presets
+            }
+        } catch {
+            print("Ошибка загрузки пресетов: \(error)")
         }
     }
     
@@ -158,6 +173,25 @@ final class DataManager: ObservableObject {
         }
     }
     
+    func savePreset(name: String, frequencyValues: [Double]) {
+        let newPreset = PresetEntity(context: container.viewContext)
+        newPreset.id = UUID()
+        newPreset.name = name
+        newPreset.frequencyValues = frequencyValues as NSArray  // Преобразуем в NSArray для сохранения
+        
+        saveData(shouldFetchPresets: true)
+        print("Пресет сохранен: \(name)")
+    }
+    
+    func saveCustomPreset(name: String, frequencyValues: [Double]) {
+        let newPreset = PresetEntity(context: container.viewContext)
+        newPreset.id = UUID()
+        newPreset.name = name
+        newPreset.frequencyValues = frequencyValues as NSObject  // Преобразуем в NSData для хранения
+        
+        saveData(shouldFetchPresets: true)
+    }
+    
     // MARK: - Переименование Песни
     
     func renameSong(_ song: MusicFileEntity, newArtist: String, newName: String) {
@@ -244,6 +278,20 @@ final class DataManager: ObservableObject {
                 print("Данные успешно сохранены.")
                 if shouldFetchPlaylists {
                     fetchPlaylists()
+                }
+            } catch {
+                print("Ошибка сохранения данных: \(error)")
+            }
+        }
+    }
+    
+    func saveData(shouldFetchPresets: Bool = false) {
+        if container.viewContext.hasChanges {
+            do {
+                try container.viewContext.save()
+                print("Данные успешно сохранены.")
+                if shouldFetchPresets {
+                    fetchPresets()
                 }
             } catch {
                 print("Ошибка сохранения данных: \(error)")

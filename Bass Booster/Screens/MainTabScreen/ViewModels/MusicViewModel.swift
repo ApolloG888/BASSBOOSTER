@@ -56,10 +56,9 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var sheetState: SliderType = .bass
     @Published var bottomSheetPosition: BottomSheetPosition = .hidden
     @Published var selectedMusicFile: MusicFileEntity?
-    @Published var selectedPreset: Preset?
-    @Published var customPresets: [Preset] = []
+    @Published var selectedPreset: PresetEntity?
     
-    @Published var isExpandedSheet: Bool = true
+    @Published var isExpandedSheet: Bool = false
     @Published var currentSong: MusicFileEntity?
     @Published var isPlaying: Bool = false
     
@@ -77,8 +76,13 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published var isShowingCreatePresetView: Bool = false
     
     @Published var frequencyValues: [Double] = Array(repeating: 0.0, count: 10) // For 32Hz, 64Hz, 125Hz, etc.
-
-    private var dataManager = DataManager.shared
+    
+    @Published var selectedCustomPreset: PresetEntity?
+    @Published var selectedRegularPreset: MusicPreset?
+    
+    @Published var customPresets: [PresetEntity] = []
+    
+    var dataManager = DataManager.shared
     private var cancellables = Set<AnyCancellable>()
     
     var isInGeneralPlaylist: Bool {
@@ -113,8 +117,13 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             .receive(on: DispatchQueue.main)
             .assign(to: \.playlists, on: self)
             .store(in: &cancellables)
+        
+        dataManager.$savedPresets
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.customPresets, on: self)
+            .store(in: &cancellables)
     }
-
+    
     
     func canAddSong() -> Bool {
         if !userPurchaseIsActive && musicFiles.count >= 1 {
@@ -273,8 +282,17 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     func addCustomPreset(name: String) {
-        let newPreset = Preset(id: ObjectIdentifier(Preset.self), name: name)
-        customPresets.append(newPreset)
+        // Create a new `PresetEntity` object to store in Core Data
+        let newPreset = PresetEntity(context: dataManager.container.viewContext)
+        newPreset.id = UUID()  // Assign a new UUID for the preset
+        newPreset.name = name
+        newPreset.frequencyValues = frequencyValues as NSObject  // Store the current frequency values
+
+        // Save the preset using Core Data
+        dataManager.saveCustomPreset(name: name, frequencyValues: frequencyValues)
+
+        // Automatically update the UI
+        selectedCustomPreset = newPreset  // Set the new preset as the selected one
     }
     
     func hideBottomSheet() {
@@ -333,7 +351,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             print("Неверная песня или URL файла")
             return
         }
-        resetPresets()
+        resetPreset()
         
         let documentsDirectory = dataManager.getDocumentsDirectory()
         let fileURL = documentsDirectory.appendingPathComponent(fileName)
@@ -361,13 +379,13 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             print("Ошибка при воспроизведении музыки: \(error)")
         }
     }
-
+    
     func pauseMusic() {
         audioPlayer?.pause()
         isPlaying = false
         stopProgressTimer()
     }
-
+    
     func playPauseMusic() {
         if isPlaying {
             pauseMusic()
@@ -382,7 +400,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             }
         }
     }
-
+    
     func nextSong() {
         guard !musicFiles.isEmpty else { return }
         
@@ -395,7 +413,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         }
         playMusic()
     }
-
+    
     func previousSong() {
         guard let currentSong = currentSong else { return }
         guard let currentIndex = musicFiles.firstIndex(of: currentSong) else { return }
@@ -403,7 +421,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         self.currentSong = musicFiles[previousIndex]
         playMusic()
     }
-
+    
     // MARK: - Прогресс Воспроизведения
     
     private func startProgressTimer() {
@@ -412,12 +430,12 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             self?.updatePlaybackProgress()
         }
     }
-
+    
     private func stopProgressTimer() {
         progressTimer?.invalidate()
         progressTimer = nil
     }
-
+    
     private func updatePlaybackProgress() {
         guard let audioPlayer = audioPlayer else {
             playbackProgress = 0.0
@@ -430,7 +448,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             playbackProgress = 0.0
         }
     }
-
+    
     func seek(to progress: Double) {
         guard let audioPlayer = audioPlayer else { return }
         let newTime = progress * audioPlayer.duration
@@ -445,7 +463,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             UserDefaults.standard.set(songID.uuidString, forKey: "LastPlayedSongID")
         }
     }
-
+    
     func loadLastPlayedSong() {
         if let songIDString = UserDefaults.standard.string(forKey: "LastPlayedSongID"),
            let songID = UUID(uuidString: songIDString),
@@ -458,7 +476,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         stopProgressTimer()
-
+        
         if isRepeatOn {
             playMusic()
             isRepeatOn = false
@@ -489,7 +507,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         currentVolume = audioSession.outputVolume
         audioSession.addObserver(self, forKeyPath: "outputVolume", options: [.new, .initial], context: nil)
     }
-
+    
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "outputVolume" {
             if let newVolume = change?[.newKey] as? Float {
@@ -499,7 +517,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             }
         }
     }
-
+    
     func updateDeviceVolume(to value: Float) {
         let volumeView = MPVolumeView(frame: .zero)
         if let volumeSlider = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider {
@@ -511,20 +529,17 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     private func setupAudioChain() {
-        // Initialize bass boost and crystallizer (AudioKit components)
         bassBoost = ParametricEQ(playerNode)
         bassBoost.centerFreq = AUValue(100.0)
         bassBoost.q = AUValue(1.0)
         bassBoost.gain = AUValue(bassBoostValue)
-
+        
         crystallizer = Delay(bassBoost)
         crystallizer.time = AUValue(0.1)
         crystallizer.feedback = AUValue(crystallizerValue)
         crystallizer.dryWetMix = AUValue(crystallizerValue)
-
-        // Add equalizers for each frequency band
-        let frequencies: [Double] = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
         
+        let frequencies: [Double] = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
         var previousNode: Node = crystallizer
         equalizers = frequencies.map { frequency in
             let eq = ParametricEQ(previousNode)
@@ -534,11 +549,9 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
             previousNode = eq
             return eq
         }
-
-        // The last equalizer in the chain becomes the output
+        
         engine.output = equalizers.last ?? crystallizer
-
-        // Start the AudioKit engine
+        
         do {
             try engine.start()
         } catch {
@@ -547,113 +560,77 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     }
     
     func updateBassBoost() {
-        // Ensure bassBoost is initialized before updating its gain
-        guard let bassBoost = bassBoost else {
-            print("Bass boost filter is not initialized.")
-            return
-        }
-        bassBoost.gain = AUValue(bassBoostValue)  // Convert Double to AUValue (Float)
+        guard let bassBoost = bassBoost else { return }
+        bassBoost.gain = AUValue(bassBoostValue)
     }
-
+    
     func updateCrystallizer() {
-        // Ensure crystallizer is initialized before updating its properties
-        guard let crystallizer = crystallizer else {
-            print("Crystallizer effect is not initialized.")
-            return
-        }
-        crystallizer.feedback = AUValue(crystallizerValue)  // Convert Double to AUValue (Float)
+        guard let crystallizer = crystallizer else { return }
+        crystallizer.feedback = AUValue(crystallizerValue)
         crystallizer.dryWetMix = AUValue(crystallizerValue)
     }
     
     func updateEqualizer(for index: Int, value: Double) {
         guard index < equalizers.count else { return }
-        print("Updating equalizer \(index) with value \(value)") // Логирование
         equalizers[index].gain = AUValue(value)
     }
     
-    func applyPreset(_ preset: MusicPreset) {
-        let scalingFactor = 8.33
+    func applyCustomPreset(_ preset: PresetEntity) {
+        selectedRegularPreset = nil
+        selectedCustomPreset = preset
         
-        switch preset {
-        case .rock:
-            frequencyValues = [
-                4.0 * scalingFactor,
-                2.0 * scalingFactor,
-                0.0,
-                -2.0 * scalingFactor,
-                -4.0 * scalingFactor,
-                2.0 * scalingFactor,
-                4.0 * scalingFactor,
-                -1.0 * scalingFactor,
-                -2.0 * scalingFactor,
-                0.0
-            ]
-        case .rnb:
-            frequencyValues = [
-                2.0 * scalingFactor,
-                1.0 * scalingFactor,
-                0.0,
-                -1.0 * scalingFactor,
-                -2.0 * scalingFactor,
-                2.0 * scalingFactor,
-                3.0 * scalingFactor,
-                -1.5 * scalingFactor,
-                0.5 * scalingFactor,
-                0.0
-            ]
-        case .pop:
-            frequencyValues = [
-                5.0 * scalingFactor,
-                3.0 * scalingFactor,
-                0.0,
-                -1.0 * scalingFactor,
-                -3.0 * scalingFactor,
-                1.0 * scalingFactor,
-                3.0 * scalingFactor,
-                -2.0 * scalingFactor,
-                -3.0 * scalingFactor,
-                0.0
-            ]
-        case .classic:
-            frequencyValues = [
-                3.0 * scalingFactor,
-                2.0 * scalingFactor,
-                1.0 * scalingFactor,
-                0.0,
-                -2.0 * scalingFactor,
-                1.5 * scalingFactor,
-                2.0 * scalingFactor,
-                -1.0 * scalingFactor,
-                -1.5 * scalingFactor,
-                0.0
-            ]
-        case .rap:
-            frequencyValues = [
-                6.0 * scalingFactor,
-                4.0 * scalingFactor,
-                1.0 * scalingFactor,
-                -2.0 * scalingFactor,
-                -3.0 * scalingFactor,
-                2.0 * scalingFactor,
-                5.0 * scalingFactor,
-                -1.0 * scalingFactor,
-                -2.0 * scalingFactor,
-                1.0 * scalingFactor
-            ]
-        }
-        
-        // Обновляем значения эквалайзера
-        for index in 0..<frequencyValues.count {
-            updateEqualizer(for: index, value: frequencyValues[index])
+        if let values = preset.frequencyValues as? [Double] {
+            frequencyValues = values
+            for index in 0..<frequencyValues.count {
+                updateEqualizer(for: index, value: frequencyValues[index])
+            }
         }
     }
     
-    func resetPresets() {
+    func saveNewCustomPreset(name: String) {
+        let newPreset = PresetEntity(context: dataManager.container.viewContext)
+        newPreset.id = UUID()
+        newPreset.name = name
+        newPreset.frequencyValues = frequencyValues as NSObject
+        
+        dataManager.saveCustomPreset(name: name, frequencyValues: frequencyValues)
+        selectedCustomPreset = newPreset  // Set the new custom preset as selected
+    }
+    
+    func applyRegularPreset(_ preset: MusicPreset) {
+            // Ensure custom preset is deselected
+            selectedCustomPreset = nil
+            selectedRegularPreset = preset
+            
+            let scalingFactor = 8.33
+            switch preset {
+            case .rock:
+                frequencyValues = [4.0, 2.0, 0.0, -2.0, -4.0, 2.0, 4.0, -1.0, -2.0, 0.0].map { $0 * scalingFactor }
+            case .rnb:
+                frequencyValues = [2.0, 1.0, 0.0, -1.0, -2.0, 2.0, 3.0, -1.5, 0.5, 0.0].map { $0 * scalingFactor }
+            case .pop:
+                frequencyValues = [5.0, 3.0, 0.0, -1.0, -3.0, 1.0, 3.0, -2.0, -3.0, 0.0].map { $0 * scalingFactor }
+            case .classic:
+                frequencyValues = [3.0, 2.0, 1.0, 0.0, -2.0, 1.5, 2.0, -1.0, -1.5, 0.0].map { $0 * scalingFactor }
+            case .rap:
+                frequencyValues = [6.0, 4.0, 1.0, -2.0, -3.0, 2.0, 5.0, -1.0, -2.0, 1.0].map { $0 * scalingFactor }
+            }
+            
+            // Update equalizer values
+            for index in 0..<frequencyValues.count {
+                updateEqualizer(for: index, value: frequencyValues[index])
+            }
+        }
+    
+    func resetPreset() {
         frequencyValues = Array(repeating: 0.0, count: 10)
+        selectedCustomPreset = nil
+        selectedRegularPreset = nil
+        
+        // Reset equalizer values
         for index in 0..<frequencyValues.count {
             updateEqualizer(for: index, value: frequencyValues[index])
         }
-        selectedPreset = nil // Сброс выбранного пресета
     }
     
     deinit {

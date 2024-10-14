@@ -13,4 +13,9 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="songs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MusicFileEntity" inverseName="playlist" inverseEntity="MusicFileEntity"/>
     </entity>
+    <entity name="PresetEntity" representedClassName="PresetEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="frequencyValues" optional="YES" attributeType="Transformable"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+    </entity>
 </model>
