@@ -229,8 +229,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         bottomSheetPosition = .absolute(270)
     }
     
-    func showVolumeBottomSheet(for musicFile: MusicFileEntity) {
-        selectedMusicFile = musicFile
+    func showVolumeBottomSheet() {
         isVolumeSheet = true
         bottomSheetPosition = .relative(0.7)
     }
