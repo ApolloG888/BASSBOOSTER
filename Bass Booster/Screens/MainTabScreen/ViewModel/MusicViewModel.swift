@@ -10,7 +10,8 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @AppStorage("userPurchaseIsActive") var userPurchaseIsActive: Bool = false
     @AppStorage("shouldShowPromotion") var shouldShowPromotion = true
     @AppStorage("isQuietSoundSelected") var isQuietSoundSelected: Bool = false
-    @AppStorage("isSuppressionSelected") var isSuppressionSelected: Bool = false
+
+    @AppStorage("isSuppressionSelected") var isSuppressionSelected: Bool = false 
     @AppStorage("selectedMode") var selectedMode: Modes = .normal
     @AppStorage("bassBoostValue") var bassBoostValue: Double = 0.0 {
         didSet { updateBassBoost() }
@@ -27,7 +28,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     private var audioSession = AVAudioSession.sharedInstance()
     private var progressTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
-    private var isSeeking: Bool = false
+    private var lowPassFilter: LowPassFilter?
     
     // AudioKit properties
     var engine = AudioEngine()
@@ -358,7 +359,6 @@ extension MusicViewModel {
         let frequencies: [Double] = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
         var previousNode: Node = crystallizer
 
-        // Создание эквалайзеров для каждой частоты
         equalizers = frequencies.map { frequency in
             let eq = ParametricEQ(previousNode)
             eq.centerFreq = AUValue(frequency)
@@ -407,6 +407,31 @@ extension MusicViewModel {
             dataManager.saveCustomPreset(preset: preset, frequencyValues: frequencyValues)
         }
     }
+    
+    // update
+    
+//    private func updateQuietSound() {
+//        // Обновляем громкость микшера, не останавливая плеер
+//        mixer.volume = isQuietSoundSelected ? 0.3 : 1.0
+//    }
+//
+//    private func updateSuppression() {
+//        // Удаляем предыдущий фильтр подавления шума, если он существует
+//        if let lowPassFilter = lowPassFilter {
+//            mixer.removeInput(lowPassFilter)
+//            self.lowPassFilter = nil
+//        }
+//        
+//        // Если подавление шума включено, добавляем фильтр
+//        if isSuppressionSelected {
+//            lowPassFilter = LowPassFilter(mixer)
+//            lowPassFilter?.cutoffFrequency = 500.0
+//            mixer.addInput(lowPassFilter!)
+//        }
+//        
+//        // Обновляем выходной микшер
+//        engine.output = mixer
+//    }
     
     func applyCustomPreset(_ preset: PresetEntity) {
         selectedRegularPreset = nil
@@ -460,23 +485,23 @@ extension MusicViewModel {
 // MARK: - File Handling and Playlist Management
 extension MusicViewModel {
     func canAddSong() -> Bool {
-//        if !userPurchaseIsActive && musicFiles.count >= 1 {
-//            isShowSubscriptionOverlay = true
-//            return false
-//        }
+        if !userPurchaseIsActive && musicFiles.count >= 1 {
+            isShowSubscriptionOverlay = true
+            return false
+        }
         return true
     }
     
     // MARK: - Обработка Выбранных Файлов
     
     func handlePickedFiles(urls: [URL]) {
-//        if !userPurchaseIsActive && urls.count > 1 {
-//            let limitedURLs = Array(urls.prefix(1))
-//            processFiles(urls: limitedURLs)
-//            isShowSubscriptionOverlay = true
-//        } else {
+        if !userPurchaseIsActive && urls.count > 1 {
+            let limitedURLs = Array(urls.prefix(1))
+            processFiles(urls: limitedURLs)
+            isShowSubscriptionOverlay = true
+        } else {
             processFiles(urls: urls)
-//        }
+        }
     }
 
     private func processFiles(urls: [URL]) {
