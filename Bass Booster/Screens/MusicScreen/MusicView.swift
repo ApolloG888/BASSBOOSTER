@@ -109,7 +109,7 @@ struct MusicView: View {
                             viewModel.seek(to: newValue)
                         }
                     ))
-                    .frame(height: 30)
+                    .frame(height: 50)
                     
                     PlayerView(size)
                         .frame(maxWidth: .infinity)

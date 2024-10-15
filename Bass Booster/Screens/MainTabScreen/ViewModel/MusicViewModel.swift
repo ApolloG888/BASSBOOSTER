@@ -27,6 +27,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     private var audioSession = AVAudioSession.sharedInstance()
     private var progressTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
+    private var isSeeking: Bool = false
     
     // AudioKit properties
     var engine = AudioEngine()
@@ -191,16 +192,12 @@ extension MusicViewModel {
     }
 
     private func updatePlaybackProgress() {
-        let duration = playerNode.duration
-        let currentTime = playerNode.currentTime
-        if duration > 0 {
-            playbackProgress = currentTime / duration
-            // Ограничение значения до 1.0
-            playbackProgress = min(playbackProgress, 1.0)
-            print("playbackProgress обновлён: \(playbackProgress)")
-        } else {
+        guard playerNode.duration > 0 else {
             playbackProgress = 0.0
+            return
         }
+        
+        playbackProgress = playerNode.currentTime / playerNode.duration
     }
 
     func pauseMusic() {
@@ -274,24 +271,14 @@ extension MusicViewModel {
     }
     
     func seek(to progress: Double) {
-        let duration = playerNode.duration
-        guard duration > 0 else {
-            print("Продолжительность трека равна нулю")
-            return
-        }
+        guard playerNode.duration > 0 else { return }
+
+        let newTime = progress * playerNode.duration
         
-        // Ограничиваем progress между 0.0 и 1.0
-        let clampedProgress = min(max(progress, 0.0), 1.0)
-        let newTime = clampedProgress * duration
-        
-        // Печатаем значения для отладки
-        print("Перемещение воспроизведения на \(newTime) секунд (прогресс: \(clampedProgress))")
-        
-        // Перемещаемся на новую позицию
-        playerNode.seek(time: newTime)
-        
-        // Обновляем прогресс вручную, так как таймер может задерживать обновление
-        playbackProgress = clampedProgress
+        playerNode.stop()
+        playerNode.play(from: newTime)
+
+        updatePlaybackProgress()
     }
     
     func shuffleToggle() {
