@@ -4,7 +4,6 @@ import BottomSheet
 import AVFoundation
 import MediaPlayer
 import AudioKit
-
 final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
 
     // MARK: - AppStorage Properties
@@ -20,7 +19,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         didSet { updateCrystallizer() }
     }
     @AppStorage("panValue") var panValue: Double = 0.0 {
-        didSet { audioPlayer?.pan = Float(panValue) }
+        didSet { mixer.pan = Float(panValue) }
     }
 
     // MARK: - Private Properties
@@ -28,13 +27,13 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
     private var audioSession = AVAudioSession.sharedInstance()
     private var progressTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
-    var audioPlayer: AVAudioPlayer?
     
     // AudioKit properties
     var engine = AudioEngine()
     var playerNode = AudioPlayer()
     var bassBoost: ParametricEQ!
     var crystallizer: Delay!
+    var mixer = Mixer()
 
     // MARK: - Published Properties for UI Updates
     @Published var musicFiles: [MusicFileEntity] = []
@@ -127,7 +126,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
 // MARK: - Music Playback
 
 extension MusicViewModel {
-    
+
     func playMusic() {
         guard let song = currentSong, let fileName = song.url else {
             print("Неверная песня или URL файла")
@@ -135,34 +134,77 @@ extension MusicViewModel {
         }
         resetPreset()
         
+        DispatchQueue.main.async {
+            self.bassBoostValue = 0.0
+            self.crystallizerValue = 0.0
+        }
+
         let documentsDirectory = dataManager.getDocumentsDirectory()
         let fileURL = documentsDirectory.appendingPathComponent(fileName)
-        
+
         print("Попытка воспроизведения файла по URL: \(fileURL)")
-        
+
         if FileManager.default.fileExists(atPath: fileURL.path) {
             print("Файл существует по пути: \(fileURL.path)")
         } else {
             print("Файл не найден по пути: \(fileURL.path)")
             return
         }
-        
+
         do {
-            audioPlayer?.stop()
-            audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
-            audioPlayer?.delegate = self
-            audioPlayer?.prepareToPlay()
-            audioPlayer?.pan = Float(panValue)
-            audioPlayer?.play()
+            let audioFile = try AVAudioFile(forReading: fileURL)
+            
+            playerNode.stop()
+            try playerNode.load(file: audioFile)
+            
+            // Устанавливаем зацикливание в зависимости от isRepeatOn
+            playerNode.isLooping = isRepeatOn
+            
+            playerNode.completionHandler = { [weak self] in
+                guard let self = self else { return }
+                print("Трек завершил воспроизведение")
+                if self.isRepeatOn {
+                    print("Повторяем трек")
+                    self.playerNode.play(from: 0)
+                } else {
+                    DispatchQueue.main.async {
+                        self.nextSong()
+                    }
+                }
+            }
+
+            // Начинаем воспроизведение с начала
+            playerNode.play(from: 0)
             isPlaying = true
+            playbackProgress = 0.0 // Сброс прогресса воспроизведения
             startProgressTimer()
+            print("Воспроизведение началось с начала")
         } catch {
             print("Ошибка при воспроизведении музыки: \(error)")
         }
     }
-    
+
+    func repeatToggle() {
+        isRepeatOn.toggle()
+        playerNode.isLooping = isRepeatOn
+        print("Режим повторения установлен: \(isRepeatOn)")
+    }
+
+    private func updatePlaybackProgress() {
+        let duration = playerNode.duration
+        let currentTime = playerNode.currentTime
+        if duration > 0 {
+            playbackProgress = currentTime / duration
+            // Ограничение значения до 1.0
+            playbackProgress = min(playbackProgress, 1.0)
+            print("playbackProgress обновлён: \(playbackProgress)")
+        } else {
+            playbackProgress = 0.0
+        }
+    }
+
     func pauseMusic() {
-        audioPlayer?.pause()
+        playerNode.pause()
         isPlaying = false
         stopProgressTimer()
     }
@@ -171,36 +213,52 @@ extension MusicViewModel {
         if isPlaying {
             pauseMusic()
         } else {
-            if audioPlayer != nil {
-                audioPlayer?.pan = Float(panValue)
-                audioPlayer?.play()
-                isPlaying = true
-                startProgressTimer()
-            } else {
-                playMusic()
-            }
+            playerNode.play()
+            isPlaying = true
+            startProgressTimer()
         }
     }
     
     func nextSong() {
-        guard !musicFiles.isEmpty else { return }
-        
-        if shuffleMode {
-            currentSong = musicFiles.randomElement()
-        } else {
-            guard let currentIndex = musicFiles.firstIndex(of: currentSong!) else { return }
-            let nextIndex = (currentIndex + 1) % musicFiles.count
-            currentSong = musicFiles[nextIndex]
+        guard !musicFiles.isEmpty else {
+            print("Список песен пуст")
+            return
         }
-        playMusic()
+
+        if shuffleMode {
+            DispatchQueue.main.async {
+                self.currentSong = self.musicFiles.randomElement()
+                if let songName = self.currentSong?.name {
+                    print("Shuffle включен. Выбрана случайная песня: \(songName)")
+                }
+                self.playMusic()
+            }
+        } else {
+            guard let currentIndex = musicFiles.firstIndex(of: currentSong!) else {
+                print("Текущая песня не найдена в списке")
+                return
+            }
+            let nextIndex = (currentIndex + 1) % musicFiles.count
+            print("Переход от индекса \(currentIndex) к следующему индексу \(nextIndex)")
+            DispatchQueue.main.async {
+                self.currentSong = self.musicFiles[nextIndex]
+                if let songName = self.currentSong?.name {
+                    print("Воспроизведение следующей песни: \(songName)")
+                }
+                self.playMusic()
+            }
+        }
     }
     
     func previousSong() {
         guard let currentSong = currentSong else { return }
         guard let currentIndex = musicFiles.firstIndex(of: currentSong) else { return }
         let previousIndex = (currentIndex - 1 + musicFiles.count) % musicFiles.count
-        self.currentSong = musicFiles[previousIndex]
-        playMusic()
+        
+        DispatchQueue.main.async {
+            self.currentSong = self.musicFiles[previousIndex]
+            self.playMusic()
+        }
     }
     
     private func startProgressTimer() {
@@ -215,43 +273,29 @@ extension MusicViewModel {
         progressTimer = nil
     }
     
-    private func updatePlaybackProgress() {
-        guard let audioPlayer = audioPlayer else {
-            playbackProgress = 0.0
+    func seek(to progress: Double) {
+        let duration = playerNode.duration
+        guard duration > 0 else {
+            print("Продолжительность трека равна нулю")
             return
         }
-        let duration = audioPlayer.duration
-        if duration > 0 {
-            playbackProgress = audioPlayer.currentTime / duration
-        } else {
-            playbackProgress = 0.0
-        }
-    }
-    
-    func seek(to progress: Double) {
-        guard let audioPlayer = audioPlayer else { return }
-        let newTime = progress * audioPlayer.duration
-        audioPlayer.currentTime = newTime
-        updatePlaybackProgress()
-    }
-    
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        stopProgressTimer()
         
-        if isRepeatOn {
-            playMusic()
-            isRepeatOn = false
-        } else {
-            nextSong()
-        }
+        // Ограничиваем progress между 0.0 и 1.0
+        let clampedProgress = min(max(progress, 0.0), 1.0)
+        let newTime = clampedProgress * duration
+        
+        // Печатаем значения для отладки
+        print("Перемещение воспроизведения на \(newTime) секунд (прогресс: \(clampedProgress))")
+        
+        // Перемещаемся на новую позицию
+        playerNode.seek(time: newTime)
+        
+        // Обновляем прогресс вручную, так как таймер может задерживать обновление
+        playbackProgress = clampedProgress
     }
     
     func shuffleToggle() {
         shuffleMode.toggle()
-    }
-    
-    func repeatToggle() {
-        isRepeatOn.toggle()
     }
 }
 
@@ -298,18 +342,21 @@ extension MusicViewModel {
 
 extension MusicViewModel {
     private func setupAudioChain() {
+        // Настройка эквалайзера для баса
         bassBoost = ParametricEQ(playerNode)
-        bassBoost.centerFreq = AUValue(100.0)
-        bassBoost.q = AUValue(1.0)
-        bassBoost.gain = AUValue(bassBoostValue)
-        
+        bassBoost.centerFreq = AUValue(100.0) // Частота для бас-бустера
+        bassBoost.q = AUValue(1.0) // Качество фильтра
+        bassBoost.gain = AUValue(bassBoostValue) // Начальное значение усиления
+
         crystallizer = Delay(bassBoost)
-        crystallizer.time = AUValue(0.1)
-        crystallizer.feedback = AUValue(crystallizerValue)
-        crystallizer.dryWetMix = AUValue(crystallizerValue)
-        
+        crystallizer.time = AUValue(0.1) // Время задержки
+        crystallizer.feedback = AUValue(crystallizerValue) // Обратная связь
+        crystallizer.dryWetMix = AUValue(crystallizerValue) // Микс сухого и обработанного сигнала
+
         let frequencies: [Double] = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
         var previousNode: Node = crystallizer
+
+        // Создание эквалайзеров для каждой частоты
         equalizers = frequencies.map { frequency in
             let eq = ParametricEQ(previousNode)
             eq.centerFreq = AUValue(frequency)
@@ -318,13 +365,22 @@ extension MusicViewModel {
             previousNode = eq
             return eq
         }
-        
-        engine.output = equalizers.last ?? crystallizer
-        
+
+        // Настройка микшера для всех аудиоузлов (эквалайзеры, эффекты и плеер)
+        mixer = Mixer(equalizers)
+
+        // Установка начального значения панорамы
+        mixer.pan = Float(panValue)
+
+        // Устанавливаем выход микшера в аудиодвижок
+        engine.output = mixer
+
+        // Запуск аудиодвижка AudioKit
         do {
             try engine.start()
+            print("AudioKit Engine успешно запущен")
         } catch {
-            print("AudioKit Engine failed to start: \(error)")
+            print("Не удалось запустить AudioKit Engine: \(error)")
         }
     }
     
@@ -386,13 +442,15 @@ extension MusicViewModel {
     }
     
     func resetPreset() {
-        frequencyValues = Array(repeating: 0.0, count: 10)
-        
-        selectedCustomPreset = nil
-        selectedRegularPreset = nil
-        
-        for index in 0..<frequencyValues.count {
-            updateEqualizer(for: index, value: frequencyValues[index])
+        DispatchQueue.main.async {
+            self.frequencyValues = Array(repeating: 0.0, count: 10)
+            
+            self.selectedCustomPreset = nil
+            self.selectedRegularPreset = nil
+            
+            for index in 0..<self.frequencyValues.count {
+                self.updateEqualizer(for: index, value: self.frequencyValues[index])
+            }
         }
     }
 }

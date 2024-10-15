@@ -274,7 +274,7 @@
 		5FD59D922C84EC7700D3508B /* MainTabScreen */ = {
 			isa = PBXGroup;
 			children = (
-				5FE7DC582CB9B10500001F61 /* ViewModels */,
+				5FE7DC582CB9B10500001F61 /* ViewModel */,
 				5FD59D932C84EC9200D3508B /* MainTabView.swift */,
 				5FD00C5F2C8D35FE008F2B4B /* MainTabAssembly.swift */,
 			);
@@ -402,12 +402,12 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		5FE7DC582CB9B10500001F61 /* ViewModels */ = {
+		5FE7DC582CB9B10500001F61 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
 				6D363B6D2C888D680053761C /* MusicViewModel.swift */,
 			);
-			path = ViewModels;
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		5FF254992CB8857E0004E391 /* SubViews */ = {

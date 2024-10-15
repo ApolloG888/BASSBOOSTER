@@ -273,15 +273,17 @@ extension MainTabView {
                     .foregroundStyle(.white)
                     .font(.quicksand(type: .bold700, size: 20))
                 
-                BidirectionalSlider(value: Binding<Double>(
-                    get: { viewModel.panValue },
-                    set: { newPanValue in
-                        viewModel.panValue = newPanValue
-                        viewModel.audioPlayer?.pan = Float(newPanValue)
-                    }
-                ))
+                BidirectionalSlider(
+                    value: Binding<Double>(
+                        get: { viewModel.panValue },
+                        set: { newPanValue in
+                            viewModel.panValue = newPanValue
+                            viewModel.mixer.pan = Float(newPanValue) // Устанавливаем панораму для микшера
+                        }
+                    )
+                )
                 .onChange(of: viewModel.panValue) { oldValue, newPanValue in
-                    viewModel.audioPlayer?.pan = Float(newPanValue)
+                    viewModel.mixer.pan = Float(newPanValue) // Обновляем панораму для микшера
                 }
             }
             .padding(.horizontal)
