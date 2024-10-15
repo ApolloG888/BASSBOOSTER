@@ -164,10 +164,30 @@ extension MusicViewModel {
             playerNode.completionHandler = { [weak self] in
                 guard let self = self else { return }
                 print("Трек завершил воспроизведение")
+                
+                // Останавливаем таймер прогресса
+                self.stopProgressTimer()
+                
                 if self.isRepeatOn {
+                    // Если включен режим повторения, воспроизводим трек заново
                     print("Повторяем трек")
+                    
+                    // Останавливаем плеер перед повторным воспроизведением
+                    self.playerNode.stop()
+                    
+                    // Сбрасываем текущую позицию и воспроизводим с самого начала
                     self.playerNode.play(from: 0)
+                    
+                    // Обновляем UI для прогресса на главный поток
+                    DispatchQueue.main.async {
+                        self.playbackProgress = 0.0
+                    }
+                    
+                    // Перезапускаем таймер прогресса
+                    self.startProgressTimer()
+                    
                 } else {
+                    // Переходим к следующей песне
                     DispatchQueue.main.async {
                         self.nextSong()
                     }
@@ -178,8 +198,9 @@ extension MusicViewModel {
             playerNode.play(from: 0)
             isPlaying = true
             playbackProgress = 0.0 // Сброс прогресса воспроизведения
-            startProgressTimer()
+            startProgressTimer() // Запускаем таймер для отслеживания прогресса
             print("Воспроизведение началось с начала")
+            
         } catch {
             print("Ошибка при воспроизведении музыки: \(error)")
         }

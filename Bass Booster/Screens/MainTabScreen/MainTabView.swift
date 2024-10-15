@@ -528,6 +528,7 @@ extension MainTabView {
             Button(action: {
                 viewModel.isShowViewNewPlaylist = true
                 viewModel.bottomSheetPosition = .hidden
+                viewModel.isExpandedSheet = false
             }) {
                 HStack {
                     Image(systemName: "plus")
