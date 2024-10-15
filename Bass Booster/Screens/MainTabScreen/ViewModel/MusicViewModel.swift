@@ -19,7 +19,7 @@ final class MusicViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
         didSet { updateCrystallizer() }
     }
     @AppStorage("panValue") var panValue: Double = 0.0 {
-        didSet { mixer.pan = Float(panValue) }
+        didSet { mixer.pan = smoothPanValue(panValue) }
     }
 
     // MARK: - Private Properties
@@ -296,6 +296,10 @@ extension MusicViewModel {
     
     func shuffleToggle() {
         shuffleMode.toggle()
+    }
+    
+    func smoothPanValue(_ value: Double) -> Float {
+        return Float(tanh(value / 25.0))
     }
 }
 
